@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+
+    <!-- เชื่อม CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <!-- เชื่อม JS -->
+    <script src="../js/dashboard.js" defer></script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="left-section">
+      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+      <img src="../../img/hospital.png" class="circle-img">
+    </div>
+
+    <div class="profile" onclick="goProfile()">
+    <span>Admin 1</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+    
+    </div>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3>
+    <br>
+    <a href="users.html" class="menu">จัดการผู้ใช้</a>
+    <a href="staff.html" class="menu active">จัดการบุคลากร</a>
+
+    <div class="logout" onclick="logout()"><img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    
+
+<div class="top-bar">
+    <input type="text" placeholder="ค้นหา...">
+    <div class="role-dropdown">
+        <div class="role-btn" onclick="toggleDropdown()">
+            <span id="selectedRole">All</span>
+            <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
+        </div>
+        <div id="dropdownMenu" class="dropdown-menu">
+            <div onclick="filterRole('all')">All</div>
+            <div onclick="filterRole('doctor')">Doctor</div>
+            <div onclick="filterRole('staff')">Staff</div>
+        </div>
+    </div>
+</div>
+<div class="summary">
+    <div class="card">
+        <img src="../../img/doctor.png" class="icon">
+        <div class="card-details">
+            <h3>Doctor</h3>
+            <p>200 Users</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../../img/nurse.png" class="icon">
+        <div class="card-details">
+            <h3>Staff</h3>
+            <p>400 Users</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid" id="userGrid">
+    </div>
+  </main>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
+}
+
+
+body {
+  background: #faf8fe;
+}
+
+/* HEADER */
+.header {
+  height: 80px;
+  background: #6E65BE;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.circle-img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    cursor: pointer;
+}
+
+/* ปรับแต่งวงกลมสีขาวและรูปภาพด้านใน */
+.avatar {
+    width: 35px;              
+    height: 35px;
+    background-color: white;   
+    border-radius: 50%;        
+    border: 2px solid white;   
+    
+    
+    background-size: cover;    
+    background-position: center; 
+    background-repeat: no-repeat; 
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+
+/* LAYOUT */
+.container {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: white;
+  padding: 20px;
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s;
+}
+
+.sidebar.hide {
+  margin-left: -250px;
+}
+
+.menu {
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.menu:hover {
+  background: #f0f0ff;
+}
+
+.menu.active {
+  background: linear-gradient(90deg, #746BC3, #B4ADEE);
+  color: white;
+}
+
+.logout {
+  margin-top: auto;
+  color: red;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.logoutlogo {
+    width: 20px;
+    margin-right: 5px;
+    margin-bottom: -2px; 
+    margin-left: 5px;
+    vertical-align: middle;
+    margin-top: -5px;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* TOP BAR */
+.top-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.top-bar input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.role-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #E5E3FF;
+}
+
+/* SUMMARY */
+.icon {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.summary {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.card {
+    display: flex;         /* จัดไอคอนกับกลุ่มข้อความให้อยู่ข้างกัน */
+    align-items: center;   /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    gap: 20px;             /* ระยะห่างระหว่างไอคอนกับข้อความ */
+    padding: 25px;
+    background: white;
+    border-radius: 20px;
+    flex: 1;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border: 1px solid #6E65BE;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column; 
+    gap: 5px;               
+}
+
+.card-details h3 {
+    font-size: 25px;
+    color: #333;
+    margin: 0;             
+}
+
+.card-details p {
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+}
+
+.icon {
+    margin-top: 0px; 
+    width: 60px;           
+    height: auto;
+    
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+
+
+/* USER CARD */
+.user-card {
+    display: flex;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    border: 1px solid #6E65BE;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: relative;
+    transition: 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+
+.user-img {
+    width: 90px;
+    height: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* ให้ Badge อยู่บนสุด */
+    flex: 1;
+}
+
+.text-content {
+    margin-top: 12px; /* ระยะห่างจาก Badge ลงมาที่ชื่อ */
+}
+
+.text-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.text-content p {
+    font-size: 13px;
+    color: #777;
+    margin: 0;
+}
+
+.badge {
+    align-self: flex-start; /* ให้กว้างเท่าเนื้อหา */
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge.doctor {
+  background: #FFE436;
+}
+
+.badge.staff {
+  background: #96CEFE;
+}
+
+/* ปุ่มแก้ไขมุมขวาล่าง */
+.edit-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 18px; /* ปรับขนาดให้กดง่ายขึ้น */
+    color: #6E65BE;  /* ใช้สีม่วงเดียวกับ Header เพื่อให้เด่น */
+    cursor: pointer; /* เปลี่ยนเมาส์เป็นรูปมือเมื่อชี้ */
+    background: #f0f0ff; /* เพิ่มพื้นหลังจางๆ ให้ดูเป็นปุ่ม */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    z-index: 10; 
+}
+
+.edit-btn:hover {
+    background: #6E65BE; /* เปลี่ยนสีพื้นหลังเมื่อ Hover */
+    color: white;        /* เปลี่ยนไอคอนเป็นสีขาว */
+    transform: scale(1.1); /* ขยายใหญ่ขึ้นเล็กน้อย */
+}
+
+.role-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  display: none;
+  overflow: hidden;
+  cursor: pointer;
+  
+}
+
+.dropdown-menu div {
+  padding: 10px 20px;
+  cursor: pointer;
+  
+}
+
+.dropdown-menu div:hover {
+  background: #f0f0ff;
+  cursor: pointer;
+}
+
+.arrowdropdown {
+    width: 14px;      /* ปรับขนาดความกว้าง */
+    height: auto;     /* ให้ความสูงปรับตามสัดส่วนอัตโนมัติ */
+    margin-left: 8px; /* เว้นระยะห่างจากคำว่า All */
+    vertical-align: middle; /* จัดให้กึ่งกลางแนวเดียวกับตัวอักษร */
+    display: inline-block;
+    cursor: pointer;
+}
