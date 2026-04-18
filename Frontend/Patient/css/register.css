@@ -120,9 +120,58 @@ input, select {
   margin-top: 4px;
 }
 
-/* Desktop */
-@media (min-width: 768px) {
-  .container {
-    max-width: 700px;
-  }
+/* ===== CUSTOM DROPDOWN ===== */
+.custom-dropdown {
+  position: relative;
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 18px;
+  border-radius: 12px; /* 🔥 แก้: จาก 25px → เหลี่ยมขึ้น */
+  border: 1px solid #e0e0e0; /* 🔥 เพิ่มความคม */
+  background: white;
+  cursor: pointer;
+}
+
+.arrow {
+  width: 14px;
+  transition: 0.3s;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* dropdown */
+.dropdown-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+
+  background: white;
+  border-radius: 12px; /* 🔥 แก้: จาก 20px */
+  border: 1px solid #eee; /* 🔥 เพิ่มให้ดูเหมือน dashboard */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+
+  display: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.dropdown-options div {
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.dropdown-options div:hover {
+  background: #f3f2ff;
+}
+
+.dropdown-options.show {
+  display: block;
 }

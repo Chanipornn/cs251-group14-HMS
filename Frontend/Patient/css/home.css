@@ -5,8 +5,8 @@
    ============================================================ */
 :root {
   /* --- สีหลัก --- */
-  --purple-main:  #7B6FDB;
-  --purple-light: #A89BE8;
+  --purple-main:  #746BC3;
+  --purple-light: #b0a5e5;
   --purple-bg:    #FAFAFA;
   --bg-page:      #F0EEF8;
   --text-dark:    #2d2d2d;
@@ -47,7 +47,7 @@ body {
  
 /* ── HEADER ── */
 .header {
-  background: linear-gradient(135deg, var(--purple-main), var(--purple-light));
+  background: #6E65BE;
   padding: 14px 20px;
   border-radius: 0 0 28px 28px;
   display: flex;
@@ -277,6 +277,79 @@ body {
 .nav-btn.active { background: var(--white); }
 .nav-btn.active svg { stroke: #6640a2; }
  
+/* ========================= */
+/* HEADER PROFILE ICON */
+/* ========================= */
+.avatar-circle {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.avatar-circle:hover {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.2);
+}
+
+/* ========================= */
+/* MENU CARD */
+/* ========================= */
+.menu-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* ========================= */
+/* MENU ICON (เด้งนิด ๆ) */
+/* ========================= */
+.menu-icon svg {
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover svg {
+  transform: scale(1.1);
+}
+
+/* ========================= */
+/* BOTTOM NAV */
+/* ========================= */
+.nav-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.15);
+}
+
+/* ========================= */
+/* CHANGE COLOR ON HOVER */
+/* ========================= */
+.nav-btn svg,
+.menu-icon svg {
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover svg,
+.menu-item:hover svg {
+  stroke: #211c81;
+}
+
+/* ========================= */
+/* BUTTON (ถ้ามี) */
+/* ========================= */
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
 @media (min-width: 768px) {
   .bottom-nav {
     bottom: 25px;   /* 🔥 ขยับขึ้น */

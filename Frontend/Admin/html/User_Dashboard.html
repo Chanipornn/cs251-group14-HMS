@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/user_dashboard.css">
+  <script src="../js/user_dashboard.js" defer></script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
+
+  <div class="profile">
+    <span>Admin 1</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3><br>
+
+    <a href="users.html" class="menu active">จัดการผู้ใช้</a>
+    <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
+
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+
+      <input type="text" placeholder="ค้นหา...">
+
+      <!-- ROLE -->
+      <div class="role-dropdown">
+        <div class="role-btn" onclick="toggleDropdown('roleMenu', this)">
+          <span id="selectedRole">All</span>
+          <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
+        </div>
+
+        <div id="roleMenu" class="dropdown-menu">
+          <div onclick="filterRole('all')">All</div>
+          <div onclick="filterRole('admin')">Admin</div>
+          <div onclick="filterRole('staff')">Staff</div>
+          <div onclick="filterRole('doctor')">Doctor</div>
+          <div onclick="filterRole('user')">User</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="role-dropdown">
+        <div class="role-btn" onclick="toggleDropdown('statusMenu', this)">
+          <span id="selectedStatus">All</span>
+          <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
+        </div>
+
+        <div id="statusMenu" class="dropdown-menu">
+          <div onclick="filterStatus('all')">All</div>
+          <div onclick="filterStatus('active')">Active</div>
+          <div onclick="filterStatus('inactive')">Inactive</div>
+        </div>
+      </div>
+
+      <button class="add-btn">+ Add User</button>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Full name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="userTable"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
