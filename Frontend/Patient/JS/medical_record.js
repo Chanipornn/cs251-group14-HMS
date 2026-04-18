@@ -48,7 +48,6 @@ function displayRecords(dataList) {
 
 function handleCardClick(id) {
     console.log("Card ID " + id + " was clicked!");
-    alert("กำลังเปิดดูรายละเอียดการรักษา รหัส: " + id);
     window.location.href = `treatment_details.html?id=${id}`;
 }
 
