@@ -1,0 +1,114 @@
+/* ========================= */
+/* HEADER */
+/* ========================= */
+.profile-header {
+  width: 100%;
+  height: 140px;
+
+  background: #6E65BE;
+
+  display: flex;
+  align-items: flex-start;  
+
+  padding: 20px;
+
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.profile-header h2 {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0; 
+}
+
+/* ========================= */
+/* PROFILE CARD */
+/* ========================= */
+.profile-card {
+  background: #F0EEF8;
+
+  border-radius: 30px 30px 0 0;
+
+  padding: 30px 20px;
+
+  margin: -60px 0 0; 
+  width: 100%;
+
+  text-align: center;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+  flex: 1; 
+}
+
+/* ========================= */
+/* IMAGE */
+/* ========================= */
+.profile-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* ========================= */
+/* TEXT */
+/* ========================= */
+.profile-card h3 {
+  margin: 10px 0 5px;
+}
+
+.profile-card p {
+  color: #888;
+  font-size: 14px;
+}
+
+/* ========================= */
+/* INFO */
+/* ========================= */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14px 0;
+}
+
+.info-row span {
+  background: #CAC6FF;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.info-row p {
+  font-size: 14px;
+  color: #333;
+}
+
+/* ========================= */
+/* LOGOUT */
+/* ========================= */
+.logout {
+  margin-top: 30px;
+  background: none;
+  border: none;
+  color: red;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ========================= */
+/* LAYOUT FIX (สำคัญ) */
+/* ========================= */
+body {
+  margin: 0;
+}
+
+.phone-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

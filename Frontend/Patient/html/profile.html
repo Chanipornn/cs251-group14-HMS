@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/profile.css">
+</head>
+
+<body>
+
+<div class="phone-shell">
+
+  <!-- HEADER -->
+  <div class="profile-header">
+    <h2>ข้อมูลส่วนตัว</h2>
+  </div>
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+
+    <img src="../../img/profile.jpg" class="profile-img">
+
+    <h3 id="profileName">Username</h3>
+    <p id="profileEmail">email@gmail.com</p>
+
+    <div class="info-row">
+      <span>ชื่อ-นามสกุล</span>
+      <p id="fullname">-</p>
+    </div>
+
+    <div class="info-row">
+      <span>หมายเลขโทรศัพท์</span>
+      <p id="phone">-</p>
+    </div>
+
+    <div class="info-row">
+      <span>เลขบัตรประชาชน</span>
+      <p id="idcard">-</p>
+    </div>
+
+    <div class="info-row">
+      <span>เพศ</span>
+      <p id="gender">-</p>
+    </div>
+
+    <div class="info-row">
+      <span>วันเกิด</span>
+      <p id="birth">-</p>
+    </div>
+
+    <button class="logout" onclick="logout()">ออกจากระบบ</button>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+
+    <!-- Home -->
+    <div class="nav-btn" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+        <path d="M9 21V12h6v9"/>
+      </svg>
+    </div>
+
+    <!-- Layers -->
+    <div class="nav-btn">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 12l10 5 10-5"/>
+        <path d="M2 17l10 5 10-5"/>
+      </svg>
+    </div>
+
+    <!-- Profile -->
+    <div class="nav-btn active">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/>
+      </svg>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="../JS/profile.js"></script>
+</body>
+</html>
