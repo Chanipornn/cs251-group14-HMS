@@ -162,7 +162,68 @@
   .save-btn:active {
     transform: scale(0.97);
   }
-  
+
+  /* ===== CUSTOM DROPDOWN ===== */
+.custom-dropdown {
+  position: relative;
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  cursor: pointer;
+}
+
+.arrow {
+  width: 14px;
+  transition: 0.3s;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.dropdown-options div {
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.dropdown-options div:hover {
+  background: #f3f2ff;
+}
+
+.dropdown-options.show {
+  display: block;
+}
+  /* กลุ่มวันเกิด */
+.dob-group {
+  display: flex;
+  gap: 10px;
+}
+
+/* ทำให้แต่ละช่องเล็กลง */
+.dob-group .custom-dropdown {
+  width: 100px;
+}
   /* ========================= */
   /* MOBILE */
   /* ========================= */

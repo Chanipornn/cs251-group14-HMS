@@ -1,6 +1,8 @@
 // =========================
 // INIT DATA 
 // =========================
+let selectedRole = "all";
+let selectedStatus = "all";
 const defaultUsers = [
   {
     name: "นาย กฤต",
@@ -32,6 +34,15 @@ function renderTable() {
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
   users.forEach((user, index) => {
+    // FILTER ROLE
+  if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) {
+    return;
+  }
+
+  // FILTER STATUS
+  if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) {
+    return;
+  }
     table.innerHTML += `
       <tr>
         <td><input type="checkbox"></td>
@@ -155,17 +166,25 @@ function toggleDropdown(menuId, btn) {
 // FILTER
 // =========================
 function filterRole(role) {
+  selectedRole = role;
+
   document.getElementById("selectedRole").innerText =
-    role.charAt(0).toUpperCase() + role.slice(1);
+    role === "all" ? "All" : role;
 
   document.getElementById("roleMenu").classList.remove("show");
+
+  renderTable(); 
 }
 
 function filterStatus(status) {
+  selectedStatus = status;
+
   document.getElementById("selectedStatus").innerText =
-    status.charAt(0).toUpperCase() + status.slice(1);
+    status === "all" ? "All" : status;
 
   document.getElementById("statusMenu").classList.remove("show");
+
+  renderTable(); 
 }
 
 // =========================

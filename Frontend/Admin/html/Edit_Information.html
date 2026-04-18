@@ -65,25 +65,35 @@
             <div class="form-grid">
 
                 <!-- ROW 1 -->
-                <div class="form-group">
-                  <label>ชื่อผู้ใช้ *</label>
-                  <input type="text" placeholder="กรอกชื่อผู้ใช้">
-                </div>
-              
-                <div class="form-group">
-                  <label>กรุ๊ปเลือด *</label>
-                  <select>
-                    <option>A</option>
-                    <option>B</option>
-                    <option>AB</option>
-                    <option>O</option>
-                  </select>
-                </div>
+<div class="form-group">
+  <label>ชื่อผู้ใช้ *</label>
+  <input type="text" id="name" placeholder="กรอกชื่อผู้ใช้">
+</div>
+
+<div class="form-group">
+  <label>กรุ๊ปเลือด *</label>
+
+  <div class="custom-dropdown">
+    <div class="dropdown-selected" onclick="toggleDropdown(this)">
+      <span>เลือกกรุ๊ปเลือด</span>
+      <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+    </div>
+
+    <div class="dropdown-options">
+      <div onclick="selectOption(this, 'blood')">A</div>
+      <div onclick="selectOption(this, 'blood')">B</div>
+      <div onclick="selectOption(this, 'blood')">AB</div>
+      <div onclick="selectOption(this, 'blood')">O</div>
+    </div>
+  </div>
+
+  <input type="hidden" id="blood">
+</div>
               
                 <!-- ROW 2 -->
                 <div class="form-group">
                   <label>อีเมล *</label>
-                  <input type="email" placeholder="กรอกอีเมล">
+                  <input type="email" id="emailInput" placeholder="กรอกอีเมล">
                 </div>
               
                 <div class="form-group">
@@ -144,7 +154,7 @@
                   <input type="text" placeholder="กรอกหมายเลขโทรศัพท์">
                 </div>
               
-                <div></div> <!-- 🔥 ช่องว่างให้ balance -->
+                <div></div> <!-- ช่องว่างให้ balance -->
               
                 <!-- ROW 8 -->
                 <div class="form-group full">
@@ -156,7 +166,10 @@
 
           <!-- BUTTON -->
           <div class="btn-group">
-            <button type="button" class="cancel-btn" onclick="goBack()">ยกเลิก</button>
+            <button type="button" class="cancel-btn"
+  onclick="window.location.href='User_Dashboard.html'">
+  ยกเลิก
+</button>
             <button type="submit" class="save-btn">บันทึก</button>
           </div>
 
