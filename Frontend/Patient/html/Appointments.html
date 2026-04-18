@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการนัดหมาย</title>
+    <link rel="stylesheet" href="../css/Appointments.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="mobile-container">
+        <header class="app-header">
+            <button class="back-link" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h1>รายการนัด</h1>
+        </header>
+
+        <div class="tab-section">
+            <div class="tab-wrapper">
+                <button class="tab-item active" onclick="switchTab(this, 'today')">รายการนัดวันนี้</button>
+                <button class="tab-item" onclick="switchTab(this, 'upcoming')">รายการนัดล่วงหน้า</button>
+            </div>
+        </div>
+
+        <div class="appointments-content" id="appointmentsList"></div>
+        
+
+    </div>
+
+    <!-- Cancel Modal -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-triangle modal-icon"></i>
+            <h2>ยืนยันการยกเลิก</h2>
+            <p>คุณแน่ใจหรือไม่ที่จะยกเลิกการนัดหมายนี้?</p>
+            <div class="modal-buttons">
+                <button class="btn-no" onclick="closeCancelModal()">ยกเลิก</button>
+                <button class="btn-yes" id="confirmCancelBtn">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/Appointments.js"></script>
+</body>
+
+</html>

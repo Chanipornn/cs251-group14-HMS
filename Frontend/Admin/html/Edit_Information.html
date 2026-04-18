@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User</title>
+
+  <!-- ใช้ layout เดิม -->
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/Edit_Information.css">
+
+  <script src="../js/edit_user.js" defer></script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
+
+  <div class="profile">
+    <span>Admin 1</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3><br>
+
+    <a href="User_Dashboard.html" class="menu">จัดการผู้ใช้</a>
+    <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
+
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="form-container">
+
+      <!-- HEADER (เพิ่มใหม่) -->
+      <div class="form-header">
+        <img src="../../img/profile.jpg" class="profile-img">
+
+        <div class="user-info">
+          <h3 id="username">Username</h3>
+          <p id="email">email@gmail.com</p>
+        </div>
+
+        <div class="user-role" id="roleText">Patient</div>
+      </div>
+
+      <!-- BODY -->
+      <div class="form-body">
+
+        <form id="editForm">
+
+            <div class="form-grid">
+
+                <!-- ROW 1 -->
+                <div class="form-group">
+                  <label>ชื่อผู้ใช้ *</label>
+                  <input type="text" placeholder="กรอกชื่อผู้ใช้">
+                </div>
+              
+                <div class="form-group">
+                  <label>กรุ๊ปเลือด *</label>
+                  <select>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>AB</option>
+                    <option>O</option>
+                  </select>
+                </div>
+              
+                <!-- ROW 2 -->
+                <div class="form-group">
+                  <label>อีเมล *</label>
+                  <input type="email" placeholder="กรอกอีเมล">
+                </div>
+              
+                <div class="form-group">
+                  <label>โรคประจำตัว *</label>
+                  <input type="text" placeholder="กรอกโรคประจำตัว">
+                </div>
+              
+                <!-- ROW 3 -->
+                <div class="form-group">
+                  <label>ชื่อ-นามสกุล *</label>
+                  <div class="inline-group">
+                    <input type="text" placeholder="กรอกชื่อ">
+                    <input type="text" placeholder="กรอกนามสกุล">
+                  </div>
+                </div>
+              
+                <div class="form-group">
+                  <label>แพ้ยา</label>
+                  <input type="text" placeholder="กรอกยาที่แพ้">
+                </div>
+              
+                <!-- ROW 4 -->
+                <div class="form-group">
+                  <label>หมายเลขบัตรประชาชน *</label>
+                  <input type="text" value="113XXXXXX4345" disabled>
+                </div>
+              
+                <div class="form-group">
+                  <label>น้ำหนัก (กก.) *</label>
+                  <input type="number" placeholder="กรอกน้ำหนัก">
+                </div>
+              
+                <!-- ROW 5 -->
+                <div class="form-group">
+                  <label>เพศ</label>
+                  <input type="text" value="หญิง" disabled>
+                </div>
+              
+                <div class="form-group">
+                  <label>ส่วนสูง (ซม.) *</label>
+                  <input type="number" placeholder="กรอกส่วนสูง">
+                </div>
+              
+                <!-- ROW 6 -->
+                <div class="form-group">
+                  <label>วันเกิด</label>
+                  <input type="text" value="20/02/2003" disabled>
+                </div>
+              
+                <div class="form-group">
+                  <label>สิทธิการรักษา *</label>
+                  <input type="text" value="ชำระเงินเอง">
+                </div>
+              
+                <!-- ROW 7 -->
+                <div class="form-group">
+                  <label>หมายเลขโทรศัพท์ *</label>
+                  <input type="text" placeholder="กรอกหมายเลขโทรศัพท์">
+                </div>
+              
+                <div></div> <!-- 🔥 ช่องว่างให้ balance -->
+              
+                <!-- ROW 8 -->
+                <div class="form-group full">
+                  <label>ที่อยู่ *</label>
+                  <input type="text" placeholder="กรอกที่อยู่ปัจจุบัน">
+                </div>
+              
+              </div>
+
+          <!-- BUTTON -->
+          <div class="btn-group">
+            <button type="button" class="cancel-btn" onclick="goBack()">ยกเลิก</button>
+            <button type="submit" class="save-btn">บันทึก</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

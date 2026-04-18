@@ -1,0 +1,268 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #e8e8e8;
+    margin: 0;
+}
+
+/* ✅ เต็มจอทุกอุปกรณ์ */
+.mobile-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #fdfdfd;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.app-header {
+    background: #746BC3;
+    padding: 40px 40px 30px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+}
+
+.back-link {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255,255,255,0.6);;
+    background: transparent;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-link:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.05);
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+/* TAB */
+.tab-section {
+    padding: 0 40px;
+    margin-top: 20px;
+}
+
+.tab-wrapper {
+    background: white;
+    border-radius: 30px;
+    display: flex;
+    padding: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    max-width: 500px;
+}
+
+.tab-item {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    background: transparent;
+    border-radius: 25px;
+    font-family: 'Prompt';
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.tab-item.active {
+    background: #746BC3;
+    color: white;
+}
+
+/* CONTENT */
+.appointments-content {
+    flex: 1;
+    padding: 25px 20px;
+    overflow-y: auto;
+
+    display: flex;          /* 🔥 เปลี่ยนจาก grid */
+    flex-direction: column; /* 🔥 เรียงบนลงล่าง */
+    gap: 20px;
+}
+
+/* CARD */
+.appointment-card {
+    background: white;
+    border-radius: 25px;
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+    height: fit-content; /* 🔥 ให้สูงตามเนื้อหา */
+}
+
+/* TEXT */
+.card-header {
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.badge-label {
+    background: #EBE9F8;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    min-width: 90px;
+    text-align: center;
+    margin-right: 12px;
+}
+
+.detail-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* BUTTON */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-reschedule, .btn-cancel {
+    padding: 8px 18px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-reschedule {
+    background: #F0F0F0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+    background: #D93025;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔥 MOBILE */
+@media (max-width: 768px) {
+
+    .app-header {
+        padding: 30px 20px 25px;
+    }
+
+    .tab-section {
+        padding: 0 20px;
+    }
+
+    .appointments-content {
+        padding: 20px;
+        grid-template-columns: 1fr; /* เรียงบนลงล่าง */
+    }
+
+    .app-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .tab-item {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* ซ่อนไว้ก่อน */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+/* Modal Content Box */
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 30px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-icon {
+    font-size: 50px;
+    color: #D93025;
+    margin-bottom: 15px;
+}
+
+.modal-content h2 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.modal-content p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Buttons in Modal */
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 15px;
+    border: none;
+    font-family: 'Prompt';
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-no {
+    background: #F0F0F0;
+    color: #333;
+}
+
+.btn-yes {
+    background: #D93025;
+    color: white;
+}
+
+.btn-no:hover { background: #e0e0e0; }
+.btn-yes:hover { background: #b7281f; }

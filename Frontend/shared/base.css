@@ -97,6 +97,7 @@ body {
   }
 /* CONTAINER */
 
+
 .container {
   max-width: 420px;
   margin: 80px auto;
@@ -238,5 +239,12 @@ button:hover {
 
   .splash {
     font-size: 32px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .container {
+    max-width: 700px;
   }
 }
