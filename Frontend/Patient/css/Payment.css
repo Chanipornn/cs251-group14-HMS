@@ -1,0 +1,160 @@
+:root {
+    --primary-color: #746bc3;
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --unpaid-color: #ff4d4d;
+    --paid-color: #2ecc71;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+}
+
+.main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ✅ ปรับ Header ให้ชิดซ้ายมากขึ้น --- */
+.header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 35px 20px; /* ลด Padding ซ้ายขวาลงเหลือ 20px */
+    border-radius: 0 0 35px 35px;
+    display: flex;
+    justify-content: center; /* ยังคงไว้เผื่อจัดกึ่งกลางเนื้อหาข้างใน */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    width: 100%;
+    max-width: 100%; /* 👈 ยืดให้ชิดขอบซ้าย-ขวาที่สุด */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px; /* เว้นระยะจากขอบจอนิดหน่อยเพื่อความสวยงาม */
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- ✅ ปรับ Content ให้การ์ดยืดเต็มจอ --- */
+.content-wrapper {
+    padding: 25px 20px; /* ระยะห่างบนล่าง 25px ซ้ายขวา 20px */
+    display: flex;
+    justify-content: center;
+}
+
+.payment-grid {
+    width: 100%;
+    max-width: 100%; /* 👈 ปลดล็อคจาก 1200px ให้ยืดเต็มจอ */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Payment Card ดีไซน์เดิมที่ยืดกว้างขึ้น */
+.payment-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px 35px;
+    border-left: 7px solid var(--primary-color);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    transition: 0.3s;
+}
+
+.payment-card:hover {
+    transform: translateY(-3px);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.date-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.label {
+    min-width: 90px;
+    color: var(--text-muted);
+}
+
+.value {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.unpaid .dot { background: var(--unpaid-color); }
+.paid .dot { background: var(--paid-color); }
+
+/* ปุ่มอยู่ขวามือเสมอ */
+.btn {
+    padding: 12px 35px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(58, 58, 58, 0.1);
+}
+
+.btn-pay {
+    background: linear-gradient(135deg, #8e84e7, #746bc3);
+    color: white;
+
+}
+
+.btn-detail {
+    background: #ecf0f1;
+    color: var(--text-muted);
+}

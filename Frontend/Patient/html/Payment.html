@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบชำระเงิน - Full Responsive</title>
+    <link rel="stylesheet" href="../css/Payment.css">
+    <script src="../js/Payment.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="main-container">
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h1>ชำระเงิน</h1>
+            </div>
+        </header>
+
+        <main class="content-wrapper">
+            <div class="payment-grid">
+
+                <div class="payment-card">
+                    <div class="card-body">
+                        <div class="date-title">11/04/2026 09:46:15</div>
+                        <div class="info-row"><span class="label">แผนก</span><span class="value">หู คอ จมูก</span></div>
+                        <div class="info-row"><span class="label">แพทย์</span><span class="value">นพ.สมชาย ศรีสุข</span>
+                        </div>
+                        <div class="info-row"><span class="label">รายการ</span><span class="value">ตรวจทั่วไป</span>
+                        </div>
+                        <div class="info-row" style="margin-top:5px;">
+                            <span class="label">ยอดชำระ</span>
+                            <span class="value" style="color:var(--primary-color); font-size: 1.1rem;">500 บาท</span>
+                        </div>
+                        <div class="status-badge unpaid">
+                            <div class="dot"></div><span class="status-text">สถานะ: ค้างชำระ</span>
+                        </div>
+                    </div>
+                    <div class="action-area">
+                        <button class="btn btn-pay">ชำระเงิน</button>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="card-body">
+                        <div class="date-title">11/04/2026 10:30:00</div>
+                        <div class="info-row"><span class="label">แผนก</span><span class="value">จักษุ</span></div>
+                        <div class="info-row"><span class="label">แพทย์</span><span class="value">นพ.นนทพัทธ์
+                                ใจดี</span></div>
+                        <div class="info-row"><span class="label">รายการ</span><span class="value">ตรวจทั่วไป</span>
+                        </div>
+                        <div class="info-row" style="margin-top:5px;">
+                            <span class="label">ยอดชำระ</span>
+                            <span class="value">500 บาท</span>
+                        </div>
+                        <div class="status-badge paid">
+                            <div class="dot"></div><span class="status-text">สถานะ: ชำระแล้ว</span>
+                        </div>
+                    </div>
+                    <div class="action-area">
+                        <button class="btn btn-detail">ดูรายละเอียด</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
