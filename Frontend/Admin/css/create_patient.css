@@ -1,11 +1,17 @@
 /* ========================= */
 /* ROLE SELECTOR (HEADER) */
 /* ========================= */
-.role-selector-header {
-  margin-left: auto;
+/* ===== FIX ROLE POSITION ONLY ===== */
+.role-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 20px;
+}
+
+.role-selector {
   display: flex;
   gap: 10px;
-  align-items: center;
 }
 
 /* ========================= */
@@ -116,3 +122,28 @@
 .custom-dropdown {
   width: 100%;
 }
+
+
+.role-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0 10px;
+}
+
+.role-row label {
+  font-weight: 500;
+}
+
+/* ให้ element กินเต็ม 2 คอลัมน์ */
+.form-group.full {
+  grid-column: span 2;
+}
+
+/* role layout */
+.role-selector {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+

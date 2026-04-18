@@ -51,22 +51,15 @@
           <p>กรอกข้อมูลผู้ใช้ใหม่</p>
         </div>
 
-        <!-- ROLE -->
-        <div class="role-selector-header">
-          <button type="button" class="role-btn active" data-role="patient">Patient</button>
-          <button type="button" class="role-btn" data-role="doctor">Doctor</button>
-          <button type="button" class="role-btn" data-role="staff">Staff</button>
-          <button type="button" class="role-btn" data-role="admin">Admin</button>
-        </div>
-
       </div>
+
 
       <div class="form-body">
 
         <form id="createForm">
 
           <div class="form-grid">
-
+         
             <!-- LEFT -->
             <div>
 
@@ -103,12 +96,18 @@
                 <input type="text">
               </div>
 
-              <div class="form-group">
-                <label>เพศ *</label>
-                <div class="gender-group">
-                  <label class="gender-item"><input type="radio"> ผู้ชาย</label>
-                  <label class="gender-item"><input type="radio"> ผู้หญิง</label>
-                </div>
+              <div class="gender-group">
+
+                <label class="gender-item">
+                  <input type="radio" name="gender" value="male">
+                  ผู้ชาย
+                </label>
+              
+                <label class="gender-item">
+                  <input type="radio" name="gender" value="female">
+                  ผู้หญิง
+                </label>
+              
               </div>
 
               <div class="form-group">
@@ -150,21 +149,33 @@
                   </div>
               
                 </div>
-
+                <div class="form-group">
+                  <label>หมายเลขโทรศัพท์ *</label>
+                  <input type="text" placeholder="กรอกหมายเลขโทรศัพท์">
+                </div>
+                
+                <div class="form-group">
+                  <label>ที่อยู่ *</label>
+                  <input type="text" placeholder="กรอกที่อยู่">
+                </div>
             </div>
 
             <!-- RIGHT -->
             <div>
+              <div class="form-group full">
+                <label>Role *</label>
+              
+                <div class="role-selector">
+                  <button type="button" class="role-btn active" data-role="Patient">Patient</button>
+                  <button type="button" class="role-btn" data-role="Doctor">Doctor</button>
+                  <button type="button" class="role-btn" data-role="Staff">Staff</button>
+                  <button type="button" class="role-btn" data-role="Admin">Admin</button>
+                </div>
+              
+                <input type="hidden" id="role" value="Patient">
+              </div>
+  
 
-              <div class="form-group">
-                <label>หมายเลขโทรศัพท์ *</label>
-                <input type="text">
-              </div>
-            
-              <div class="form-group">
-                <label>ที่อยู่ *</label>
-                <input type="text">
-              </div>
             
               <!-- ========================= -->
               <!-- PATIENT ONLY -->
