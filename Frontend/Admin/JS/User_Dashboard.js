@@ -15,6 +15,8 @@ const users = [
   }
 ];
 
+localStorage.setItem("users", JSON.stringify(users));
+
 function renderTable() {
   const table = document.getElementById("userTable");
   table.innerHTML = "";
@@ -41,14 +43,12 @@ function renderTable() {
 
         <td>${user.role}</td>
 
-        <td class="actions">
+       <td class="actions">
 
-  <!-- ✏️ edit (ใช้รูป) -->
   <img src="../../img/Edit2.png" 
        class="action-icon" 
-       onclick="goToEditPage(${index})">
+       onclick="editUser('${user.username}')">
 
-  <!-- 🗑 delete -->
   <img src="../../img/delete.png" 
        class="action-icon" 
        onclick="deleteUser('${user.username}')">
@@ -123,3 +123,17 @@ function filterStatus(status) {
 // INIT
 // =========================
 renderTable();
+
+function editUser(username) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(u => u.username === username);
+
+  if (!user) {
+    alert("ไม่พบผู้ใช้");
+    return;
+  }
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+
+  window.location.href = "Edit_Information.html";;
+}

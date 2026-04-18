@@ -1,0 +1,156 @@
+/* ========================= */
+/* FORM CONTAINER */
+/* ========================= */
+.form-container {
+    background: white;
+    border-radius: 20px;
+  
+    padding: 0; /* 🔥 เปลี่ยน */
+    border: 2px solid #7b6ee6; /* 🔥 ขอบม่วง */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  
+    overflow: hidden; /* 🔥 ให้ header โค้งตาม */
+  }
+  
+  /* ========================= */
+  /* HEADER (เพิ่มใหม่) */
+  /* ========================= */
+  .form-header {
+    background: #f3f3f3;
+    padding: 20px;
+  
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* ========================= */
+  /* PROFILE */
+  /* ========================= */
+  .profile-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+  
+  /* user info */
+  .user-info h3 {
+    margin: 0;
+  }
+  
+  .user-info p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: gray;
+  }
+  
+  /* role ขวา */
+  .user-role {
+    margin-left: auto;
+    font-weight: bold;
+    color: #3c3c8c;
+  }
+  
+  /* ========================= */
+  /* FORM BODY */
+  /* ========================= */
+  .form-body {
+    padding: 25px;
+  }
+  
+  /* ========================= */
+  /* FORM */
+  /* ========================= */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  /* 🔥 ปรับ input ให้เหมือน prototype */
+  .form-group input,
+  .form-group select {
+    padding: 12px;
+    border-radius: 20px; /* กลม */
+    border: 1px solid #ddd;
+    background: #fafafa;
+  }
+  
+  /* ========================= */
+  /* BUTTON */
+  /* ========================= */
+  .btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+  }
+  
+  .cancel-btn {
+    background: #e5e5e5;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  
+  .save-btn {
+    background: linear-gradient(90deg, #6E65BE, #9a94e6);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  /* full width field */
+.form-group.full {
+    grid-column: span 2;
+  }
+  
+  /* inline input (ชื่อ + นามสกุล) */
+  .inline-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .inline-group input {
+    flex: 1;
+  }
+  
+  /* label * สีแดง */
+  label::after {
+    content: "";
+  }
+  
+  label:has(+ input[required])::after,
+  label:has(+ select[required])::after {
+    content: " *";
+    color: red;
+  }
+  
+  /* disabled style */
+  input:disabled {
+    background: #f0f0f0;
+    color: #555;
+  }
+  
+  /* ========================= */
+  /* RESPONSIVE */
+  /* ========================= */
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }

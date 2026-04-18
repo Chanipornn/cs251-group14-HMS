@@ -42,6 +42,7 @@
   background: #fff;
 }
 
+
 /* MAIN CONTENT */
 .main {
   flex: 1;
@@ -199,6 +200,13 @@ tbody tr {
   /* ไม่ให้ text แตกเละ */
   th, td {
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: 170px;
   }
 
 }
