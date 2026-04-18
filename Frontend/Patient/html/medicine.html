@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../Patient/css/medicine.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header class="app-header">
+        <div class="header-bg-circle"></div>
+        <h1 class="title">ประวัติการรักษาและยา</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="ค้นหา">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="medical_record.html" style="text-decoration: none; color: inherit;">
+                <div class="tab">
+                    <div class="icon-box"><i class="fa-solid fa-notes-medical"></i></div>
+                    <span>ประวัติการรักษา</span>
+                </div>
+            </a>
+
+            <a href="medicine.html" style="text-decoration: none; color: inherit;">
+                <div class="tab active">
+                    <div class="icon-box"><i class="fa-solid fa-pills"></i></div>
+                    <span>การรับยา</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="content-area">
+        <div id="medicineList">
+            <div class="loading">กำลังโหลดข้อมูลยา...</div>
+            </div>
+    </main>
+
+    <!-- ═══ BOTTOM NAV ═══ -->
+  <div class="bottom-nav">
+    <!-- Home (active) -->
+    <div class="nav-btn">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+        <path d="M9 21V12h6v9"/>
+      </svg>
+    </div>
+    <!-- Layers -->
+    <div class="nav-btn active">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 12l10 5 10-5"/>
+        <path d="M2 17l10 5 10-5"/>
+      </svg>
+    </div>
+    <!-- Profile -->
+    <div class="nav-btn">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/>
+      </svg>
+    </div>
+</div>
+
+<script src="../../Patient/JS/medicine.js"></script>
+</body>
+</html>
