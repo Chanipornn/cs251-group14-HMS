@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Create User</title>
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/Edit_Information.css">
+  <link rel="stylesheet" href="../css/create_patient.css">
+
+  <script src="../js/create_patient.js" defer></script>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
+
+  <div class="profile">
+    <span>Admin 1</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <aside class="sidebar">
+    <h3>เมนู</h3><br>
+    <a href="User_Dashboard.html" class="menu">จัดการผู้ใช้</a>
+    <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
+
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="form-container">
+
+      <!-- HEADER -->
+      <div class="form-header">
+
+        <img src="../../img/profile.jpg" class="profile-img">
+
+        <div class="user-info">
+          <h3>Create User</h3>
+          <p>กรอกข้อมูลผู้ใช้ใหม่</p>
+        </div>
+
+        <!-- ROLE -->
+        <div class="role-selector-header">
+          <button type="button" class="role-btn active" data-role="patient">Patient</button>
+          <button type="button" class="role-btn" data-role="doctor">Doctor</button>
+          <button type="button" class="role-btn" data-role="staff">Staff</button>
+          <button type="button" class="role-btn" data-role="admin">Admin</button>
+        </div>
+
+      </div>
+
+      <div class="form-body">
+
+        <form id="createForm">
+
+          <div class="form-grid">
+
+            <!-- LEFT -->
+            <div>
+
+              <div class="form-group">
+                <label>ชื่อผู้ใช้ *</label>
+                <input type="text">
+              </div>
+
+              <div class="form-group">
+                <label>อีเมล *</label>
+                <input type="email">
+              </div>
+
+              <div class="form-group">
+                <label>รหัสผ่าน *</label>
+                <input type="password">
+              </div>
+
+              <div class="form-group">
+                <label>ยืนยันรหัสผ่าน *</label>
+                <input type="password">
+              </div>
+
+              <div class="form-group">
+                <label>ชื่อ-นามสกุล *</label>
+                <div class="inline-group">
+                  <input type="text" placeholder="ชื่อ">
+                  <input type="text" placeholder="นามสกุล">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>หมายเลขบัตรประชาชน *</label>
+                <input type="text">
+              </div>
+
+              <div class="form-group">
+                <label>เพศ *</label>
+                <div class="gender-group">
+                  <label class="gender-item"><input type="radio"> ผู้ชาย</label>
+                  <label class="gender-item"><input type="radio"> ผู้หญิง</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>วันเกิด *</label>
+              
+                <div? class="dob-group">
+              
+                  <!-- DAY -->
+                  <div class="dob-item">
+                    <div class="custom-dropdown">
+                      <div class="dropdown-selected" onclick="toggleDropdown(this)">
+                        <span>DD</span>
+                        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+                      </div>
+                      <div class="dropdown-options" id="dayOptions"></div>
+                    </div>
+                  </div>
+              
+                  <!-- MONTH -->
+                  <div class="dob-item">
+                    <div class="custom-dropdown">
+                      <div class="dropdown-selected" onclick="toggleDropdown(this)">
+                        <span>MM</span>
+                        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+                      </div>
+                      <div class="dropdown-options" id="monthOptions"></div>
+                    </div>
+                  </div>
+              
+                  <!-- YEAR -->
+                  <div class="dob-item">
+                    <div class="custom-dropdown">
+                      <div class="dropdown-selected" onclick="toggleDropdown(this)">
+                        <span>YYYY</span>
+                        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+                      </div>
+                      <div class="dropdown-options" id="yearOptions"></div>
+                    </div>
+                  </div>
+              
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div>
+
+              <div class="form-group">
+                <label>หมายเลขโทรศัพท์ *</label>
+                <input type="text">
+              </div>
+            
+              <div class="form-group">
+                <label>ที่อยู่ *</label>
+                <input type="text">
+              </div>
+            
+              <!-- ========================= -->
+              <!-- PATIENT ONLY -->
+              <!-- ========================= -->
+              <div id="patientFields">
+            
+                <!-- กรุ๊ปเลือด -->
+                <div class="form-group">
+                  <label>กรุ๊ปเลือด *</label>
+            
+                  <div class="custom-dropdown">
+                    <div class="dropdown-selected" onclick="toggleDropdown(this)">
+                      <span>เลือกกรุ๊ปเลือด</span>
+                      <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+                    </div>
+            
+                    <div class="dropdown-options">
+                      <div onclick="selectOption(this, 'blood')">A</div>
+                      <div onclick="selectOption(this, 'blood')">B</div>
+                      <div onclick="selectOption(this, 'blood')">AB</div>
+                      <div onclick="selectOption(this, 'blood')">O</div>
+                    </div>
+                  </div>
+            
+                  <input type="hidden" id="blood">
+                </div>
+            
+                <!-- โรค / แพ้ยา -->
+                <div class="form-group">
+                  <label>โรคประจำตัว *</label>
+                  <div class="inline-group">
+                    <input type="text" placeholder="โรคประจำตัว">
+                    <input type="text" placeholder="ยาที่แพ้">
+                  </div>
+                </div>
+            
+                <!-- น้ำหนัก / ส่วนสูง -->
+                <div class="form-group">
+                  <label>น้ำหนัก / ส่วนสูง *</label>
+                  <div class="inline-group">
+                    <input type="text" placeholder="น้ำหนัก (กก.)">
+                    <input type="text" placeholder="ส่วนสูง (ซม.)">
+                  </div>
+                </div>
+            
+                <!-- สิทธิ -->
+                <div class="form-group">
+                  <label>สิทธิการรักษา *</label>
+            
+                  <div class="custom-dropdown">
+                    <div class="dropdown-selected" onclick="toggleDropdown(this)">
+                      <span>เลือกสิทธิ</span>
+                      <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+                    </div>
+            
+                    <div class="dropdown-options">
+                      <div onclick="selectOption(this, 'right')">ชำระเงินเอง</div>
+                      <div onclick="selectOption(this, 'right')">ประกันสังคม</div>
+                      <div onclick="selectOption(this, 'right')">บัตรทอง</div>
+                      <div onclick="selectOption(this, 'right')">ข้าราชการ</div>
+                    </div>
+                  </div>
+            
+                  <input type="hidden" id="right">
+                </div>
+            
+              </div>
+            
+            </div>
+
+
+
+          <div class="btn-group">
+            <button type="button" class="cancel-btn" onclick="goBack()">ยกเลิก</button>
+            <button type="submit" class="save-btn">สร้างผู้ใช้</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

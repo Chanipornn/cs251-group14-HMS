@@ -76,9 +76,7 @@
         </div>
       </div>
 
-      <button class="add-btn" onclick="window.location.href='create_account.html'">
-        + Add User
-      </button>
+      <button class="add-btn" onclick="openRoleModal()">+ Add User</button>
 
     </div>
 
@@ -117,6 +115,19 @@
     </div>
   </div>
 </div>
+<div id="roleModal" class="modal">
+  <div class="modal-box">
+    <h3>เลือกประเภทผู้ใช้</h3>
 
+    <div class="role-select-popup">
+      <button onclick="selectRole('patient')">Patient</button>
+      <button onclick="selectRole('doctor')">Doctor</button>
+      <button onclick="selectRole('staff')">Staff</button>
+      <button onclick="selectRole('admin')">Admin</button>
+    </div>
+
+    <button onclick="closeRoleModal()" class="cancel-btn">ยกเลิก</button>
+  </div>
+</div>
 </body>
 </html>

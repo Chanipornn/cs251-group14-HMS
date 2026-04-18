@@ -3,6 +3,8 @@
 // =========================
 let selectedRole = "all";
 let selectedStatus = "all";
+let deleteUsername = null;
+
 const defaultUsers = [
   {
     name: "นาย กฤต",
@@ -33,16 +35,18 @@ function renderTable() {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  users.forEach((user, index) => {
-    // FILTER ROLE
-  if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) {
-    return;
-  }
+  users.forEach((user) => {
 
-  // FILTER STATUS
-  if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) {
-    return;
-  }
+    // FILTER ROLE
+    if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) {
+      return;
+    }
+
+    // FILTER STATUS
+    if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) {
+      return;
+    }
+
     table.innerHTML += `
       <tr>
         <td><input type="checkbox"></td>
@@ -70,7 +74,7 @@ function renderTable() {
 
           <img src="../../img/delete.png" 
                class="action-icon" 
-               onclick="openDeleteModal(${index})">
+               onclick="openDeleteModal('${user.username}')">
         </td>
       </tr>
     `;
@@ -96,44 +100,32 @@ function editUser(username) {
 // =========================
 // DELETE MODAL
 // =========================
-let deleteIndex = null;
-
-/* เปิด popup */
-function openDeleteModal(index) {
-  deleteIndex = index;
+function openDeleteModal(username) {
+  deleteUsername = username;
 
   const modal = document.getElementById("deleteModal");
-  if (modal) {
-    modal.classList.add("show");
-  }
+  if (modal) modal.classList.add("show");
 }
 
-/* ปิด popup */
 function closeDeleteModal() {
-  deleteIndex = null;
+  deleteUsername = null;
 
   const modal = document.getElementById("deleteModal");
-  if (modal) {
-    modal.classList.remove("show");
-  }
+  if (modal) modal.classList.remove("show");
 }
 
-/* กดยืนยันลบ */
 function confirmDelete() {
-  if (deleteIndex === null) return;
+  if (!deleteUsername) return;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  users.splice(deleteIndex, 1);
+  // 🔥 ลบแบบถูกต้อง
+  users = users.filter(u => u.username !== deleteUsername);
 
   localStorage.setItem("users", JSON.stringify(users));
 
-  renderTable(); // 🔥 สำคัญ
-
+  renderTable();
   closeDeleteModal();
-
-  // 🔥 เตรียมต่อ backend
-  // fetch(`/api/users/${id}`, { method: "DELETE" })
 }
 
 // =========================
@@ -162,6 +154,15 @@ function toggleDropdown(menuId, btn) {
   arrow.classList.toggle("rotate");
 }
 
+// ปิด dropdown เมื่อคลิกที่อื่น
+document.addEventListener("click", function (e) {
+  if (!e.target.closest(".role-dropdown")) {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+      menu.classList.remove("show");
+    });
+  }
+});
+
 // =========================
 // FILTER
 // =========================
@@ -169,11 +170,11 @@ function filterRole(role) {
   selectedRole = role;
 
   document.getElementById("selectedRole").innerText =
-    role === "all" ? "All" : role;
+    role === "all" ? "All" : role.charAt(0).toUpperCase() + role.slice(1);
 
   document.getElementById("roleMenu").classList.remove("show");
 
-  renderTable(); 
+  renderTable();
 }
 
 function filterStatus(status) {
@@ -184,10 +185,34 @@ function filterStatus(status) {
 
   document.getElementById("statusMenu").classList.remove("show");
 
-  renderTable(); 
+  renderTable();
+}
+
+// =========================
+// ADD USER (ROLE SELECT)
+// =========================
+function openRoleModal() {
+  document.getElementById("roleModal").classList.add("show");
+}
+
+function closeRoleModal() {
+  document.getElementById("roleModal").classList.remove("show");
+}
+
+function selectRole(role) {
+  localStorage.setItem("createRole", role);
+
+  if (role === "patient") {
+    window.location.href = "Create_Patient.html";
+  } else {
+    window.location.href = "Create_Account.html";
+  }
 }
 
 // =========================
 // INIT
 // =========================
+selectedRole = "all";
+selectedStatus = "all";
+
 renderTable();

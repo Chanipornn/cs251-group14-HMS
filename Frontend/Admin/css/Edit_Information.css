@@ -11,7 +11,7 @@
   
     overflow: hidden;
   
-    /* 🔥 เพิ่ม */
+    /* เพิ่ม */
     height: calc(100vh - 110px); /* ให้พอดีจอ */
     display: flex;
     flex-direction: column;
