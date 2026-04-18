@@ -1,0 +1,156 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #e8e8e8; /* สีพื้นหลังนอกจอ Mobile */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* ปรับขนาดจอให้เท่ากับหน้าเดิม */
+.mobile-container {
+    width: 100%;
+    max-width: 420px; /* ล็อคความกว้างเท่าเดิม */
+    height: 100vh;    /* ล็อคความสูงเท่าหน้าจอพอดี */
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* ห้ามเลื่อนทั้งหน้าจอ ให้เลื่อนแค่ข้างใน */
+}
+
+/* Header สีม่วงโค้งลงมา */
+.app-header {
+    background: #746BC3;
+    padding: 40px 20px 30px; /* เพิ่ม padding ล่างเป็น 60px เพื่อดันพื้นสีม่วงลงไป */
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+    position: relative; /* ให้แน่ใจว่าอยู่หลัง Tab */
+}
+
+.back-link {
+    width: 40px; height: 40px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: transparent;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-header h1 { margin: 0; font-size: 1.4rem; font-weight: 600; }
+
+/* Tab Section */
+.tab-section { 
+    padding: 0 20px; 
+    margin-top: 20px; /* ปรับค่าติดลบให้พอดี ไม่ให้ตัวปุ่มไปเกยทับเนื้อหา Header */
+    z-index: 10;
+    position: relative;
+}
+
+.tab-wrapper {
+    background: white;
+    border-radius: 30px;
+    display: flex;
+    padding: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tab-item {
+    flex: 1; border: none; padding: 12px;
+    background: transparent; border-radius: 25px;
+    font-family: 'Prompt'; font-size: 0.9rem; cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-item.active {
+    background: #746BC3; 
+    color: white;
+}
+
+/* ส่วนของรายการที่เลื่อนได้ */
+.appointments-content {
+    flex: 1;
+    padding: 25px 20px;
+    overflow-y: auto; /* ให้ Scroll แค่ตรงนี้ */
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+.appointments-content::-webkit-scrollbar { width: 5px; }
+.appointments-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* Card ดีไซน์ */
+.appointment-card {
+    background: white;
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    font-weight: 600; margin-bottom: 15px;
+    display: flex; align-items: center; gap: 10px; color: #333;
+}
+
+.detail-row {
+    display: flex; margin-bottom: 12px; align-items: flex-start;
+}
+
+.badge-label {
+    background: #EBE9F8;
+    color: #333;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    min-width: 90px;
+    text-align: center;
+    margin-right: 12px;
+}
+
+.detail-text { font-size: 0.85rem; color: #555; line-height: 1.4; padding-top: 2px; }
+
+/* ปุ่มกดด้านล่าง Card */
+.card-actions {
+    display: flex; 
+    justify-content: flex-end; /* เลื่อนปุ่มทั้งหมดไปทางขวา */
+    gap: 10px; 
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #f9f9f9; /* เพิ่มเส้นคั่นบางๆ ให้ดูเป็นระเบียบ (ไม่ชอบเอาออกได้ครับ) */
+}
+
+.btn-reschedule, .btn-cancel {
+    padding: 6px 18px; 
+    border-radius: 15px; 
+    font-size: 0.85rem;
+    font-family: 'Prompt';
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.btn-reschedule {
+    background: #F0F0F0;
+    color: #555;
+}
+
+.btn-cancel {
+    background: #D93025;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #b7281f;
+}
