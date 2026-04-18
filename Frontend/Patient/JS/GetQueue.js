@@ -4,8 +4,8 @@ const doctors = [
     { name: "พญ.ชลธิชา คำดี", dept: "แผนก หู คอ จมูก", img: "../../img/doctor_img4.png" },
     { name: "นพ.วราภรณ์ ศิริชัย", dept: "แผนก ศัลยกรรม", img: "../../img/doctor_img3.png" },
     { name: "นพ.อัครพล ศรีนวล", dept: "แผนก อายุรกรรม", img: "../../img/doctor_img5.png" },
-    { name: "พญ.พงศกร แก้วดี", dept: "แผนก อายุรกรรม", img: "../../img/doctor_img6.png" },
-    { name: "นพ.มินตรา จันทร์ทรา", dept: "แผนก กุมารเวชกรรม", img: "../../img/doctor_img7.png" },
+    { name: "นพ.พงศกร แก้วดี", dept: "แผนก อายุรกรรม", img: "../../img/doctor_img7.png" },
+    { name: "พญ.มินตรา จันทร์ทรา", dept: "แผนก กุมารเวชกรรม", img: "../../img/doctor_img6.png" },
     { name: "นพ.สมปอง สองสิบ", dept: "แผนก จักษุ", img: "../../img/doctor_img8.png" }
 ];
 

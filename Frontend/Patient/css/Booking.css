@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+
+
+* { box-sizing: border-box; }
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #e8e8e8;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.mobile-container {
+    width: 100%;
+    max-width: 420px;
+    background: #fdfdfd;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header { margin-bottom: 20px; }
+.back-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid #ccc; background: white; cursor: pointer;
+}
+
+/* Hero Card */
+.doctor-hero {
+    background: linear-gradient(135deg, #746BC3 0%, #a29bfe 100%);
+    border-radius: 30px;
+    padding: 20px;
+    color: white;
+    position: relative;
+    height: 200px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 20px rgba(116, 107, 195, 0.3);
+}
+
+.hero-text { margin-top: 50px; }
+.hero-text h2 { margin: 0; font-size: 1.4rem; }
+.hero-text p { margin: 5px 0; font-weight: 300; opacity: 0.9; }
+
+.hero-img {
+    position: absolute;
+    bottom: 0; right: 0px;
+    height: 100%; 
+}
+
+.heart-badge {
+    position: absolute;
+    top: 15px; right: 15px;
+    background: white; color: #ff4d4d;
+    width: 35px; height: 35px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* Date Selector */
+.section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; color: #2d2d52; margin-bottom: 15px;
+}
+
+.nav-arrows { margin-left: auto; color: #333; cursor: pointer; }
+
+.date-scroll {
+    display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;
+}
+.date-scroll::-webkit-scrollbar { display: none; }
+
+.date-item {
+    min-width: 55px; height: 75px;
+    background: #f0f0f5; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 600; color: #888; cursor: pointer;
+}
+
+.date-item.active { background: #746BC3; color: white; }
+.date-item span { font-size: 0.7rem; font-weight: 300; }
+
+.divider { border: 0.5px solid #eee; margin: 20px 0; }
+
+/* Time Slots */
+.time-container {
+    background: #dbd8ff; border-radius: 20px; padding: 15px;
+    margin-bottom: 20px;
+}
+.time-container h3 { font-size: 0.9rem; color: #2d2d52; margin-bottom: 12px; }
+
+.time-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+}
+.time-btn {
+    background: white; border: none; padding: 8px; border-radius: 15px;
+    font-family: 'Prompt'; font-size: 0.8rem; color: #746BC3;
+    cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.time-btn.active { background: white; border: 1px solid #746BC3; font-weight: 600; }
+
+/* Dropdown */
+.custom-dropdown {
+    border: 2px solid #746BC3; border-radius: 15px; overflow: hidden;
+    margin-bottom: 30px; background: white;
+}
+.dropdown-header {
+    padding: 15px; display: flex; justify-content: space-between;
+    cursor: pointer; font-weight: 600; color: #333;
+}
+.dropdown-list { padding: 0 15px 15px; display: flex; flex-direction: column; gap: 15px; }
+.option-item { font-size: 0.9rem; color: #444; display: flex; align-items: center; gap: 10px; }
+.input-line { border: none; border-bottom: 1px solid #333; outline: none; width: 60px; }
+
+/* Submit Button */
+.btn-submit {
+    width: 100%; padding: 15px; border-radius: 20px;
+    border: none; background: linear-gradient(90deg, #6E65BE 0%, #a29bfe 100%);
+    color: white; font-size: 1.1rem; font-weight: 600;
+    cursor: pointer; box-shadow: 0 5px 15px rgba(116, 107, 195, 0.4);
+}

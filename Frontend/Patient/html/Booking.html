@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Detail</title>
+    <link rel="stylesheet" href="../CSS/Booking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../JS/Booking.js" defer></script>
+</head>
+
+<body>
+
+    <div class="mobile-container">
+        <header class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </header>
+
+        <div class="doctor-hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>นพ.สมชาย ศรีสุข</h2>
+                    <p>คลินิก ตา หู คอ จมูก</p>
+                </div>
+                <div class="heart-badge"><i class="fa-solid fa-heart"></i></div>
+                <img src="../../img/doctordicut.png" alt="Doctor" class="hero-img">
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>เมษายน 2026</span> <i class="fa-regular fa-calendar-days"></i>
+            <div class="nav-arrows">
+                <i class="fa-solid fa-chevron-left"></i>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <div class="date-scroll">
+            <div class="date-item active">11 <span>Wed</span></div>
+            <div class="date-item">12 <span>Tue</span></div>
+            <div class="date-item">13 <span>Mon</span></div>
+            <div class="date-item">14 <span>Sun</span></div>
+            <div class="date-item">15 <span>Sat</span></div>
+            <div class="date-item">16 <span>Fri</span></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="time-container">
+            <h3>เวลาที่แพทย์เข้า</h3>
+            <div class="time-grid">
+                <button class="time-btn active">09:00 น.</button>
+                <button class="time-btn">10:00 น.</button>
+                <button class="time-btn">10:40 น.</button>
+                <button class="time-btn">11:30 น.</button>
+                <button class="time-btn">13:00 น.</button>
+                <button class="time-btn">13:40 น.</button>
+            </div>
+        </div>
+
+        <div class="custom-dropdown" id="dropdown">
+            <div class="dropdown-header" onclick="toggleDropdown()">
+                <span>ตัวเลือก</span>
+                <i class="fa-solid fa-chevron-up" id="drop-icon"></i>
+            </div>
+            <div class="dropdown-list" id="drop-list">
+                <label class="option-item"><input type="radio" name="reason"> ตรวจทั่วไป</label>
+                <label class="option-item"><input type="radio" name="reason"> ติดตามอาการ</label>
+                <label class="option-item"><input type="radio" name="reason"> อื่น ๆ <input type="text"
+                        class="input-line"></label>
+            </div>
+        </div>
+
+        <button class="btn-submit">จองคิว</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
