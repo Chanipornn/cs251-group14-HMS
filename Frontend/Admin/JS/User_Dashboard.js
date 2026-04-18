@@ -1,4 +1,7 @@
-const users = [
+// =========================
+// INIT DATA 
+// =========================
+const defaultUsers = [
   {
     name: "นาย กฤต",
     username: "Krit_TheTank",
@@ -15,16 +18,22 @@ const users = [
   }
 ];
 
-localStorage.setItem("users", JSON.stringify(users));
+if (!localStorage.getItem("users")) {
+  localStorage.setItem("users", JSON.stringify(defaultUsers));
+}
 
+// =========================
+// RENDER TABLE
+// =========================
 function renderTable() {
   const table = document.getElementById("userTable");
   table.innerHTML = "";
 
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
   users.forEach((user, index) => {
     table.innerHTML += `
       <tr>
-
         <td><input type="checkbox"></td>
 
         <td class="user-cell">
@@ -43,34 +52,77 @@ function renderTable() {
 
         <td>${user.role}</td>
 
-       <td class="actions">
+        <td class="actions">
+          <img src="../../img/Edit2.png" 
+               class="action-icon" 
+               onclick="editUser('${user.username}')">
 
-  <img src="../../img/Edit2.png" 
-       class="action-icon" 
-       onclick="editUser('${user.username}')">
-
-  <img src="../../img/delete.png" 
-       class="action-icon" 
-       onclick="deleteUser('${user.username}')">
-
-</td>
-
+          <img src="../../img/delete.png" 
+               class="action-icon" 
+               onclick="openDeleteModal(${index})">
+        </td>
       </tr>
     `;
   });
 }
 
 // =========================
-// ACTIONS
+// EDIT USER
 // =========================
 function editUser(username) {
-  alert("แก้ไข: " + username);
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(u => u.username === username);
+
+  if (!user) {
+    alert("ไม่พบผู้ใช้");
+    return;
+  }
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+  window.location.href = "Edit_Information.html";
 }
 
-function deleteUser(username) {
-  if (confirm("ต้องการลบ " + username + " ?")) {
-    alert("ลบแล้ว: " + username);
+// =========================
+// DELETE MODAL
+// =========================
+let deleteIndex = null;
+
+/* เปิด popup */
+function openDeleteModal(index) {
+  deleteIndex = index;
+
+  const modal = document.getElementById("deleteModal");
+  if (modal) {
+    modal.classList.add("show");
   }
+}
+
+/* ปิด popup */
+function closeDeleteModal() {
+  deleteIndex = null;
+
+  const modal = document.getElementById("deleteModal");
+  if (modal) {
+    modal.classList.remove("show");
+  }
+}
+
+/* กดยืนยันลบ */
+function confirmDelete() {
+  if (deleteIndex === null) return;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  users.splice(deleteIndex, 1);
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  renderTable(); // 🔥 สำคัญ
+
+  closeDeleteModal();
+
+  // 🔥 เตรียมต่อ backend
+  // fetch(`/api/users/${id}`, { method: "DELETE" })
 }
 
 // =========================
@@ -99,41 +151,24 @@ function toggleDropdown(menuId, btn) {
   arrow.classList.toggle("rotate");
 }
 
-// ROLE
+// =========================
+// FILTER
+// =========================
 function filterRole(role) {
   document.getElementById("selectedRole").innerText =
     role.charAt(0).toUpperCase() + role.slice(1);
 
   document.getElementById("roleMenu").classList.remove("show");
-
-  console.log("Role:", role);
 }
 
-// STATUS
 function filterStatus(status) {
   document.getElementById("selectedStatus").innerText =
     status.charAt(0).toUpperCase() + status.slice(1);
 
   document.getElementById("statusMenu").classList.remove("show");
-
-  console.log("Status:", status);
 }
 
 // =========================
 // INIT
 // =========================
 renderTable();
-
-function editUser(username) {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find(u => u.username === username);
-
-  if (!user) {
-    alert("ไม่พบผู้ใช้");
-    return;
-  }
-
-  localStorage.setItem("currentUser", JSON.stringify(user));
-
-  window.location.href = "Edit_Information.html";;
-}
