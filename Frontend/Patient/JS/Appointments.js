@@ -1,24 +1,106 @@
-function switchTab(element, type) {
-    // 1. สลับไฮไลท์ที่ปุ่ม Tab
-    const tabs = document.querySelectorAll('.tab-item');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    element.classList.add('active');
+const appointments = [
+    {
+        type: "today",
+        date: "วันนี้",
+        dept: "ตา หู จมูก",
+        doctor: "นพ.สมชาย ศรีสุข",
+        reason: "ตรวจทั่วไป",
+        prepare: "เสียบบัตรประชาชนที่ตู้ออกรหัสรับคิว"
+    },
+    {
+        type: "today",
+        date: "วันนี้",
+        dept: "อายุรกรรม",
+        doctor: "นพ.พงศกร แก้วดี",
+        reason: "ตรวจสุขภาพ",
+        prepare: "งดอาหาร 8 ชั่วโมง"
+    },
+    {
+        type: "upcoming",
+        date: "25 เมษายน 2026",
+        dept: "หู คอ จมูก",
+        doctor: "นพ.นนทพัทธ์ ใจดี",
+        reason: "ติดตามอาการ",
+        prepare: "มาถึงก่อน 15 นาที"
+    },
+    {
+        type: "upcoming",
+        date: "30 เมษายน 2026",
+        dept: "กุมารเวชกรรม",
+        doctor: "พญ.มินตรา จันทร์ทรา",
+        reason: "ตรวจเด็ก",
+        prepare: "นำสมุดวัคซีนมาด้วย"
+    }
+];
 
-    // 2. ค้นหา Card ทั้งหมด
-    const allCards = document.querySelectorAll('.appointment-card');
+const container = document.getElementById("appointmentsList");
 
-    allCards.forEach(card => {
-        // ตรวจสอบว่า Card มีคลาสตรงกับประเภทที่เลือกหรือไม่
-        if (card.classList.contains(type)) {
-            card.style.display = "block"; // แสดง
-        } else {
-            card.style.display = "none";  // ซ่อน
-        }
-    });
+// 🔥 render
+function renderAppointments(type = "today") {
+    const filtered = appointments.filter(a => a.type === type);
+
+    container.innerHTML = filtered.map(a => `
+        <div class="appointment-card">
+            <div class="card-header">
+                <i class="fa-regular fa-calendar-check"></i> ${a.date}
+            </div>
+
+            <div class="card-details">
+                <div class="detail-row">
+                    <span class="badge-label">แผนก</span>
+                    <span class="detail-text">${a.dept}</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="badge-label">แพทย์</span>
+                    <span class="detail-text">${a.doctor}</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="badge-label">นัดมาเพื่อ</span>
+                    <span class="detail-text">${a.reason}</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="badge-label">การเตรียมตัว</span>
+                    <span class="detail-text">${a.prepare}</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-reschedule">เลื่อนนัด</button>
+                <button class="btn-cancel" onclick="cancelAppointment('${a.doctor}')">
+                    ยกเลิกนัด
+                </button>
+            </div>
+        </div>
+    `).join('');
 }
 
-// ตั้งค่าเริ่มต้น: เมื่อโหลดหน้ามา ให้แสดงแค่ 'today'
+// 🔥 tab switch
+function switchTab(element, type) {
+    document.querySelectorAll('.tab-item')
+        .forEach(tab => tab.classList.remove('active'));
+
+    element.classList.add('active');
+
+    renderAppointments(type);
+}
+
+// 🔥 cancel (ลบจริง)
+function cancelAppointment(doctorName) {
+    if (confirm("ต้องการยกเลิกนัดใช่หรือไม่?")) {
+        const index = appointments.findIndex(a => a.doctor === doctorName);
+        if (index !== -1) {
+            appointments.splice(index, 1);
+        }
+
+        const activeTab = document.querySelector('.tab-item.active');
+        renderAppointments(activeTab.textContent.includes("วันนี้") ? "today" : "upcoming");
+    }
+}
+
+// โหลดครั้งแรก
 document.addEventListener("DOMContentLoaded", () => {
-    const todayTab = document.querySelector('.tab-item.active');
-    if (todayTab) switchTab(todayTab, 'today');
+    renderAppointments("today");
 });

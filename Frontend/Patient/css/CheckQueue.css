@@ -1,0 +1,143 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #E0E0E0;
+    margin: 0;
+}
+
+/* เต็มจอ */
+.mobile-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #F8F9FD;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.app-header {
+    background: #746BC3;
+    padding: 20px 30px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+}
+
+.back-link {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255,255,255,0.6);;
+    background: transparent;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🔥 เรียงบนลงล่าง + scroll */
+.queue-content {
+    flex: 1;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    overflow-y: auto;
+}
+
+/* SCROLLBAR */
+.queue-content::-webkit-scrollbar {
+    width: 6px;
+}
+.queue-content::-webkit-scrollbar-thumb {
+    background: #c5c5e0;
+    border-radius: 10px;
+}
+.queue-content::-webkit-scrollbar-thumb:hover {
+    background: #6E65BE;
+}
+
+/* CARD */
+.queue-card {
+    background: white;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* STATUS */
+.status-success {
+    color: #4CAF50;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* QUEUE NO */
+.queue-number {
+    background: #D1C4E9;
+    color: #512DA8;
+    padding: 6px 15px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* INFO */
+.info-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.label {
+    background: #EBE9F8;
+    padding: 5px 10px;
+    border-radius: 10px;
+    min-width: 80px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.value {
+    color: #444;
+}
+
+/* DATE */
+.date-time-box {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* BUTTONS */
+.card-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-edit {
+    background: #eee;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel-red {
+    background: #D93025;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

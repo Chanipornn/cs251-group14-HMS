@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,84 +9,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
 
-<div class="mobile-container">
-    <header class="app-header">
-        <button class="back-link" onclick="window.history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <h1>รายการนัด</h1>
-    </header>
+    <div class="mobile-container">
+        <header class="app-header">
+            <button class="back-link" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h1>รายการนัด</h1>
+        </header>
 
-    <div class="tab-section">
-        <div class="tab-wrapper">
-            <button class="tab-item active" onclick="switchTab(this, 'today')">รายการนัดวันนี้</button>
-            <button class="tab-item" onclick="switchTab(this, 'upcoming')">รายการนัดล่วงหน้า</button>
+        <div class="tab-section">
+            <div class="tab-wrapper">
+                <button class="tab-item active" onclick="switchTab(this, 'today')">รายการนัดวันนี้</button>
+                <button class="tab-item" onclick="switchTab(this, 'upcoming')">รายการนัดล่วงหน้า</button>
+            </div>
         </div>
+
+        <div class="appointments-content" id="appointmentsList"></div>
+
+
     </div>
 
-    <div class="appointments-content" id="appointmentsList">
-        
-        <div class="appointment-card today">
-            <div class="card-header">
-                <i class="fa-regular fa-calendar-check"></i> วันที่นัด (วันนี้)
-            </div>
-            <div class="card-details">
-                <div class="detail-row">
-                    <span class="badge-label">แผนก</span>
-                    <span class="detail-text">ตา หู จมูก</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">แพทย์</span>
-                    <span class="detail-text">นพ.สมชาย ศรีสุข</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">นัดมาเพื่อ</span>
-                    <span class="detail-text">ตรวจทั่วไป</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">การเตรียมตัว</span>
-                    <span class="detail-text">เสียบบัตรประชาชนที่ตู้ออกรหัสรับคิว</span>
-                </div>
-            </div>
-            <div class="card-actions">
-                <button class="btn-reschedule">เลื่อนนัด</button>
-                <button class="btn-cancel">ยกเลิกนัด</button>
-            </div>
-        </div>
-
-        <div class="appointment-card upcoming">
-            <div class="card-header">
-                <i class="fa-regular fa-calendar-check"></i> 25 เมษายน 2026
-            </div>
-            <div class="card-details">
-                <div class="detail-row">
-                    <span class="badge-label">แผนก</span>
-                    <span class="detail-text">หู คอ จมูก</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">แพทย์</span>
-                    <span class="detail-text">นพ.นนทพัทธ์ ใจดี</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">นัดมาเพื่อ</span>
-                    <span class="detail-text">ติดตามอาการ</span>
-                </div>
-                <div class="detail-row">
-                    <span class="badge-label">การเตรียมตัว</span>
-                    <span class="detail-text">มาถึงก่อนเวลานัด 15 นาที</span>
-                </div>
-            </div>
-            <div class="card-actions">
-                <button class="btn-reschedule">เลื่อนนัด</button>
-                <button class="btn-cancel">ยกเลิกนัด</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script src="../js/Appointments.js"></script>
+    <script src="../js/Appointments.js"></script>
 </body>
+
 </html>
