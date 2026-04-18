@@ -1,0 +1,317 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #e8e8e8;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+
+}
+.mobile-container {
+    width: 100%;
+    max-width: 420px;
+    background: #f5f5f9;
+    min-height: 100vh;
+    padding: 16px;
+}
+
+/* ===== HEADER ===== */
+.booking-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+}
+
+.booking-header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2d2d52;
+    margin: 0;
+}
+
+/* ===== SEARCH BAR ===== */
+.search-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.search-bar {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 25px;
+    border: 1px solid #e0e0e0;
+    padding: 0 12px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 12px 12px;
+    border: none;
+    background: transparent;
+    font-family: 'Prompt', sans-serif;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.search-bar input::placeholder {
+    color: #bbb;
+}
+
+.search-bar input:focus {
+    outline: none;
+}
+
+
+.filter-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.filter-btn:hover {
+    transform: scale(1.05);
+    transform: scale(1.1);
+    background-color: #746BC3; 
+    color: white;              
+    border-color: #746BC3;
+    box-shadow: 0 4px 12px rgba(116, 107, 195, 0.3);
+}
+
+.filter-btn:active {
+    transform: scale(0.95);   
+}
+
+/* ===== DOCTOR GRID (2 COLUMNS) ===== */
+/* ===== DOCTOR GRID SCROLLBAR REFINEMENT ===== */
+.doctor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 4px 8px 30px 4px; /* Added padding to prevent shadow clipping */
+    flex: 1;
+    overflow-y: auto;          /* Enables scrolling */
+    max-height: calc(100vh - 180px);
+    scroll-behavior: smooth;
+    scrollbar-width: thin;      /* Firefox support */
+    scrollbar-color: #746BC3 #f0f0f5; /* Firefox support */
+}
+
+/* Chrome, Edge, and Safari */
+.doctor-grid::-webkit-scrollbar {
+    width: 6px; /* Slightly thinner for a cleaner mobile look */
+}
+
+.doctor-grid::-webkit-scrollbar-track {
+    background: transparent; /* Cleaner look */
+    margin: 10px 0;
+}
+
+.doctor-grid::-webkit-scrollbar-thumb {
+    background: #746BC3; 
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.doctor-grid::-webkit-scrollbar-thumb:hover {
+    background: #5B54A0;
+}
+/* ===== DOCTOR CARD ===== */
+.doctor-card {
+    background: white;
+    border-radius: 20px;
+    padding: 18px 12px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
+    border: 1px solid #746BC3;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.doctor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== HEART ICON ===== */
+.heart-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+     color: #bbb; /* เทา */
+}
+
+.heart-icon {
+    color: #bbb; /* เทา */
+}
+
+.heart-icon.active {
+    color: red; /* แดง */
+}
+
+.heart-icon:hover {
+    transform: scale(1.1);
+}
+
+/* ===== DOCTOR IMAGE ===== */
+.doc-img-container {
+    width: 80px;
+    height: 80px;
+    margin: 10px auto 12px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+    border: 2px solid #f0f0f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 🔥 สำคัญ */
+}
+
+/* ===== DOCTOR INFO ===== */
+.doc-info h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 12px 0 6px;
+    color: #1a1a3d;
+    line-height: 1.3;
+}
+
+.doc-info p {
+    font-size: 0.75rem;
+    color: #999;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .mobile-container {
+    width: 100%;
+    max-width: 420px;
+    height: 100vh; /* ล็อคความสูงเท่าหน้าจอพอดี */
+    background: #f5f5f9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* จัดวางแนวตั้ง */
+    overflow: hidden;       /* ห้ามเลื่อนทั้งหน้าจอ */
+}
+
+    .booking-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .doctor-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    overflow-y: auto;
+    padding-right: 8px;
+
+    min-height: 0; /* 🔥 สำคัญมาก (กัน scroll พังใน flex) */
+}
+
+    .doctor-card {
+        padding: 16px 10px;
+    }
+
+    .doc-img-container {
+        width: 75px;
+        height: 75px;
+    }
+
+    .doc-info h3 {
+        font-size: 0.9rem;
+    }
+
+    .doc-info p {
+        font-size: 0.7rem;
+    }
+}
+
+/* ================= DOCTOR GRID SCROLLBAR ================= */
+
+.doctor-grid {
+    flex: 1;                /* ยืดพื้นที่ให้เต็มส่วนที่เหลือของจอ */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 10px 5px 30px 5px; /* เผื่อพื้นที่ให้เงาการ์ดไม่โดนตัด */
+    overflow-y: auto;       /* เปิดให้เลื่อนเฉพาะจุดนี้ */
+    
+    /* ซ่อน Scrollbar มาตรฐานของบาง Browser เพื่อความสวยงาม */
+    scrollbar-width: thin; 
+    scrollbar-color: #DEDEDE #FFFFFF;
+}
+
+/* 3. ตกแต่งแท่ง Scrollbar (WebKit: Chrome, Safari, Edge) */
+.doctor-grid::-webkit-scrollbar {
+    width: 6px; /* ความกว้างแท่ง */
+}
+
+.doctor-grid::-webkit-scrollbar-track {
+    background: #f0f0f5; /* สีพื้นหลังราง */
+    border-radius: 10px;
+}
+
+.doctor-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #746BC3 0%, #5B54A0 100%); /* สีม่วงไล่เฉด */
+    border-radius: 10px;
+}
+
+.doctor-grid::-webkit-scrollbar-thumb:hover {
+    background: #4a4485;
+}
