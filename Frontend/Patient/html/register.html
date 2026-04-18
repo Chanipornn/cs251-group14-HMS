@@ -70,16 +70,47 @@
   <!-- วันเกิด -->
   <div class="form-group">
     <label>วันเกิด <span class="required">*</span></label>
+  
     <div class="select-row">
-      <select class="square" id="day" required>
-        <option value="">DD</option>
-      </select>
-      <select class="square" id="month" required>
-        <option value="">MM</option>
-      </select>
-      <select class="square" id="year" required>
-        <option value="">YYYY</option>
-      </select>
+  
+      <!-- DAY -->
+      <div class="custom-dropdown">
+        <div class="dropdown-selected" onclick="toggleDropdown(this)">
+          <span>DD</span>
+          <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+        </div>
+  
+        <div class="dropdown-options" id="dayOptions"></div>
+      </div>
+  
+      <select id="day" style="display:none"></select>
+  
+  
+      <!-- MONTH -->
+      <div class="custom-dropdown">
+        <div class="dropdown-selected" onclick="toggleDropdown(this)">
+          <span>MM</span>
+          <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+        </div>
+  
+        <div class="dropdown-options" id="monthOptions"></div>
+      </div>
+  
+      <select id="month" style="display:none"></select>
+  
+  
+      <!-- YEAR -->
+      <div class="custom-dropdown">
+        <div class="dropdown-selected" onclick="toggleDropdown(this)">
+          <span>YYYY</span>
+          <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+        </div>
+  
+        <div class="dropdown-options" id="yearOptions"></div>
+      </div>
+  
+      <select id="year" style="display:none"></select>
+  
     </div>
   </div>
 
@@ -105,13 +136,30 @@
 
   <div class="form-group">
     <label>กรุ๊ปเลือด <span class="required">*</span></label>
-    <select id="blood" class="square" required>
+  
+    <div class="custom-dropdown">
+      <div class="dropdown-selected" onclick="toggleDropdown(this)">
+        <span>ตัวเลือก</span>
+        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+      </div>
+  
+      <div class="dropdown-options">
+        <div onclick="selectOption(this, 'blood')">A</div>
+        <div onclick="selectOption(this, 'blood')">B</div>
+        <div onclick="selectOption(this, 'blood')">AB</div>
+        <div onclick="selectOption(this, 'blood')">O</div>
+      </div>
+    </div>
+  
+    <!-- ซ่อน select -->
+    <select id="blood" style="display:none">
       <option value="">ตัวเลือก</option>
       <option>A</option>
       <option>B</option>
       <option>AB</option>
       <option>O</option>
     </select>
+  
   </div>
 
   <div class="form-group">
@@ -144,15 +192,31 @@
   <h3 class="section">สิทธิการรักษา <span class="required">*</span></h3>
 
   <div class="form-group">
-    <div class="select-wrapper">
-      <select id="right" class="square" required>
-        <option value="">ตัวเลือก</option>
-        <option>ชำระเงินเอง</option>
-        <option>สิทธิบัตรทอง</option>
-        <option>สิทธิประกันสังคม</option>
-        <option>สิทธิสวัสดิการข้าราชการ</option>
-      </select>
+    <label>สิทธิการรักษา <span class="required">*</span></label>
+  
+    <div class="custom-dropdown">
+      <div class="dropdown-selected" onclick="toggleDropdown(this)">
+        <span>ตัวเลือก</span>
+        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
+      </div>
+  
+      <div class="dropdown-options">
+        <div onclick="selectOption(this, 'right')">ชำระเงินเอง</div>
+        <div onclick="selectOption(this, 'right')">สิทธิบัตรทอง</div>
+        <div onclick="selectOption(this, 'right')">สิทธิประกันสังคม</div>
+        <div onclick="selectOption(this, 'right')">สิทธิสวัสดิการข้าราชการ</div>
+      </div>
     </div>
+  
+    <!-- ซ่อน select -->
+    <select id="right" style="display:none">
+      <option value="">ตัวเลือก</option>
+      <option>ชำระเงินเอง</option>
+      <option>สิทธิบัตรทอง</option>
+      <option>สิทธิประกันสังคม</option>
+      <option>สิทธิสวัสดิการข้าราชการ</option>
+    </select>
+  
   </div>
 
   <!-- BUTTON -->

@@ -10,7 +10,6 @@ function showError(input, message) {
     error = document.createElement("div");
     error.className = "error-msg";
     error.innerText = message;
-
     input.after(error);
   } else {
     error.innerText = message;
@@ -127,7 +126,7 @@ function validateForm() {
     valid = false;
   }
 
-  // DATE
+  // DATE (ใช้กับ custom dropdown)
   if (!day.value || !month.value || !year.value) {
     alert("กรุณาเลือกวันเกิด");
     valid = false;
@@ -191,25 +190,19 @@ function submitForm() {
     lastname: document.getElementById("lastname").value.trim(),
   };
 
-  // ดึง user ทั้งหมด
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // เช็ค email ซ้ำ
   const exists = users.find(u => u.email === user.email);
   if (exists) {
     alert("อีเมลนี้ถูกใช้งานแล้ว");
     return;
   }
 
-  // เพิ่ม user ใหม่
   users.push(user);
-
-  // บันทึก
   localStorage.setItem("users", JSON.stringify(users));
 
-  alert("สมัครสำเร็จ");
+  alert("สมัครสำเร็จ 🎉");
 
-  // ไปหน้า login
   window.location.href = "../../login.html";
 }
 
@@ -229,32 +222,70 @@ function togglePassword(id, icon) {
 }
 
 // =========================
-// GENERATE DATE
+// CUSTOM DROPDOWN
+// =========================
+function toggleDropdown(el) {
+  const options = el.nextElementSibling;
+  const arrow = el.querySelector(".arrow");
+
+  options.classList.toggle("show");
+  arrow.classList.toggle("rotate");
+}
+
+function selectOption(option, selectId) {
+  const dropdown = option.closest(".custom-dropdown");
+
+  dropdown.querySelector(".dropdown-selected span").innerText =
+    option.innerText;
+
+  document.getElementById(selectId).value = option.innerText;
+
+  dropdown.querySelector(".dropdown-options").classList.remove("show");
+  dropdown.querySelector(".arrow").classList.remove("rotate");
+}
+
+// =========================
+// GENERATE DATE (ใช้กับ custom dropdown)
 // =========================
 window.onload = function () {
-  const day = document.getElementById("day");
-  const month = document.getElementById("month");
-  const year = document.getElementById("year");
+  const dayOptions = document.getElementById("dayOptions");
+  const monthOptions = document.getElementById("monthOptions");
+  const yearOptions = document.getElementById("yearOptions");
 
+  const daySelect = document.getElementById("day");
+  const monthSelect = document.getElementById("month");
+  const yearSelect = document.getElementById("year");
+
+  // DAY
   for (let i = 1; i <= 31; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.text = i;
-    day.appendChild(opt);
+    addOption(dayOptions, daySelect, i);
   }
 
+  // MONTH
   for (let i = 1; i <= 12; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.text = i;
-    month.appendChild(opt);
+    addOption(monthOptions, monthSelect, i);
   }
 
+  // YEAR
   const currentYear = new Date().getFullYear();
   for (let i = currentYear; i >= currentYear - 100; i--) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.text = i;
-    year.appendChild(opt);
+    addOption(yearOptions, yearSelect, i);
   }
 };
+
+function addOption(container, select, value) {
+  const div = document.createElement("div");
+  div.innerText = value;
+
+  div.onclick = function () {
+    container.previousElementSibling.querySelector("span").innerText = value;
+    select.value = value;
+
+    container.classList.remove("show");
+    container.previousElementSibling
+      .querySelector(".arrow")
+      .classList.remove("rotate");
+  };
+
+  container.appendChild(div);
+}
