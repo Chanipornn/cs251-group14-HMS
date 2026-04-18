@@ -83,12 +83,34 @@ function login() {
   if (!valid) return;
 
   // =========================
-  // LOGIN ROLE
+  // ดึง user จาก register
   // =========================
-  if (email.value.includes("doctor")) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const user = users.find(
+    u => u.email === email.value && u.password === password.value
+  );
+
+  // =========================
+  // ไม่เจอ user
+  // =========================
+  if (!user) {
+    alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+    return;
+  }
+
+  // =========================
+  // ✅ login สำเร็จ
+  // =========================
+  localStorage.setItem("username", user.firstname);
+
+  // =========================
+  // ROLE
+  // =========================
+  if (user.email.includes("doctor")) {
     window.location.href = "./DoctorandStaff/html/dashboard.html";
   } 
-  else if (email.value.includes("admin")) {
+  else if (user.email.includes("admin")) {
     window.location.href = "./Admin/html/dashboard.html";
   } 
   else {

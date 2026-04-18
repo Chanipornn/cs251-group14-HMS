@@ -119,3 +119,10 @@ input, select {
   font-size: 12px;
   margin-top: 4px;
 }
+
+/* Desktop */
+@media (min-width: 768px) {
+  .container {
+    max-width: 700px;
+  }
+}
