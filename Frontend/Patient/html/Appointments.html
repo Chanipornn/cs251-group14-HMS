@@ -28,8 +28,21 @@
         </div>
 
         <div class="appointments-content" id="appointmentsList"></div>
+        
 
+    </div>
 
+    <!-- Cancel Modal -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-triangle modal-icon"></i>
+            <h2>ยืนยันการยกเลิก</h2>
+            <p>คุณแน่ใจหรือไม่ที่จะยกเลิกการนัดหมายนี้?</p>
+            <div class="modal-buttons">
+                <button class="btn-no" onclick="closeCancelModal()">ยกเลิก</button>
+                <button class="btn-yes" id="confirmCancelBtn">ยืนยัน</button>
+            </div>
+        </div>
     </div>
 
     <script src="../js/Appointments.js"></script>

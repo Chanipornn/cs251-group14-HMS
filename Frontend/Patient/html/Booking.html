@@ -77,7 +77,16 @@
         <button class="btn-submit">จองคิว</button>
     </div>
 
-    <script src="script.js"></script>
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2>จองคิวสำเร็จ!</h2>
+            <p>ระบบได้ทำการบันทึกข้อมูลการจองคิวของคุณเรียบร้อยแล้ว</p>
+            <button class="btn-close-modal" onclick="closeModal()">ตกลง</button>
+        </div>
+    </div>
 </body>
 
 </html>

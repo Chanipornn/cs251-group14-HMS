@@ -31,3 +31,31 @@ timeBtns.forEach(btn => {
         btn.classList.add('active');
     });
 });
+
+
+// อ้างอิง Element
+const btnSubmit = document.querySelector('.btn-submit');
+const successModal = document.getElementById('successModal');
+
+// เมื่อกดปุ่มจองคิว
+btnSubmit.addEventListener('click', () => {
+    // ตรงนี้สามารถเพิ่มเงื่อนไขการตรวจสอบข้อมูลก่อนได้
+    showModal();
+});
+
+function showModal() {
+    successModal.style.display = "flex";
+}
+
+function closeModal() {
+    successModal.style.display = "none";
+    // เมื่อกดตกลง อาจจะสั่งให้รีเฟรชหน้าหรือไปที่หน้าอื่น
+    // window.location.href = "pending_page.html"; 
+}
+
+// ปิด Modal เมื่อคลิกพื้นหลังภายนอก
+window.onclick = function(event) {
+    if (event.target == successModal) {
+        closeModal();
+    }
+}

@@ -12,16 +12,6 @@ body {
   background: #faf8fe;
 }
 
-/* HEADER */
-.header {
-  height: 80px;
-  background: #6E65BE;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-}
 
 .left-section {
     display: flex;
@@ -66,24 +56,54 @@ body {
 }
 
 
-/* LAYOUT */
-.container {
+/* HEADER - ปรับให้ Fixed อยู่กับที่บนสุด */
+.header {
+  height: 80px;
+  background: #6E65BE;
+  color: white;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  
+  /* เพิ่มส่วนนี้ */
+  position: fixed;   /* ล็อคให้อยู่บนสุด */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;    /* ให้อยู่เหนือเลเยอร์อื่นๆ */
 }
 
-/* SIDEBAR */
+/* CONTAINER - ปรับให้เลื่อนลงมาเท่ากับความสูง Header */
+.container {
+  display: flex;
+  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  align-items: flex-start;
+}
+
+/* SIDEBAR - ปรับให้ล็อคอยู่กับที่และเลื่อนเฉพาะในตัวเอง */
 .sidebar {
   width: 250px;
   background: white;
   padding: 20px;
-  height: calc(100vh - 80px);
+  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
+  height: calc(100vh - 80px); 
   display: flex;
   flex-direction: column;
   transition: 0.3s;
+
+  /* ล็อค Sidebar ให้อยู่กับที่ */
+  position: sticky;
+  top: 80px; 
+  flex-shrink: 0;
+  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
 }
 
-.sidebar.hide {
-  margin-left: -250px;
+/* MAIN - พื้นที่เนื้อหาหลัก */
+.main {
+  flex: 1;
+  padding: 20px;
+  min-height: calc(100vh - 80px);
 }
 
 .menu {

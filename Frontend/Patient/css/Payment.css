@@ -138,23 +138,77 @@ body {
 .paid .dot { background: var(--paid-color); }
 
 /* ปุ่มอยู่ขวามือเสมอ */
+/* ✅ ปุ่มพื้นฐาน (ปรับเป็นรูปทรงแคปซูลตามภาพ) */
 .btn {
-    padding: 12px 35px;
-    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: none;
-    font-weight: 600;
-    font-size: 1rem;
     cursor: pointer;
-    box-shadow: 0 6px 15px rgba(58, 58, 58, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+    outline: none;
+    font-family: 'Prompt', sans-serif; /* บังคับใช้ Font Prompt */
+    font-weight: 500;
+    
+    /* 1. รูปทรงแคปซูล (Pill Shape) ตามภาพ */
+    padding: 12px 35px; /* ปรับ Padding ให้ดูสมดุล */
+    border-radius: 50px; /* 👈 สำคัญ: ใช้ 50px เพื่อให้ขอบเป็นโค้งสมบูรณ์ */
+    
+    /* 2. ตัวอักษร */
+    font-size: 1rem;
 }
+
 
 .btn-pay {
-    background: linear-gradient(135deg, #8e84e7, #746bc3);
+    /* 1. สีตัวอักษร */
     color: white;
-
+    
+    /* 2. พื้นหลัง: Gradient ม่วงนุ่มนวลตามภาพ (ละเอียดอ่อน) */
+    background: linear-gradient(135deg,#9681e0, #b2a4f0);
+    
+    /* 3. Shadow: นุ่มนวลขึ้น (Soft Shadow) */
+    box-shadow: 0 4px 12px rgba(116, 107, 195, 0.35); 
 }
 
+/* ✅ Effects เมื่อ Hover (เอาเมาส์ชี้) เพื่อให้ปุ่มดูมีชีวิต */
+.btn-pay:hover {
+    transform: translateY(-2px); /* ลอยขึ้นเล็กน้อย */
+    box-shadow: 0 6px 16px rgba(116, 107, 195, 0.45); /* เงาชัดขึ้น */
+    background: linear-gradient(135deg, #9681e0, #b2a4f0); /* Gradient สว่างขึ้นเล็กน้อย */
+}
+
+/* ✅ Effect เมื่อคลิก (Active) */
+.btn-pay:active {
+    transform: translateY(1px); /* ยุบลงเล็กน้อย */
+    box-shadow: 0 2px 8px rgba(116, 107, 195, 0.3); /* เงาลดลง */
+}
+
+
+
+
+
 .btn-detail {
-    background: #ecf0f1;
-    color: var(--text-muted);
+    /* 1. สีตัวอักษร */
+    color: white;
+    
+    /* 2. พื้นหลัง: Gradient ม่วงนุ่มนวลตามภาพ (ละเอียดอ่อน) */
+    background: linear-gradient(135deg, #7c7c7c,#dee3e4);
+    
+    /* 3. Shadow: นุ่มนวลขึ้น (Soft Shadow) */
+    box-shadow: 0 4px 12px rgba(116, 107, 195, 0.35); 
+}
+
+/* ✅ Effects เมื่อ Hover (เอาเมาส์ชี้) เพื่อให้ปุ่มดูมีชีวิต */
+.btn-detail:hover {
+    transform: translateY(-2px); /* ลอยขึ้นเล็กน้อย */
+    box-shadow: 0 6px 16px rgba(116, 107, 195, 0.45); /* เงาชัดขึ้น */
+    background: linear-gradient(135deg, #7c7c7c,#dee3e4); /* Gradient สว่างขึ้นเล็กน้อย */
+}
+
+/* ✅ Effect เมื่อคลิก (Active) */
+.btn-detail:active {
+    transform: translateY(1px); /* ยุบลงเล็กน้อย */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* เงาลดลง */
 }

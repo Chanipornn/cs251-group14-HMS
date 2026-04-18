@@ -104,3 +104,46 @@ function cancelAppointment(doctorName) {
 document.addEventListener("DOMContentLoaded", () => {
     renderAppointments("today");
 });
+
+let doctorToDelete = null; // เก็บชื่อแพทย์ที่จะลบชั่วคราว
+
+// 1. ฟังก์ชันเปิด Modal
+function cancelAppointment(doctorName) {
+    doctorToDelete = doctorName; // ฝากชื่อไว้
+    document.getElementById("cancelModal").style.display = "flex";
+}
+
+// 2. ฟังก์ชันปิด Modal
+function closeCancelModal() {
+    document.getElementById("cancelModal").style.display = "none";
+    doctorToDelete = null;
+}
+
+// 3. ฟังก์ชันกดยืนยันลบจริง
+document.getElementById("confirmCancelBtn").addEventListener("click", () => {
+    if (doctorToDelete) {
+        const index = appointments.findIndex(a => a.doctor === doctorToDelete);
+        if (index !== -1) {
+            appointments.splice(index, 1);
+        }
+        
+        // ปิดหน้าต่าง
+        closeCancelModal();
+        
+        // Refresh รายการ
+        const activeTab = document.querySelector('.tab-item.active');
+        const type = activeTab.innerText.includes("วันนี้") ? "today" : "upcoming";
+        renderAppointments(type);
+        
+        // (Optional) แสดง alert สั้นๆ ว่าลบแล้ว
+        // alert("ยกเลิกการนัดหมายเรียบร้อยแล้ว");
+    }
+});
+
+// คลิกข้างนอก Modal ให้ปิดได้ (UX ที่ดี)
+window.onclick = function(event) {
+    const modal = document.getElementById("cancelModal");
+    if (event.target == modal) {
+        closeCancelModal();
+    }
+}

@@ -60,10 +60,36 @@ function renderQueues() {
     `).join('');
 }
 
+let queueIndexToDelete = null; // ตัวแปรเก็บ index ที่จะลบ
+
+const modal = document.getElementById("cancelModal");
+const confirmBtn = document.getElementById("confirmCancelBtn");
+
+// 1. ฟังก์ชันเรียกเปิด Modal
 function cancelQueue(index) {
-    if (confirm("ต้องการยกเลิกคิวใช่หรือไม่?")) {
-        queues.splice(index, 1); // ลบข้อมูล
-        renderQueues(); // render ใหม่
+    queueIndexToDelete = index;
+    modal.classList.add("active");
+}
+
+// 2. ฟังก์ชันปิด Modal
+function closeCancelModal() {
+    modal.classList.remove("active");
+    queueIndexToDelete = null;
+}
+
+// 3. กดยืนยันการลบใน Modal
+confirmBtn.addEventListener("click", () => {
+    if (queueIndexToDelete !== null) {
+        queues.splice(queueIndexToDelete, 1); // ลบข้อมูลจริง
+        renderQueues(); // วาดใหม่
+        closeCancelModal(); // ปิดหน้าต่าง
+    }
+});
+
+// คลิกพื้นหลังสีดำเพื่อปิด
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeCancelModal();
     }
 }
 
