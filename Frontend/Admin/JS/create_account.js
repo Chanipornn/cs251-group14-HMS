@@ -3,12 +3,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const roleInput = document.getElementById("role");
   const roleButtons = document.querySelectorAll(".role-btn");
 
-  const patientForm = document.getElementById("patientForm");
-  const accountForm = document.getElementById("accountForm");
-  const subtitle = document.getElementById("formSubtitle");
+  // =========================
+  // LOAD ROLE (จาก dashboard)
+  // =========================
+  let savedRole = localStorage.getItem("createRole") || "Admin";
+
+  // set default
+  roleInput.value = savedRole;
+
+  roleButtons.forEach(btn => {
+    btn.classList.remove("active");
+
+    if (btn.dataset.role === savedRole) {
+      btn.classList.add("active");
+    }
+  });
 
   // =========================
-  // SWITCH ROLE
+  // CLICK ROLE
   // =========================
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -16,57 +28,100 @@ document.addEventListener("DOMContentLoaded", function () {
       roleButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const role = btn.dataset.role;
-      roleInput.value = role;
-
-      if (role === "patient") {
-        patientForm.style.display = "block";
-        accountForm.style.display = "none";
-        subtitle.innerText = "สำหรับ Patient";
-      } else {
-        patientForm.style.display = "none";
-        accountForm.style.display = "block";
-        subtitle.innerText = "สำหรับ Admin / Doctor / Staff";
-      }
+      roleInput.value = btn.dataset.role;
     });
   });
 
   // =========================
-  // SUBMIT
+  // SUBMIT FORM
   // =========================
-  document.getElementById("createForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+  const form = document.getElementById("createForm");
 
-    const role = roleInput.value;
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-    const user = {
-      name: document.getElementById("name")?.value || "",
-      email: document.getElementById("email")?.value || "",
-      role: role,
-      status: "active"
-    };
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+      // validate
+      if (!name || !email || !password || !confirmPassword) {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        return;
+      }
 
-    users.push(user);
-    localStorage.setItem("users", JSON.stringify(users));
+      if (password !== confirmPassword) {
+        alert("รหัสผ่านไม่ตรงกัน");
+        return;
+      }
 
-    alert("สร้างสำเร็จ 🎉");
+      let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    window.location.href = "User_Dashboard.html";
-  });
+      const newUser = {
+        name,
+        username: name,   //  (dashboard ใช้)
+        email,
+        role: roleInput.value,
+        status: "active"
+      };
+
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("สร้างผู้ใช้สำเร็จ");
+
+      window.location.href = "User_Dashboard.html";
+    });
+  }
 
 });
 
+// =========================
+// BACK
+// =========================
 function goBack() {
   window.location.href = "User_Dashboard.html";
 }
 
+// =========================
+// SIDEBAR
+// =========================
 function toggleSidebar() {
   document.querySelector(".sidebar").classList.toggle("hide");
 }
 
+// =========================
+// LOGOUT
+// =========================
 function logout() {
   localStorage.clear();
   window.location.href = "../../login.html";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const roleButtons = document.querySelectorAll(".role-btn");
+  const roleInput = document.getElementById("role");
+
+  roleButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      const role = btn.dataset.role;
+
+      // ถ้าเป็น patient → ไปอีกหน้า
+      if (role === "patient") {
+        window.location.href = "Create_Patient.html";
+        return;
+      }
+
+      // ถ้าไม่ใช่ → เปลี่ยน active
+      roleButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      roleInput.value = role;
+    });
+  });
+
+});

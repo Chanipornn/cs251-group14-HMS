@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // ROLE SWITCH
   // =========================
   function updateFormByRole(role) {
+    const patientFields = document.getElementById("patientFields");
+  
     if (role === "Patient") {
-      if (patientFields) patientFields.style.display = "block";
-      if (extraFields) extraFields.style.display = "block";
+      patientFields.style.display = "block";
     } else {
-      if (patientFields) patientFields.style.display = "none";
-      if (extraFields) extraFields.style.display = "none";
+      patientFields.style.display = "none";
     }
   }
 
@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const role = btn.dataset.role;
       roleInput.value = role;
+
+      if (role !== "Patient") {
+        window.location.href = "Create_Account.html";
+      }
 
       updateFormByRole(role); // 
     });
@@ -109,9 +113,6 @@ function toggleDropdown(el) {
     if (d !== el.nextElementSibling) d.classList.remove("show");
   });
 
-  document.querySelectorAll(".arrow").forEach(a => {
-    if (a !== el.querySelector(".arrow")) a.classList.remove("rotate");
-  });
 
   const options = el.nextElementSibling;
   const arrow = el.querySelector(".arrow");

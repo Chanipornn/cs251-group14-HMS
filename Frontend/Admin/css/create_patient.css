@@ -135,15 +135,3 @@
   font-weight: 500;
 }
 
-/* ให้ element กินเต็ม 2 คอลัมน์ */
-.form-group.full {
-  grid-column: span 2;
-}
-
-/* role layout */
-.role-selector {
-  display: flex;
-  gap: 10px;
-  margin-top: 5px;
-}
-

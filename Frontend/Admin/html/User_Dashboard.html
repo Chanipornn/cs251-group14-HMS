@@ -120,12 +120,11 @@
     <h3>เลือกประเภทผู้ใช้</h3>
 
     <div class="role-select-popup">
-      <button onclick="selectRole('patient')">Patient</button>
-      <button onclick="selectRole('doctor')">Doctor</button>
-      <button onclick="selectRole('staff')">Staff</button>
-      <button onclick="selectRole('admin')">Admin</button>
+      <button onclick="selectRole('patient', this)">Patient</button>
+      <button onclick="selectRole('doctor', this)">Doctor</button>
+      <button onclick="selectRole('staff', this)">Staff</button>
+      <button onclick="selectRole('admin', this)">Admin</button>
     </div>
-
     <button onclick="closeRoleModal()" class="cancel-btn">ยกเลิก</button>
   </div>
 </div>
