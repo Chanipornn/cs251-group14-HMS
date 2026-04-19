@@ -19,8 +19,19 @@
   <!-- PROFILE CARD -->
   <div class="profile-card">
 
-    <img src="../../img/profile.jpg" class="profile-img">
+    <div class="profile-img-wrapper" onclick="document.getElementById('imageUpload').click()">
 
+      <img src="../../img/profile.jpg" class="profile-img" id="profileImage">
+    
+      <!-- ไอคอนแก้ไข -->
+      <div class="edit-icon">
+        ✎
+      </div>
+    
+      <!-- ซ่อน input -->
+      <input type="file" id="imageUpload" accept="image/*" style="display:none">
+    
+    </div>
     <h3 id="profileName">Username</h3>
     <p id="profileEmail">email@gmail.com</p>
 
@@ -49,7 +60,10 @@
       <p id="birth">-</p>
     </div>
 
-    <button class="logout" onclick="logout()">ออกจากระบบ</button>
+    <div class="logout-btn" onclick="logout()">
+      <img src="../../img/log out.png" class="logout-icon">
+      <span>ออกจากระบบ</span>
+    </div>
 
   </div>
 
@@ -65,7 +79,7 @@
     </div>
 
     <!-- Layers -->
-    <div class="nav-btn">
+    <div class="nav-btn" onclick="location.href='medical_record.html'">
       <svg viewBox="0 0 24 24">
         <path d="M12 2L2 7l10 5 10-5-10-5z"/>
         <path d="M2 12l10 5 10-5"/>

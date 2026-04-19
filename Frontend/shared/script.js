@@ -52,7 +52,7 @@ function togglePassword() {
 // =========================
 // LOGIN + VALIDATION
 // =========================
-function login() {
+async function login() {
   const email = document.getElementById("email");
   const password = document.getElementById("password");
 
@@ -82,38 +82,71 @@ function login() {
 
   if (!valid) return;
 
-  // =========================
-  // ดึง user จาก register
-  // =========================
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const emailValue = email.value.trim();
+  const passwordValue = password.value.trim();
 
-  const user = users.find(
-    u => u.email === email.value && u.password === password.value
-  );
+  try {
+    // =========================
+    // เรียก Backend API
+    // =========================
+    /*
+    const res = await fetch("http://localhost:3000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: emailValue,
+        password: passwordValue
+      })
+    });
 
-  // =========================
-  // ไม่เจอ user
-  // =========================
-  if (!user) {
-    alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
-    return;
-  }
+    const data = await res.json();
 
-  // =========================
-  // ✅ login สำเร็จ
-  // =========================
-  localStorage.setItem("username", user.firstname);
+    if (!res.ok) {
+      alert(data.message || "Login failed");
+      return;
+    }
 
-  // =========================
-  // ROLE
-  // =========================
-  if (user.email.includes("doctor")) {
-    window.location.href = "./DoctorandStaff/html/dashboard.html";
-  } 
-  else if (user.email.includes("admin")) {
-    window.location.href = "./Admin/html/dashboard.html";
-  } 
-  else {
-    window.location.href = "./Patient/html/dashboard.html";
+    const user = data.user;
+    */
+
+    // =========================
+    // 🔧 (ปัจจุบัน) ใช้ localStorage ไปก่อน
+    // =========================
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = users.find(
+      u => u.email === emailValue && u.password === passwordValue
+    );
+
+    if (!user) {
+      alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      return;
+    }
+
+    // =========================
+    // SAVE SESSION
+    // =========================
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    // =========================
+    // ROLE REDIRECT (ใช้ role จริง แทน email)
+    // =========================
+    const role = (user.role || "").toLowerCase();
+
+    if (role === "admin") {
+      window.location.href = "./Admin/html/User_Dashboard.html";
+    } 
+    else if (role === "doctor" || role === "staff") {
+      window.location.href = "./DoctorandStaff/html/history.html";
+    } 
+    else {
+      window.location.href = "./Patient/html/home.html";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
   }
 }

@@ -298,10 +298,6 @@ body {
   transition: all 0.2s ease;
 }
 
-.menu-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
 
 /* ========================= */
 /* MENU ICON (เด้งนิด ๆ) */
@@ -352,6 +348,24 @@ button:hover {
 }
 @media (min-width: 768px) {
   .bottom-nav {
-    bottom: 25px;   /* 🔥 ขยับขึ้น */
+    bottom: 25px;   /* ขยับขึ้น */
   }
+}
+
+.banner-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-slider {
+  display: flex;
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.banner-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
