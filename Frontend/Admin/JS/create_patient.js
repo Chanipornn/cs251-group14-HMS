@@ -62,37 +62,99 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const confirmPassword = document.getElementById("confirmPassword").value.trim();
-      const role = roleInput.value;
-
+  
+      // =========================
+      // BASIC
+      // =========================
+      const name = document.getElementById("name")?.value.trim();
+      const email = document.getElementById("email")?.value.trim();
+      const password = document.getElementById("password")?.value.trim();
+      const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
+  
+      // =========================
+      // PATIENT FIELDS
+      // =========================
+      const phone = document.getElementById("phone")?.value.trim();
+      const idcard = document.getElementById("idcard")?.value.trim();
+      const blood = document.getElementById("blood")?.value;
+      const right = document.getElementById("right")?.value;
+  
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+  
+      const day = document.getElementById("day")?.value;
+      const month = document.getElementById("month")?.value;
+      const year = document.getElementById("year")?.value;
+  
+      const birth = `${day || ""}-${month || ""}-${year || ""}`;
+  
+      // =========================
+      // VALIDATE
+      // =========================
+      if (!name || !email || !password || !confirmPassword) {
+        alert("กรุณากรอกข้อมูลพื้นฐานให้ครบ");
+        return;
+      }
+  
+      // email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("รูปแบบอีเมลไม่ถูกต้อง");
+        return;
+      }
+  
+      // password
+      if (password.length < 6) {
+        alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
+        return;
+      }
+  
       if (password !== confirmPassword) {
         alert("รหัสผ่านไม่ตรงกัน");
         return;
       }
-
-      if (!role) {
-        alert("กรุณาเลือก Role");
+  
+      // patient required
+      if (!phone || !idcard || !gender || !day || !month || !year) {
+        alert("กรุณากรอกข้อมูลผู้ป่วยให้ครบ");
         return;
       }
-
+  
+      // =========================
+      // LOAD USERS
+      // =========================
       let users = JSON.parse(localStorage.getItem("users")) || [];
-
+  
+      // duplicate email
+      const isDuplicate = users.some(u => u.email === email);
+      if (isDuplicate) {
+        alert("อีเมลนี้ถูกใช้งานแล้ว");
+        return;
+      }
+  
+      // =========================
+      // CREATE USER
+      // =========================
       const newUser = {
         name,
         username: name,
         email,
+        password,
+        role: "Patient",
         status: "active",
-        role
+  
+        // patient data
+        phone,
+        idcard,
+        gender,
+        birth,
+        blood,
+        right
       };
-
+  
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-
-      alert("สร้างผู้ใช้สำเร็จ 🎉");
+  
+      alert("สร้างผู้ป่วยสำเร็จ");
       window.location.href = "User_Dashboard.html";
     });
   }

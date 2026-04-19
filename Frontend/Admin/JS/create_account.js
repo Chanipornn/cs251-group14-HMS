@@ -40,42 +40,73 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function(e) {
       e.preventDefault();
-
+  
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-      // validate
+  
+      // =========================
+      // VALIDATE
+      // =========================
+  
+      // required
       if (!name || !email || !password || !confirmPassword) {
         alert("กรุณากรอกข้อมูลให้ครบ");
         return;
       }
-
+  
+      // email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("รูปแบบอีเมลไม่ถูกต้อง");
+        return;
+      }
+  
+      // password length
+      if (password.length < 6) {
+        alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
+        return;
+      }
+  
+      // password match
       if (password !== confirmPassword) {
         alert("รหัสผ่านไม่ตรงกัน");
         return;
       }
-
+  
+      // =========================
+      // LOAD USERS
+      // =========================
       let users = JSON.parse(localStorage.getItem("users")) || [];
-
+  
+      // duplicate email
+      const isDuplicate = users.some(u => u.email === email);
+      if (isDuplicate) {
+        alert("อีเมลนี้ถูกใช้งานแล้ว");
+        return;
+      }
+  
+      // =========================
+      // CREATE USER
+      // =========================
       const newUser = {
         name,
-        username: name,   //  (dashboard ใช้)
+        username: name,
         email,
+        password,   
         role: roleInput.value,
         status: "active"
       };
-
+  
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-
+  
       alert("สร้างผู้ใช้สำเร็จ");
-
+  
       window.location.href = "User_Dashboard.html";
     });
   }
-
 });
 
 // =========================
