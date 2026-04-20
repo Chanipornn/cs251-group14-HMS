@@ -65,7 +65,8 @@ body {
 }
 
 .title {
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 600;
     color: var(--text-main);
     margin-bottom: 20px;
     position: relative; 
