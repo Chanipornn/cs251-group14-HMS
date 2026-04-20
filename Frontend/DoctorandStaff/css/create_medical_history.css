@@ -37,6 +37,11 @@
     text-decoration: none;
 }
 
+.back-btn-circle:hover {
+    transform: translateX(-1px);
+    color: #4b4399;
+}
+
 .form-title {
     font-size: 24px;
     color: var(--primary-purple);

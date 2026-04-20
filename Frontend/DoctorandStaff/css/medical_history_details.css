@@ -179,24 +179,39 @@ body {
 
 /* --- 1. ส่วนหัวและปุ่มย้อนกลับ --- */
 .detail-header {
-    margin-bottom: 25px;
-    padding: 0 10px;
-}
-
-.back-link {
-    text-decoration: none;
-    color: #7B6FDB;
-    font-size: 22px;
-    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 12px;
-    transition: 0.2s;
+    gap: 15px;
+    margin-bottom: 30px;
 }
 
-.back-link:hover {
-    transform: translateX(-5px); /* เลื่อนซ้ายนิดๆ เวลาเอาเมาส์ชี้ */
-    color: #5b51b8;
+.back-btn-circle {
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-purple);
+    text-decoration: none;
+}
+
+.back-btn-circle:hover {
+    transform: translateX(-1px);
+    color: #4b4399;
+}
+
+.form-title {
+    font-size: 24px;
+    color: var(--primary-purple);
+    font-weight: 600;
+}
+
+.medical-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* --- 2. Container ของการจัดวาง Card --- */
