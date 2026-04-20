@@ -4,32 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ประวัติใบแจ้งหนี้</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body data-page="invoice-history">
   <div class="app-shell">
-    <header class="topbar">
-      <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
-      <button class="plus-btn" data-nav="create_invoice.html"><i class="fa-solid fa-plus"></i></button>
-    </header>
-    <div class="layout">
-      <aside class="sidebar">
-        <nav class="nav-list">
-          <a class="nav-item" href="#"><i class="fa-solid fa-notes-medical"></i>ประวัติการรักษา</a>
-          <a class="nav-item" href="#"><i class="fa-solid fa-capsules"></i>การจ่ายยา</a>
-          <a class="nav-item" href="#"><i class="fa-regular fa-clock"></i>การนัดหมาย</a>
-          <a class="nav-item" href="medical_certificate_history.html"><i class="fa-regular fa-file-lines"></i>การออกใบรับรองแพทย์</a>
-          <a class="nav-item active" href="invoice_history.html"><i class="fa-solid fa-file-invoice-dollar"></i>ใบแจ้งหนี้</a>
-        </nav>
-        <div class="profile-box">
-          <div class="profile-info"><div class="profile-avatar"><i class="fa-regular fa-user"></i></div><span>นพ. วิรุต</span></div>
-          <a href="#" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i></a>
-        </div>
-      </aside>
+    <!-- HEADER -->
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
+
+  <div class="profile">
+    <span>นพ.วิรุต</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
+
+    <div class="container">
+        
+        <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3><br>
+
+    <a href="medical_history.html" class="menu active">ประวัติการรักษา</a>
+    <a href="history.html" class="menu">การจ่ายยา</a>
+    <a href="appointment.html" class="menu">การนัดหมาย</a>
+    <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+    <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+    </div>
+  </aside>
       <main class="main">
         <div class="search-row">
           <div class="search-box">

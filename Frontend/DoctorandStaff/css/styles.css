@@ -16,59 +16,150 @@
   --warning: #f2b332;
 }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  font-family: "Prompt", sans-serif;
-  background: var(--surface);
-  color: var(--text);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
 }
 
-a { color: inherit; text-decoration: none; }
-button, input, textarea, select { font: inherit; }
-button { cursor: pointer; }
+html { margin: 0; padding: 0; }
+body {
+  background: #faf8fe;
+}
 
-.topbar {
-  height: 92px;
-  background: var(--primary);
-  padding: 0 24px;
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.circle-img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    cursor: pointer;
+}
+
+/* ปรับแต่งวงกลมสีขาวและรูปภาพด้านใน */
+.avatar {
+    width: 35px;              
+    height: 35px;
+    background-color: white;   
+    border-radius: 50%;        
+    border: 2px solid white;   
+    
+    
+    background-size: cover;    
+    background-position: center; 
+    background-repeat: no-repeat; 
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+
+/* HEADER - ปรับให้ Fixed อยู่กับที่บนสุด */
+.header {
+  height: 80px;
+  background: #6E65BE;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #fff;
+  padding: 0 20px;
+  
+  /* เพิ่มส่วนนี้ */
+  position: fixed;   /* ล็อคให้อยู่บนสุด */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;    /* ให้อยู่เหนือเลเยอร์อื่นๆ */
 }
 
-.hamburger,
-.plus-btn {
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
+/* CONTAINER - ปรับให้เลื่อนลงมาเท่ากับความสูง Header */
+.container {
+  display: flex;
+  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  align-items: flex-start;
 }
 
-.plus-btn {
-  background: #fff;
-  color: #f06464;
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  min-height: calc(100vh - 148px);
-}
-
+/* SIDEBAR - ปรับให้ล็อคอยู่กับที่และเลื่อนเฉพาะในตัวเอง */
 .sidebar {
-  background: #fff;
-  border-right: 1px solid #ebe7f5;
-  padding: 22px 18px;
+  width: 250px;
+  background: white;
+  padding: 20px;
+  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
+  height: calc(100vh - 80px); 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: 0.3s;
+
+  /* ล็อค Sidebar ให้อยู่กับที่ */
+  position: sticky;
+  top: 80px; 
+  flex-shrink: 0;
+  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
+}
+
+.container {
+  display: flex;
+  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  align-items: flex-start;
+}
+
+/* Main Content */
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.menu {
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.menu:hover {
+  background: #f0f0ff;
+}
+
+.menu.active {
+  background: linear-gradient(90deg, #746BC3, #B4ADEE);
+  color: white;
+}
+
+.logout {
+  margin-top: auto;
+  color: red;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.logoutlogo {
+    width: 20px;
+    margin-right: 5px;
+    margin-bottom: -2px; 
+    margin-left: 5px;
+    vertical-align: middle;
+    margin-top: -5px;
 }
 
 .nav-list {

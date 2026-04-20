@@ -6,43 +6,40 @@
 
 <link rel="stylesheet" href="../css/history.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
 </head>
-
 <body>
 
-<div class="container">
+<!-- HEADER -->
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
 
-    <div class="sidebar">
+  <div class="profile">
+    <span>นพ.วิรุต</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
 
-        <div class="menu-item">
-            <i class="fa-solid fa-notes-medical"></i>
-            <span>ประวัติการรักษา</span>
-        </div>
+    <div class="container">
+        
+        <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3><br>
 
-        <div class="menu-item active">
-            <i class="fa-solid fa-capsules"></i>
-            <span>การจ่ายยา</span>
-        </div>
+    <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+    <a href="history.html" class="menu active">การจ่ายยา</a>
+    <a href="appointment.html" class="menu">การนัดหมาย</a>
+    <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+    <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
 
-        <div class="menu-item">
-            <i class="fa-solid fa-clock"></i>
-            <span>การนัดหมาย</span>
-        </div>
-
-        <div class="menu-item">
-            <i class="fa-solid fa-file-medical"></i>
-            <span>ใบรับรองแพทย์</span>
-        </div>
-
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
     </div>
+  </aside>
 
     <div class="main">
-
-        <div class="header">
-            <i class="fa-solid fa-bars"></i>
-            <div class="logo"><i class="fa-solid fa-plus"></i></div>
-        </div>
 
         <div class="search">
             <input type="text" placeholder="รหัสผู้ป่วย / รหัสใบสั่งยา">
