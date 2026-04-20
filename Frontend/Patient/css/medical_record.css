@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+
 :root {
     --main-purple: #7B6FDB;
     --light-purple: #dbdbfa;
@@ -13,7 +15,7 @@
 * { box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Kanit', sans-serif; }
+    font-family: 'Prompt', sans-serif; }
 
 body {
     margin: 0;
@@ -58,7 +60,7 @@ body {
 
 .app-header, .content-area {
     width: 100%;
-    max-width: 800px;
+    max-width: 920px;
     z-index: 1;
 }
 
@@ -99,7 +101,7 @@ body {
 /* Tabs */
 .nav-tabs {
     display: flex;
-    gap: 40px;
+    gap: 62px;
     justify-content: center; 
 }
 
@@ -110,14 +112,14 @@ body {
 }
 
 .icon-box {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background: var(--bg-gray);
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    font-size: 38px;
     color: #666;
     margin-bottom: 8px;
     border: 1px solid #54545474;
@@ -132,7 +134,7 @@ body {
 }
 
 .tab span {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     color: #565656; 
 }
@@ -169,7 +171,7 @@ body {
 .card-top { display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-    font-size:13px;
+    font-size: 16px;
     font-weight: bold; 
 }
 
@@ -180,7 +182,8 @@ body {
 
 .badge {
     background: var(--status-yellow);
-    font-size: 11px;
+    font-size: 14px;
+    font-weight: 500;
     padding: 2px 12px;
     border-radius: 10px;
     min-width: 80px;
