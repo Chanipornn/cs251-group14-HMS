@@ -11,14 +11,16 @@ const defaultUsers = [
     username: "Krit_TheTank",
     email: "krit@gmail.com",
     status: "active",
-    role: "Patient"
+    role: "Patient",
+    profileImage: "../../img/profile.jpg"
   },
   {
     name: "นางสาว นิชา",
     username: "Nicha",
     email: "nicha@gmail.com",
     status: "inactive",
-    role: "Doctor"
+    role: "Doctor",
+    profileImage: "../../img/profile.jpg"
   }
 ];
 
@@ -27,7 +29,7 @@ if (!localStorage.getItem("users")) {
 }
 
 // =========================
-// RENDER TABLE
+// RENDER TABLE (ตัวเดียวพอ)
 // =========================
 function renderTable() {
   const table = document.getElementById("userTable");
@@ -35,7 +37,7 @@ function renderTable() {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  users.forEach((user) => {
+  users.forEach((user, index) => {
 
     // FILTER ROLE
     if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) {
@@ -49,18 +51,19 @@ function renderTable() {
 
     table.innerHTML += `
       <tr>
-        <td><input type="checkbox"></td>
-
-        <td class="user-cell">
-          <img src="../../img/profile.jpg">
-          ${user.name}
+        <td>
+          <img src="${user.profileImage && user.profileImage !== '' 
+  ? user.profileImage 
+  : '../../img/profile.png'}" 
+class="table-avatar">
         </td>
 
-        <td>${user.username}</td>
-        <td>${user.email}</td>
+        <td>${user.fullname || user.name || "-"}</td>
+        <td>${user.username || "-"}</td>
+        <td>${user.email || "-"}</td>
 
         <td>
-          <span class="status ${user.status}">
+          <span class="status ${user.status}" onclick="toggleStatus(${index})">
             ${user.status}
           </span>
         </td>
@@ -82,6 +85,20 @@ function renderTable() {
 }
 
 // =========================
+// TOGGLE STATUS
+// =========================
+function toggleStatus(index) {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  users[index].status =
+    users[index].status === "active" ? "inactive" : "active";
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  renderTable();
+}
+
+// =========================
 // EDIT USER
 // =========================
 function editUser(username) {
@@ -98,28 +115,22 @@ function editUser(username) {
 }
 
 // =========================
-// DELETE MODAL
+// DELETE
 // =========================
 function openDeleteModal(username) {
   deleteUsername = username;
-
-  const modal = document.getElementById("deleteModal");
-  if (modal) modal.classList.add("show");
+  document.getElementById("deleteModal").classList.add("show");
 }
 
 function closeDeleteModal() {
   deleteUsername = null;
-
-  const modal = document.getElementById("deleteModal");
-  if (modal) modal.classList.remove("show");
+  document.getElementById("deleteModal").classList.remove("show");
 }
 
 function confirmDelete() {
   if (!deleteUsername) return;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  // 🔥 ลบแบบถูกต้อง
   users = users.filter(u => u.username !== deleteUsername);
 
   localStorage.setItem("users", JSON.stringify(users));
@@ -129,15 +140,12 @@ function confirmDelete() {
 }
 
 // =========================
-// SIDEBAR
+// SIDEBAR / LOGOUT
 // =========================
 function toggleSidebar() {
   document.querySelector(".sidebar").classList.toggle("hide");
 }
 
-// =========================
-// LOGOUT
-// =========================
 function logout() {
   localStorage.clear();
   window.location.href = "../../login.html";
@@ -154,7 +162,6 @@ function toggleDropdown(menuId, btn) {
   arrow.classList.toggle("rotate");
 }
 
-// ปิด dropdown เมื่อคลิกที่อื่น
 document.addEventListener("click", function (e) {
   if (!e.target.closest(".role-dropdown")) {
     document.querySelectorAll(".dropdown-menu").forEach(menu => {
@@ -212,7 +219,4 @@ function selectRole(role) {
 // =========================
 // INIT
 // =========================
-selectedRole = "all";
-selectedStatus = "all";
-
 renderTable();

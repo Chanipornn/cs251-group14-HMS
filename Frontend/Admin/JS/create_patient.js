@@ -137,10 +137,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const newUser = {
         name,
         username: name,
+        fullname: name,
         email,
         password,
         role: "Patient",
         status: "active",
+
+        profileImage: "../../img/profile.jpg",
   
         // patient data
         phone,

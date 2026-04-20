@@ -44,10 +44,67 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("DOMContentLoaded", function () {
 
     const user = JSON.parse(localStorage.getItem("currentUser"));
-  
     if (!user) return;
   
-    // แสดงข้อมูล
+    const img = document.getElementById("profileImage");
+  
+    // =========================
+    // LOAD IMAGE
+    // =========================
+    img.src = user.profileImage && user.profileImage !== ""
+      ? user.profileImage
+      : "../../img/profile.png";
+  
+    // =========================
+    // CLICK → UPLOAD
+    // =========================
+    img.addEventListener("click", function () {
+      document.getElementById("imageUpload").click();
+    });
+  
+    // =========================
+    // CHANGE IMAGE
+    // =========================
+    document.getElementById("imageUpload").addEventListener("change", function (e) {
+  
+      const file = e.target.files[0];
+      if (!file) return;
+  
+      const reader = new FileReader();
+  
+      reader.onload = function (event) {
+        const imageData = event.target.result;
+  
+        // เปลี่ยนรูปทันที
+        img.src = imageData;
+  
+        // =========================
+        // UPDATE currentUser
+        // =========================
+        user.profileImage = imageData;
+        localStorage.setItem("currentUser", JSON.stringify(user));
+  
+        // =========================
+        // UPDATE users (สำคัญมาก)
+        // =========================
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+  
+        users = users.map(u => {
+          if (u.username === user.username) {
+            return user;
+          }
+          return u;
+        });
+  
+        localStorage.setItem("users", JSON.stringify(users));
+      };
+  
+      reader.readAsDataURL(file);
+    });
+  
+    // =========================
+    // TEXT DATA
+    // =========================
     document.getElementById("profileName").innerText = user.username || "-";
     document.getElementById("profileEmail").innerText = user.email || "-";
   
@@ -58,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("idcard").innerText = user.idcard || "-";
     document.getElementById("gender").innerText = user.gender || "-";
   
-    // วันเกิด (รวม DD/MM/YYYY)
+    // วันเกิด
     if (user.day && user.month && user.year) {
       document.getElementById("birth").innerText =
         user.day + "/" + user.month + "/" + user.year;
@@ -67,3 +124,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
   });
+  
+  
+  // =========================
+  // LOGOUT
+  // =========================
+  function logout() {
+    localStorage.clear();
+    window.location.href = "../../login.html";
+  }
