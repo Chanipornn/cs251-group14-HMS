@@ -100,3 +100,50 @@ function goToEditPage(index) {
   }
 }
 
+// =========================
+// SIDEBAR
+// =========================
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
+
+// =========================
+// DROPDOWN
+// =========================
+function toggleDropdown() {
+  document.getElementById("dropdownMenu").classList.toggle("show");
+}
+
+// =========================
+// FILTER ROLE
+// =========================
+function filterRole(role) {
+  document.getElementById("selectedRole").innerText = role;
+
+  const cards = document.querySelectorAll(".grid .card");
+
+  cards.forEach(card => {
+    const userRole = card.dataset.role;
+
+    if (role === "all" || userRole === role) {
+      card.style.display = "flex";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+// =========================
+// PROFILE
+// =========================
+function goProfile() {
+  window.location.href = "profile.html";
+}
+
+// =========================
+// LOGOUT
+// =========================
+function logout() {
+  localStorage.clear();
+  window.location.href = "../../login.html";
+}

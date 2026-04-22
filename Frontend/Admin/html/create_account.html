@@ -52,81 +52,92 @@
 
       <div class="form-body">
 
-        <div class="form-grid">
-
-          <!-- ================= LEFT ================= -->
-          <div class="left-column">
-        
-            <div class="form-group">
-              <label>ชื่อผู้ใช้ *</label>
-              <input type="text" id="name">
-            </div>
-        
-            <div class="form-group">
-              <label>อีเมล *</label>
-              <input type="email" id="email">
-            </div>
-        
-            <div class="form-group">
-              <label>รหัสผ่าน *</label>
-              <input type="password" id="password">
-            </div>
-        
-            <div class="form-group">
-              <label>ยืนยันรหัสผ่าน *</label>
-              <input type="password" id="confirmPassword">
-            </div>
-        
-            <div class="form-group">
-              <label>ชื่อ-นามสกุล *</label>
-              <div class="inline-group">
-                <input type="text" placeholder="ชื่อ">
-                <input type="text" placeholder="นามสกุล">
+        <form id="createForm">
+      
+          <div class="form-grid">
+      
+            <!-- LEFT -->
+            <div class="left-column">
+      
+              <div class="form-group">
+                <label>ชื่อผู้ใช้ *</label>
+                <input type="text" id="name">
               </div>
-            </div>
-        
-            <div class="form-group">
-              <label>หมายเลขโทรศัพท์ *</label>
-              <input type="text">
-            </div>
-        
-          </div>
-        
-        
-          <!-- ================= RIGHT ================= -->
-          <div class="right-column">
-        
-            <div class="form-group">
-              <label>Role *</label>
-        
-              <div class="role-selector">
-                <button type="button" class="role-btn active" data-role="patient">Patient</button>
-                <button type="button" class="role-btn" data-role="doctor">Doctor</button>
-                <button type="button" class="role-btn" data-role="staff">Staff</button>
-                <button type="button" class="role-btn" data-role="admin">Admin</button>
+      
+              <div class="form-group">
+                <label>อีเมล *</label>
+                <input type="email" id="email">
               </div>
-        
-              <input type="hidden" id="role" value="patient">
+      
+              <div class="form-group">
+                <label>รหัสผ่าน *</label>
+                <input type="password" id="password">
+              </div>
+      
+              <div class="form-group">
+                <label>ยืนยันรหัสผ่าน *</label>
+                <input type="password" id="confirmPassword">
+              </div>
+      
+              <div class="form-group">
+                <label>ชื่อ-นามสกุล *</label>
+                <div class="inline-group">
+                  <input type="text" placeholder="ชื่อ">
+                  <input type="text" placeholder="นามสกุล">
+                </div>
+              </div>
+      
+              <div class="form-group">
+                <label>หมายเลขโทรศัพท์ *</label>
+                <input type="text">
+              </div>
+      
             </div>
-        
+      
+            <!-- RIGHT -->
+            <div class="right-column">
+      
+              <div class="form-group">
+                <label>Role *</label>
+      
+                <div class="role-selector">
+                  <button type="button" class="role-btn active" data-role="Patient">Patient</button>
+                  <button type="button" class="role-btn" data-role="Doctor">Doctor</button>
+                  <button type="button" class="role-btn" data-role="Staff">Staff</button>
+                  <button type="button" class="role-btn" data-role="Admin">Admin</button>
+                </div>
+      
+                <input type="hidden" id="role" value="Patient">
+              </div>
+      
+            </div>
+      
           </div>
-        
-        </div>
-
+      
           <!-- BUTTON -->
           <div class="btn-group">
             <button type="button" class="cancel-btn" onclick="goBack()">ยกเลิก</button>
             <button type="submit" class="save-btn">สร้างผู้ใช้</button>
           </div>
-
+      
         </form>
-
+      
       </div>
+
+      
 
     </div>
 
   </main>
 
+</div>
+
+<div id="successModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>สร้างสำเร็จ!</h2>
+    <p>ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว</p>
+    <button class="btn-confirm" onclick="closeModal()">ตกลง</button>
+  </div>
 </div>
 
 </body>

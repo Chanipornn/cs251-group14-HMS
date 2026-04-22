@@ -1,20 +1,15 @@
-// =========================
-// INIT (รอ DOM โหลดก่อน)
-// =========================
+// ============================================================
+// create_patient.js
+// ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
-  // =========================
-  // ELEMENTS
-  // =========================
   const form = document.getElementById("createForm");
   const roleButtons = document.querySelectorAll(".role-btn");
   const roleInput = document.getElementById("role");
-
   const patientFields = document.getElementById("patientFields");
-  const extraFields = document.getElementById("extraFields");
 
   // =========================
-  // GO BACK
+  // BACK
   // =========================
   window.goBack = function () {
     window.location.href = "User_Dashboard.html";
@@ -24,8 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // ROLE SWITCH
   // =========================
   function updateFormByRole(role) {
-    const patientFields = document.getElementById("patientFields");
-  
     if (role === "Patient") {
       patientFields.style.display = "block";
     } else {
@@ -33,60 +26,50 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // click role
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
+
+      const role = btn.dataset.role;
+
+      // ถ้าไม่ใช่ Patient → ไป Create_Account.html (ตรง case)
+      if (role !== "Patient") {
+        window.location.href = "create_account.html";
+        return;
+      }
 
       roleButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const role = btn.dataset.role;
       roleInput.value = role;
-
-      if (role !== "Patient") {
-        window.location.href = "Create_Account.html";
-      }
-
-      updateFormByRole(role); // 
+      updateFormByRole(role);
     });
   });
 
-  // =========================
-  // DEFAULT STATE (ตอนเปิดหน้า)
-  // =========================
   updateFormByRole(roleInput.value || "Patient");
 
   // =========================
-  // FORM SUBMIT
+  // SUBMIT
   // =========================
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-  
-      // =========================
-      // BASIC
-      // =========================
-      const name = document.getElementById("name")?.value.trim();
-      const email = document.getElementById("email")?.value.trim();
-      const password = document.getElementById("password")?.value.trim();
+
+      const name            = document.getElementById("name")?.value.trim();
+      const email           = document.getElementById("email")?.value.trim();
+      const password        = document.getElementById("password")?.value.trim();
       const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
-  
-      // =========================
-      // PATIENT FIELDS
-      // =========================
-      const phone = document.getElementById("phone")?.value.trim();
+
+      const phone  = document.getElementById("phone")?.value.trim();
       const idcard = document.getElementById("idcard")?.value.trim();
-      const blood = document.getElementById("blood")?.value;
-      const right = document.getElementById("right")?.value;
-  
+      const blood  = document.getElementById("blood")?.value;
+      const right  = document.getElementById("right")?.value;
       const gender = document.querySelector('input[name="gender"]:checked')?.value;
-  
-      const day = document.getElementById("day")?.value;
+
+      const day   = document.getElementById("day")?.value;
       const month = document.getElementById("month")?.value;
-      const year = document.getElementById("year")?.value;
-  
+      const year  = document.getElementById("year")?.value;
       const birth = `${day || ""}-${month || ""}-${year || ""}`;
-  
+
       // =========================
       // VALIDATE
       // =========================
@@ -94,58 +77,53 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("กรุณากรอกข้อมูลพื้นฐานให้ครบ");
         return;
       }
-  
-      // email format
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         alert("รูปแบบอีเมลไม่ถูกต้อง");
         return;
       }
-  
-      // password
+
       if (password.length < 6) {
         alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
         return;
       }
-  
+
       if (password !== confirmPassword) {
         alert("รหัสผ่านไม่ตรงกัน");
         return;
       }
-  
-      // patient required
-      if (!phone || !idcard || !gender || !day || !month || !year) {
-        alert("กรุณากรอกข้อมูลผู้ป่วยให้ครบ");
-        return;
+
+      if (roleInput.value === "Patient") {
+        if (!phone || !idcard || !gender || !day || !month || !year) {
+          alert("กรุณากรอกข้อมูลผู้ป่วยให้ครบ");
+          return;
+        }
       }
-  
+
       // =========================
       // LOAD USERS
       // =========================
       let users = JSON.parse(localStorage.getItem("users")) || [];
-  
-      // duplicate email
-      const isDuplicate = users.some(u => u.email === email);
-      if (isDuplicate) {
+
+      if (users.some(u => u.email === email)) {
         alert("อีเมลนี้ถูกใช้งานแล้ว");
         return;
       }
-  
+
       // =========================
       // CREATE USER
       // =========================
       const newUser = {
+        id: Date.now(),
         name,
-        username: name,
         fullname: name,
+        username: name.toLowerCase().replace(/\s+/g, "_"),
         email,
         password,
-        role: "Patient",
+        role: roleInput.value || "Patient",
         status: "active",
-
         profileImage: "../../img/profile.jpg",
-  
-        // patient data
         phone,
         idcard,
         gender,
@@ -153,34 +131,37 @@ document.addEventListener("DOMContentLoaded", function () {
         blood,
         right
       };
-  
+
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-  
-      alert("สร้างผู้ป่วยสำเร็จ");
-      window.location.href = "User_Dashboard.html";
+
+      document.getElementById("successModal").classList.add("show");
+      setTimeout(() => {
+        window.location.href = "User_Dashboard.html";
+      }, 1500);
     });
   }
 
   // =========================
-  // GENERATE DOB
+  // CLOSE MODAL  
+  // =========================
+  window.closeModal = function () {
+    document.getElementById("successModal").classList.remove("show");
+    window.location.href = "User_Dashboard.html";
+  };
+
+  // =========================
+  // DOB GENERATOR
   // =========================
   generateDOB();
-
 });
-
 
 // =========================
 // DROPDOWN
 // =========================
 function toggleDropdown(el) {
-  document.querySelectorAll(".dropdown-options").forEach(d => {
-    if (d !== el.nextElementSibling) d.classList.remove("show");
-  });
-
-
   const options = el.nextElementSibling;
-  const arrow = el.querySelector(".arrow");
+  const arrow   = el.querySelector(".arrow");
 
   options.classList.toggle("show");
   arrow.classList.toggle("rotate");
@@ -189,46 +170,39 @@ function toggleDropdown(el) {
 function selectOption(option, selectId) {
   const dropdown = option.closest(".custom-dropdown");
 
-  dropdown.querySelector(".dropdown-selected span").innerText =
-    option.innerText;
-
-  const input = document.getElementById(selectId);
-  if (input) input.value = option.innerText;
+  dropdown.querySelector("span").innerText        = option.innerText;
+  document.getElementById(selectId).value         = option.innerText;
 
   dropdown.querySelector(".dropdown-options").classList.remove("show");
   dropdown.querySelector(".arrow").classList.remove("rotate");
 }
 
 // =========================
-// CLICK OUTSIDE CLOSE
+// SIDEBAR
 // =========================
-document.addEventListener("click", function (e) {
-  if (!e.target.closest(".custom-dropdown")) {
-    document.querySelectorAll(".dropdown-options").forEach(d => {
-      d.classList.remove("show");
-    });
-    document.querySelectorAll(".arrow").forEach(a => {
-      a.classList.remove("rotate");
-    });
-  }
-});
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
 
+// =========================
+// LOGOUT
+// =========================
+function logout() {
+  localStorage.clear();
+  window.location.href = "../../login.html";
+}
 
 // =========================
 // DOB GENERATOR
 // =========================
 function generateDOB() {
-  const dayOptions = document.getElementById("dayOptions");
+  const dayOptions   = document.getElementById("dayOptions");
   const monthOptions = document.getElementById("monthOptions");
-  const yearOptions = document.getElementById("yearOptions");
+  const yearOptions  = document.getElementById("yearOptions");
 
   if (!dayOptions || !monthOptions || !yearOptions) return;
 
-  dayOptions.innerHTML = "";
-  monthOptions.innerHTML = "";
-  yearOptions.innerHTML = "";
-
-  for (let i = 1; i <= 31; i++) addOption(dayOptions, "day", i);
+  for (let i = 1; i <= 31; i++) addOption(dayOptions,   "day",   i);
   for (let i = 1; i <= 12; i++) addOption(monthOptions, "month", i);
 
   const currentYear = new Date().getFullYear();
@@ -238,7 +212,7 @@ function generateDOB() {
 }
 
 function addOption(container, inputId, value) {
-  const div = document.createElement("div");
+  const div     = document.createElement("div");
   div.innerText = value;
 
   div.onclick = function () {
@@ -254,57 +228,7 @@ function addOption(container, inputId, value) {
   container.appendChild(div);
 }
 
-function handleRoleChange(role) {
-  const patientFields = document.getElementById("patientFields");
-
-  if (role === "patient") {
-    patientFields.style.display = "block";
-  } else {
-    patientFields.style.display = "none";
-  }
+function toggleSidebar() {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("hide");
 }
-
-// ผูกกับปุ่ม role
-document.querySelectorAll(".role-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const role = btn.innerText.toLowerCase();
-
-    document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    handleRoleChange(role);
-  });
-});
-
-// default
-handleRoleChange("patient");
-
-// =========================
-// GENERATE DATE (ใช้กับ custom dropdown)
-// =========================
-window.onload = function () {
-  const dayOptions = document.getElementById("dayOptions");
-  const monthOptions = document.getElementById("monthOptions");
-  const yearOptions = document.getElementById("yearOptions");
-
-  const daySelect = document.getElementById("day");
-  const monthSelect = document.getElementById("month");
-  const yearSelect = document.getElementById("year");
-
-  // DAY
-  for (let i = 1; i <= 31; i++) {
-    addOption(dayOptions, daySelect, i);
-  }
-
-  // MONTH
-  for (let i = 1; i <= 12; i++) {
-    addOption(monthOptions, monthSelect, i);
-  }
-
-  // YEAR
-  const currentYear = new Date().getFullYear();
-  for (let i = currentYear; i >= currentYear - 100; i--) {
-    addOption(yearOptions, yearSelect, i);
-  }
-};
-

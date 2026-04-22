@@ -1,13 +1,18 @@
-// =========================
-// INIT DATA 
-// =========================
-let selectedRole = "all";
+// ============================================================
+// User_Dashboard.js
+// ============================================================
+let selectedRole   = "all";
 let selectedStatus = "all";
-let deleteUsername = null;
+let deleteId       = null;
 
+// =========================
+// DEFAULT USERS
+// =========================
 const defaultUsers = [
   {
+    id: 1,
     name: "นาย กฤต",
+    fullname: "นาย กฤต",
     username: "Krit_TheTank",
     email: "krit@gmail.com",
     status: "active",
@@ -15,7 +20,9 @@ const defaultUsers = [
     profileImage: "../../img/profile.jpg"
   },
   {
+    id: 2,
     name: "นางสาว นิชา",
+    fullname: "นางสาว นิชา",
     username: "Nicha",
     email: "nicha@gmail.com",
     status: "inactive",
@@ -29,7 +36,7 @@ if (!localStorage.getItem("users")) {
 }
 
 // =========================
-// RENDER TABLE (ตัวเดียวพอ)
+// RENDER TABLE
 // =========================
 function renderTable() {
   const table = document.getElementById("userTable");
@@ -37,33 +44,23 @@ function renderTable() {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  users.forEach((user, index) => {
+  users.forEach((user) => {
 
-    // FILTER ROLE
-    if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) {
-      return;
-    }
-
-    // FILTER STATUS
-    if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) {
-      return;
-    }
+    if (selectedRole   !== "all" && user.role.toLowerCase()   !== selectedRole)   return;
+    if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) return;
 
     table.innerHTML += `
       <tr>
         <td>
-          <img src="${user.profileImage && user.profileImage !== '' 
-  ? user.profileImage 
-  : '../../img/profile.png'}" 
-class="table-avatar">
+          <img src="${user.profileImage || '../../img/profile.png'}" class="table-avatar">
         </td>
 
         <td>${user.fullname || user.name || "-"}</td>
         <td>${user.username || "-"}</td>
-        <td>${user.email || "-"}</td>
+        <td>${user.email    || "-"}</td>
 
         <td>
-          <span class="status ${user.status}" onclick="toggleStatus(${index})">
+          <span class="status ${user.status}" onclick="toggleStatus(${user.id})">
             ${user.status}
           </span>
         </td>
@@ -71,13 +68,13 @@ class="table-avatar">
         <td>${user.role}</td>
 
         <td class="actions">
-          <img src="../../img/Edit2.png" 
-               class="action-icon" 
-               onclick="editUser('${user.username}')">
+          <img src="../../img/Edit2.png"
+               class="action-icon"
+               onclick="editUser(${user.id})">
 
-          <img src="../../img/delete.png" 
-               class="action-icon" 
-               onclick="openDeleteModal('${user.username}')">
+          <img src="../../img/delete.png"
+               class="action-icon"
+               onclick="openDeleteModal(${user.id})">
         </td>
       </tr>
     `;
@@ -87,51 +84,47 @@ class="table-avatar">
 // =========================
 // TOGGLE STATUS
 // =========================
-function toggleStatus(index) {
+function toggleStatus(id) {
   let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // ใช้ == แทน === เพราะ id จาก onclick เป็น number แต่ใน localStorage อาจเป็น string
+  const index = users.findIndex(u => u.id == id);
+  if (index === -1) return;
 
   users[index].status =
     users[index].status === "active" ? "inactive" : "active";
 
   localStorage.setItem("users", JSON.stringify(users));
-
   renderTable();
 }
 
 // =========================
 // EDIT USER
 // =========================
-function editUser(username) {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find(u => u.username === username);
-
-  if (!user) {
-    alert("ไม่พบผู้ใช้");
-    return;
-  }
-
-  localStorage.setItem("currentUser", JSON.stringify(user));
+function editUser(id) {
+  localStorage.setItem("editUserId", id);
   window.location.href = "Edit_Information.html";
 }
 
 // =========================
 // DELETE
 // =========================
-function openDeleteModal(username) {
-  deleteUsername = username;
+function openDeleteModal(id) {
+  deleteId = id;
   document.getElementById("deleteModal").classList.add("show");
 }
 
 function closeDeleteModal() {
-  deleteUsername = null;
+  deleteId = null;
   document.getElementById("deleteModal").classList.remove("show");
 }
 
 function confirmDelete() {
-  if (!deleteUsername) return;
+  // ใช้ != แทน !== เพราะ deleteId อาจเป็น number แต่ u.id ใน localStorage เป็น string
+  if (deleteId === null) return;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
-  users = users.filter(u => u.username !== deleteUsername);
+  users = users.filter(u => u.id != deleteId);
 
   localStorage.setItem("users", JSON.stringify(users));
 
@@ -155,7 +148,7 @@ function logout() {
 // DROPDOWN
 // =========================
 function toggleDropdown(menuId, btn) {
-  const menu = document.getElementById(menuId);
+  const menu  = document.getElementById(menuId);
   const arrow = btn.querySelector(".arrowdropdown");
 
   menu.classList.toggle("show");
@@ -196,7 +189,7 @@ function filterStatus(status) {
 }
 
 // =========================
-// ADD USER (ROLE SELECT)
+// ADD USER
 // =========================
 function openRoleModal() {
   document.getElementById("roleModal").classList.add("show");
@@ -207,16 +200,26 @@ function closeRoleModal() {
 }
 
 function selectRole(role) {
-  localStorage.setItem("createRole", role);
 
+  // แปลงให้ format ตรง (Doctor / Admin / Staff)
+  const formattedRole = role.charAt(0).toUpperCase() + role.slice(1);
+
+  // เก็บไว้ให้หน้า create ใช้
+  localStorage.setItem("createRole", formattedRole);
+
+  // redirect
   if (role === "patient") {
-    window.location.href = "Create_Patient.html";
+    window.location.href = "create_patient.html";
   } else {
-    window.location.href = "Create_Account.html";
+    window.location.href = "create_account.html";
   }
+
 }
 
 // =========================
 // INIT
 // =========================
-renderTable();
+document.addEventListener("DOMContentLoaded", () => {
+  renderTable();
+});
+

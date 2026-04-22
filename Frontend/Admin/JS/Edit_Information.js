@@ -1,30 +1,28 @@
-// =========================
-// INIT (สำคัญมาก)
-// =========================
+// ============================================================
+// Edit_Information.js
+// ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const users  = JSON.parse(localStorage.getItem("users")) || [];
+  const editId = localStorage.getItem("editUserId");
+
+  //  ใช้ == แทน === เพราะ editId จาก localStorage เป็น string แต่ u.id เป็น number
+  const user = users.find(u => u.id == editId);
+  if (!user) return;
 
   // =========================
   // LOAD USER
   // =========================
-  if (user) {
-    document.getElementById("username").innerText = user.username;
-    document.getElementById("email").innerText = user.email;
+  document.getElementById("username").innerText = user.username || "-";
+  document.getElementById("email").innerText    = user.email    || "-";
 
-    const nameEl = document.getElementById("name");
-    const emailEl = document.getElementById("emailInput");
-    const roleEl = document.getElementById("role");
-    const statusEl = document.getElementById("status");
+  document.getElementById("name")       && (document.getElementById("name").value       = user.name   || "");
+  document.getElementById("emailInput") && (document.getElementById("emailInput").value = user.email  || "");
+  document.getElementById("role")       && (document.getElementById("role").value       = user.role   || "");
+  document.getElementById("status")     && (document.getElementById("status").value     = user.status || "");
 
-    if (nameEl) nameEl.value = user.name;
-    if (emailEl) emailEl.value = user.email;
-    if (roleEl) roleEl.value = user.role;
-    if (statusEl) statusEl.value = user.status;
-
-    // 🔥 set dropdown หลัง DOM พร้อม
-    setDropdown("blood", user.blood || "เลือกกรุ๊ปเลือด");
-  }
+  //  setDropdown หา span จาก closest(".custom-dropdown") แทน previousElementSibling
+  setDropdown("blood", user.blood || "เลือกกรุ๊ปเลือด");
 
   // =========================
   // SAVE
@@ -32,25 +30,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("editForm");
 
   if (form) {
-    form.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
       let users = JSON.parse(localStorage.getItem("users")) || [];
 
-      const updatedUser = {
-        name: document.getElementById("name").value,
-        username: user.username,
-        email: document.getElementById("emailInput").value,
-        role: document.getElementById("role").value,
-        status: document.getElementById("status").value,
+      //  ใช้ == แทน ===
+      const index = users.findIndex(u => u.id == editId);
+      if (index === -1) return;
 
-        // 🔥 เพิ่มตรงนี้ (ของคุณไม่มี)
-        blood: document.getElementById("blood").value
+      users[index] = {
+        ...users[index],
+        name:     document.getElementById("name").value,
+        fullname: document.getElementById("name").value,
+        email:    document.getElementById("emailInput").value,
+        role:     document.getElementById("role").value,
+        status:   document.getElementById("status").value,
+        blood:    document.getElementById("blood").value
       };
-
-      users = users.map(u => 
-        u.username === user.username ? updatedUser : u
-      );
 
       localStorage.setItem("users", JSON.stringify(users));
 
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 });
-
 
 // =========================
 // BACK
@@ -97,7 +93,7 @@ function toggleDropdown(el) {
   });
 
   const options = el.nextElementSibling;
-  const arrow = el.querySelector(".arrow");
+  const arrow   = el.querySelector(".arrow");
 
   options.classList.toggle("show");
   arrow.classList.toggle("rotate");
@@ -106,8 +102,7 @@ function toggleDropdown(el) {
 function selectOption(option, selectId) {
   const dropdown = option.closest(".custom-dropdown");
 
-  dropdown.querySelector(".dropdown-selected span").innerText =
-    option.innerText;
+  dropdown.querySelector(".dropdown-selected span").innerText = option.innerText;
 
   const input = document.getElementById(selectId);
   if (input) input.value = option.innerText;
@@ -131,7 +126,7 @@ document.addEventListener("click", function (e) {
 });
 
 // =========================
-// SET DROPDOWN VALUE
+// SET DROPDOWN  
 // =========================
 function setDropdown(id, value) {
   const input = document.getElementById(id);
@@ -139,9 +134,10 @@ function setDropdown(id, value) {
 
   input.value = value;
 
-  const dropdown = input.previousElementSibling;
-  if (dropdown) {
-    const span = dropdown.querySelector("span");
+  const container = input.closest(".custom-dropdown");
+  if (container) {
+    const span = container.querySelector("span");
     if (span) span.innerText = value;
   }
 }
+

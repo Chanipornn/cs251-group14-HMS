@@ -1,22 +1,22 @@
+// ============================================================
+// create_account.js
+// ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
-  const roleInput = document.getElementById("role");
+  const roleInput   = document.getElementById("role");
   const roleButtons = document.querySelectorAll(".role-btn");
+  const form        = document.getElementById("createForm");
 
   // =========================
-  // LOAD ROLE (จาก dashboard)
+  // SET DEFAULT จาก UI จริง (ไม่ใช้ localStorage)
   // =========================
-  let savedRole = localStorage.getItem("createRole") || "Admin";
+  const activeBtn   = document.querySelector(".role-btn.active");
+  const defaultRole = activeBtn ? activeBtn.dataset.role : "Admin";
 
-  // set default
-  roleInput.value = savedRole;
+  roleInput.value = defaultRole;
 
   roleButtons.forEach(btn => {
-    btn.classList.remove("active");
-
-    if (btn.dataset.role === savedRole) {
-      btn.classList.add("active");
-    }
+    btn.classList.toggle("active", btn.dataset.role === defaultRole);
   });
 
   // =========================
@@ -25,94 +25,96 @@ document.addEventListener("DOMContentLoaded", function () {
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
 
+      const role = btn.dataset.role;
+      console.log("CLICK:", role);
+
+      if (role === "Patient") {
+        window.location.href = "create_patient.html?role=Patient";
+        return;
+      }
+
       roleButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-
-      roleInput.value = btn.dataset.role;
+      roleInput.value = role;
     });
   });
 
   // =========================
-  // SUBMIT FORM
+  // SUBMIT
   // =========================
-  const form = document.getElementById("createForm");
-
   if (form) {
-    form.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-  
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+
+      const name            = document.getElementById("name").value.trim();
+      const email           = document.getElementById("email").value.trim();
+      const password        = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirmPassword").value.trim();
-  
-      // =========================
-      // VALIDATE
-      // =========================
-  
-      // required
+
       if (!name || !email || !password || !confirmPassword) {
         alert("กรุณากรอกข้อมูลให้ครบ");
         return;
       }
-  
-      // email format
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         alert("รูปแบบอีเมลไม่ถูกต้อง");
         return;
       }
-  
-      // password length
+
       if (password.length < 6) {
         alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
         return;
       }
-  
-      // password match
+
       if (password !== confirmPassword) {
         alert("รหัสผ่านไม่ตรงกัน");
         return;
       }
-  
-      // =========================
-      // LOAD USERS
-      // =========================
+
       let users = JSON.parse(localStorage.getItem("users")) || [];
-  
-      // duplicate email
-      const isDuplicate = users.some(u => u.email === email);
-      if (isDuplicate) {
+
+      if (users.some(u => u.email === email)) {
         alert("อีเมลนี้ถูกใช้งานแล้ว");
         return;
       }
-  
-      // =========================
-      // CREATE USER
-      // =========================
+
       const newUser = {
+        id: Date.now(),
         name,
-        username: name,
+        fullname: name,
+        username: name.toLowerCase().replace(/\s+/g, "_"),
         email,
-        password,   
-        role: roleInput.value,
-        status: "active"
+        password,
+        role:   roleInput.value || "Admin",
+        status: "active",
+        profileImage: "../../img/profile.jpg"
       };
-  
+
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-  
-      alert("สร้างผู้ใช้สำเร็จ");
-  
-      window.location.href = "User_Dashboard.html";
+
+      document.getElementById("successModal").classList.add("show");
+      setTimeout(() => {
+        window.location.href = "User_Dashboard.html";
+      }, 1500);
     });
   }
+
 });
 
 // =========================
-// BACK
+// BACK 
 // =========================
 function goBack() {
+  window.location.href = "User_Dashboard.html";
+}
+
+// =========================
+// CLOSE MODAL  
+// =========================
+function closeModal() {
+  document.getElementById("successModal").classList.remove("show");
   window.location.href = "User_Dashboard.html";
 }
 
@@ -131,28 +133,7 @@ function logout() {
   window.location.href = "../../login.html";
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
-  const roleButtons = document.querySelectorAll(".role-btn");
-  const roleInput = document.getElementById("role");
-
-  roleButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-
-      const role = btn.dataset.role;
-
-      // ถ้าเป็น patient → ไปอีกหน้า
-      if (role === "patient") {
-        window.location.href = "Create_Patient.html";
-        return;
-      }
-
-      // ถ้าไม่ใช่ → เปลี่ยน active
-      roleButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      roleInput.value = role;
-    });
-  });
-
-});
+function toggleSidebar() {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("hide");
+}

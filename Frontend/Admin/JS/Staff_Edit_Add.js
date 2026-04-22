@@ -81,3 +81,8 @@ function saveData() {
 function cancelEdit() {
     window.location.href = "dashboard.html";
 }
+
+function toggleSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.classList.toggle("hide");
+  }

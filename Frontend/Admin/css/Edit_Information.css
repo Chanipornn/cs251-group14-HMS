@@ -236,3 +236,42 @@
       height: auto; /* มือถือไม่ fix */
     }
   }
+
+  /* ซ่อน sidebar */
+.sidebar.hide {
+  transform: translateX(-100%);
+}
+
+/* animation ให้ลื่น */
+.sidebar {
+  transition: all 0.3s ease;
+}
+
+/* layout หลัก */
+.container {
+  display: flex;
+}
+
+/* sidebar ปกติ */
+.sidebar {
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+/* ตอนซ่อน */
+.sidebar.hide {
+  width: 0;
+  overflow: hidden;
+}
+
+/* main ต้องขยาย */
+.main {
+  flex: 1;
+  transition: all 0.3s ease;
+  
+}
+
+/* บีบ margin ออก */
+.sidebar.hide ~ .main {
+  margin-left: 0;
+}
