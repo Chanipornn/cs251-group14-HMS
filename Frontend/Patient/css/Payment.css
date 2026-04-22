@@ -212,3 +212,22 @@ body {
     transform: translateY(1px); /* ยุบลงเล็กน้อย */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* เงาลดลง */
 }
+
+/* ลบเส้นใต้ลิงก์ */
+.back-btn,
+.back-btn:visited,
+.back-btn:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+/* hover effect */
+.back-btn:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+/* ตอนกด */
+.back-btn:active {
+    transform: scale(0.95);
+}

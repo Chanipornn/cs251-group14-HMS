@@ -369,3 +369,14 @@ button:hover {
   object-fit: cover;
   flex-shrink: 0;
 }
+
+.menu-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  transform: translateY(-3px);
+  transition: 0.2s;
+}
