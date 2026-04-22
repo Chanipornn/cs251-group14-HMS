@@ -1,0 +1,131 @@
+/* การตั้งค่าพื้นฐาน */
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #746BC3;
+    margin: 0;
+}
+
+.main-content {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+}
+
+/* ปุ่มย้อนกลับแบบวงกลม */
+.back-btn-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ลบเส้นใต้ลิงก์ */
+.back-btn-circle,
+.back-btn:visited,
+.back-btn:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+/* hover effect */
+.back-btn-circle:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+/* ตอนกด */
+.back-btn-circle:active {
+    transform: scale(0.95);
+}
+
+/* ตัวการ์ดฟอร์ม */
+.certificate-card {
+    margin-top: 30px;
+    background: #ffffff;
+    padding: 40px 50px;
+    border-radius: 30px; /* ขอบมนมากตามรูป */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.form-title {
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* การจัดการ Input */
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+    font-weight: 500;
+}
+
+.input-group label i {
+    margin-right: 8px;
+    color: #7B6FDB;
+}
+
+.input-group select, 
+.input-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    background-color: #fafafa;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.input-group select:focus, 
+.input-group textarea:focus {
+    outline: none;
+    border-color: #7B6FDB;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(123, 111, 219, 0.1);
+}
+
+/* ปุ่มส่งฟอร์ม */
+.btn-request {
+    font-family: 'Prompt', sans-serif;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #8E84E9 0%, #B4ADEE 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 6px 15px rgba(123, 111, 219, 0.3);
+    margin-top: 10px;
+}
+
+.btn-request:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(123, 111, 219, 0.4);
+    opacity: 0.9;
+}
