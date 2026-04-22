@@ -11,16 +11,15 @@ const doctors = [
 ];
 
 const doctorGrid = document.getElementById("doctorGrid");
-
 let selectedDept = "all";
 
 // ================= RENDER =================
 function renderDoctors(list) {
     doctorGrid.innerHTML = list.map(doc => `
-        <div class="doctor-card">
+        <div class="doctor-card" onclick="goToBooking(${doc.id})">
             
             <div class="heart-icon ${doc.favorite ? 'active' : ''}" 
-                 onclick="toggleFavorite(${doc.id})">
+                 onclick="event.stopPropagation(); toggleFavorite(${doc.id})">
                 ❤
             </div>
 
@@ -37,71 +36,19 @@ function renderDoctors(list) {
     `).join('');
 }
 
-// ================= FAVORITE (แก้ bug index) =================
+// ================= GO BOOKING =================
+function goToBooking(id) {
+    const doc = doctors.find(d => d.id === id);
+    if (!doc) return;
+
+    localStorage.setItem("selectedDoctor", JSON.stringify(doc));
+    window.location.href = "Booking.html";
+}
+
+// ================= FAVORITE =================
 function toggleFavorite(id) {
     const doc = doctors.find(d => d.id === id);
     if (doc) doc.favorite = !doc.favorite;
-    applyFilter();
-}
-
-// ================= POPUP =================
-const popupHTML = `
-<div class="filter-popup" id="filterPopup">
-    <div class="popup-content">
-        <h3>เลือกแผนก</h3>
-
-        <div class="filter-options">
-            <button onclick="selectDept('all')">ทั้งหมด</button>
-            <button onclick="selectDept('หู คอ จมูก')">หู คอ จมูก</button>
-            <button onclick="selectDept('ศัลยกรรม')">ศัลยกรรม</button>
-            <button onclick="selectDept('อายุรกรรม')">อายุรกรรม</button>
-            <button onclick="selectDept('กุมารเวชกรรม')">กุมารเวชกรรม</button>
-            <button onclick="selectDept('จักษุ')">จักษุ</button>
-            <button onclick="selectDept('กระดูกและข้อ')">กระดูกและข้อ</button>
-            <button onclick="selectDept('สูตินรีเวช')">สูตินรีเวช</button>
-            <button onclick="selectDept('ฉุกเฉินและอุบัติเหตุ')">ฉุกเฉินและอุบัติเหตุ</button>
-            <button onclick="selectDept('จิตเวช')">จิตเวช</button>
-            <button onclick="selectDept('ผู้ป่วยหนัก')">ผู้ป่วยหนัก</button>
-            <button onclick="selectDept('วิสัญญี')">วิสัญญี</button>
-            <button onclick="selectDept('เวชศาสตร์ฟื้นฟู')">เวชศาสตร์ฟื้นฟู</button>
-        </div>
-
-        <button class="close-btn" onclick="closePopup()">ปิด</button>
-    </div>
-</div>
-`;
-
-document.body.insertAdjacentHTML("beforeend", popupHTML);
-
-// ================= POPUP CONTROL =================
-function openPopup() {
-    document.getElementById("filterPopup").classList.add("active");
-}
-
-function closePopup() {
-    document.getElementById("filterPopup").classList.remove("active");
-}
-
-function selectDept(dept) {
-    selectedDept = dept;
-
-    document.querySelectorAll(".filter-options button")
-        .forEach(btn => btn.classList.remove("active"));
-
-    const buttons = document.querySelectorAll(".filter-options button");
-
-    buttons.forEach(btn => {
-        const text = btn.textContent.trim();
-
-        if (
-            (dept === "all" && text === "ทั้งหมด") ||
-            text.includes(dept)
-        ) {
-            btn.classList.add("active");
-        }
-    });
-
-    closePopup();
     applyFilter();
 }
 
@@ -126,19 +73,43 @@ function applyFilter() {
 
 // ================= EVENTS =================
 document.querySelector(".filter-icon").addEventListener("click", openPopup);
-
 document.getElementById("searchInput").addEventListener("input", applyFilter);
 
-// ================= INIT =================
-applyFilter();
+// ================= POPUP =================
+const popupHTML = `
+<div class="filter-popup" id="filterPopup">
+    <div class="popup-content">
+        <h3>เลือกแผนก</h3>
+
+        <div class="filter-options">
+            <button onclick="selectDept('all')">ทั้งหมด</button>
+            <button onclick="selectDept('หู คอ จมูก')">หู คอ จมูก</button>
+            <button onclick="selectDept('ศัลยกรรม')">ศัลยกรรม</button>
+            <button onclick="selectDept('อายุรกรรม')">อายุรกรรม</button>
+            <button onclick="selectDept('กุมารเวชกรรม')">กุมารเวชกรรม</button>
+            <button onclick="selectDept('จักษุ')">จักษุ</button>
+        </div>
+
+        <button class="close-btn" onclick="closePopup()">ปิด</button>
+    </div>
+</div>
+`;
+
+document.body.insertAdjacentHTML("beforeend", popupHTML);
 
 function openPopup() {
     document.getElementById("filterPopup").classList.add("active");
-    document.body.classList.add("no-scroll");
 }
 
 function closePopup() {
     document.getElementById("filterPopup").classList.remove("active");
-    document.body.classList.remove("no-scroll");
 }
 
+function selectDept(dept) {
+    selectedDept = dept;
+    closePopup();
+    applyFilter();
+}
+
+// ================= INIT =================
+applyFilter();

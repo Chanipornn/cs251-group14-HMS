@@ -59,3 +59,47 @@ window.onclick = function(event) {
         closeModal();
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ✅ ดึงข้อมูลหมอจากหน้า Queue
+    const data = JSON.parse(localStorage.getItem("selectedDoctor"));
+
+    if (data) {
+        document.getElementById("doctorName").textContent = data.name;
+        document.getElementById("doctorDept").textContent = data.dept;
+        document.getElementById("doctorImg").src = data.img;
+    }
+
+    // ==========================
+    // 🎯 เลือกเวลา
+    // ==========================
+    document.querySelectorAll(".time-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+        });
+    });
+
+    // ==========================
+    // 🎯 กดจองคิว
+    // ==========================
+    document.querySelector(".btn-submit").addEventListener("click", () => {
+        document.getElementById("successModal").classList.add("active");
+    });
+
+});
+
+// ==========================
+// 🎯 Dropdown
+// ==========================
+function toggleDropdown() {
+    document.getElementById("drop-list").classList.toggle("active");
+}
+
+// ==========================
+// 🎯 ปิด Modal
+// ==========================
+function closeModal() {
+    document.getElementById("successModal").classList.remove("active");
+}

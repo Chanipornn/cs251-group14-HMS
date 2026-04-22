@@ -28,31 +28,49 @@
                 <img src="../../img/filtericon.png" class="filter-icon">
             </div>
         </div>
-        <div class="doctor-grid" id="doctorGrid">
-            <div class="doctor-card">
-                <div class="heart-icon">❤️</div>
-                <div class="doc-img-container">
-                    <img src="../../img/doctor_img1.png" class="doc-avatar">
-                </div>
-                <div class="doc-info">
-                    <h3>นพ.สมชาย ศรีสุข</h3>
-                    <p>แผนก หู คอ จมูก</p>
-                </div>
-            </div>
 
-            <div class="doctor-card">
-                <div class="heart-icon">❤️</div>
-                <div class="doc-img-container">
-                    <img src="../../img/doctor_img2.png" class="doc-avatar">
-                </div>
-                <div class="doc-info">
-                    <h3>นพ.นนทพัทธ์ ใจดี</h3>
-                    <p>แผนก หู คอ จมูก</p>
-                </div>
-            </div>
+        <div class="doctor-grid" id="doctorGrid">
+
+            <!-- หมอ 1 -->
+            <div class="doctor-card"
+            data-name="นพ.สมชาย ศรีสุข"
+            data-dept="คลินิก ตา หู คอ จมูก"
+            data-img="../../img/doctor_img1.png"
+            onclick="selectDoctor(this)">
+       
+           <div class="heart-icon" onclick="event.stopPropagation(); toggleHeart(this)">❤️</div>
+       
+           <div class="doc-img-container">
+               <img src="../../img/doctor_img1.png" class="doc-avatar">
+           </div>
+       
+           <div class="doc-info">
+               <h3>นพ.สมชาย ศรีสุข</h3>
+               <p>แผนก หู คอ จมูก</p>
+           </div>
+       </div>
+       
+       
+       <div class="doctor-card"
+            data-name="นพ.นนทพัทธ์ ใจดี"
+            data-dept="คลินิก ตา หู คอ จมูก"
+            data-img="../../img/doctor_img2.png"
+            onclick="selectDoctor(this)">
+       
+           <div class="heart-icon" onclick="event.stopPropagation(); toggleHeart(this)">❤️</div>
+       
+           <div class="doc-img-container">
+               <img src="../../img/doctor_img2.png" class="doc-avatar">
+           </div>
+       
+           <div class="doc-info">
+               <h3>นพ.นนทพัทธ์ ใจดี</h3>
+               <p>แผนก หู คอ จมูก</p>
+           </div>
+       </div>
+
         </div>
     </div>
 
 </body>
-
 </html>
