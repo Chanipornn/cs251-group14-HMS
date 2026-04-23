@@ -1,6 +1,7 @@
 // ============================================================
 // User_Dashboard.js
 // ============================================================
+
 let selectedRole   = "all";
 let selectedStatus = "all";
 let deleteId       = null;
@@ -46,7 +47,7 @@ function renderTable() {
 
   users.forEach((user) => {
 
-    if (selectedRole   !== "all" && user.role.toLowerCase()   !== selectedRole)   return;
+    if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) return;
     if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) return;
 
     table.innerHTML += `
@@ -54,24 +55,19 @@ function renderTable() {
         <td>
           <img src="${user.profileImage || '../../img/profile.png'}" class="table-avatar">
         </td>
-
         <td>${user.fullname || user.name || "-"}</td>
         <td>${user.username || "-"}</td>
-        <td>${user.email    || "-"}</td>
-
+        <td>${user.email || "-"}</td>
         <td>
           <span class="status ${user.status}" onclick="toggleStatus(${user.id})">
             ${user.status}
           </span>
         </td>
-
         <td>${user.role}</td>
-
         <td class="actions">
           <img src="../../img/Edit2.png"
                class="action-icon"
                onclick="editUser(${user.id})">
-
           <img src="../../img/delete.png"
                class="action-icon"
                onclick="openDeleteModal(${user.id})">
@@ -87,7 +83,6 @@ function renderTable() {
 function toggleStatus(id) {
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // ใช้ == แทน === เพราะ id จาก onclick เป็น number แต่ใน localStorage อาจเป็น string
   const index = users.findIndex(u => u.id == id);
   if (index === -1) return;
 
@@ -120,7 +115,6 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
-  // ใช้ != แทน !== เพราะ deleteId อาจเป็น number แต่ u.id ใน localStorage เป็น string
   if (deleteId === null) return;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
@@ -200,20 +194,7 @@ function closeRoleModal() {
 }
 
 function selectRole(role) {
-
-  // แปลงให้ format ตรง (Doctor / Admin / Staff)
-  const formattedRole = role.charAt(0).toUpperCase() + role.slice(1);
-
-  // เก็บไว้ให้หน้า create ใช้
-  localStorage.setItem("createRole", formattedRole);
-
-  // redirect
-  if (role === "patient") {
-    window.location.href = "create_patient.html";
-  } else {
-    window.location.href = "create_account.html";
-  }
-
+  window.location.href = "create_users.html";
 }
 
 // =========================
@@ -222,4 +203,3 @@ function selectRole(role) {
 document.addEventListener("DOMContentLoaded", () => {
   renderTable();
 });
-

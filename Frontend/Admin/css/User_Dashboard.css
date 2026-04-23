@@ -441,7 +441,7 @@ tbody tr {
 .main {
   flex: 1;
   transition: all 0.3s ease;
-  width: 100%;
+  
 }
 
 /* บีบ margin ออก */

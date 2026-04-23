@@ -78,18 +78,22 @@
 }
 
 /* ========================= */
-/* FIX GRID (กันพัง) */
+/* FIX GRID                  */
 /* ========================= */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px 20px;
+  /* ↑ ค่าแรก = ระยะห่างแนวตั้ง (row-gap)
+       ค่าสอง = ระยะห่างแนวนอน (column-gap) */
 }
+
 #patientFields {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+
 /* mobile */
 @media (max-width: 768px) {
   .form-grid {
@@ -123,7 +127,6 @@
   width: 100%;
 }
 
-
 .role-row {
   display: flex;
   align-items: center;
@@ -134,70 +137,66 @@
 .role-row label {
   font-weight: 500;
 }
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
 
-  background: rgba(0,0,0,0.5);
-
-  justify-content: center;
-  align-items: center;
+/* ========================= */
+/* * สีแดง                   */
+/* ========================= */
+.req {
+  color: #e53935;
 }
 
-.modal-overlay.show {
+/* ========================= */
+/* BTN GROUP — ท้ายฟอร์มชิดขวา */
+/* ========================= */
+.btn-group {
   display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-bottom: 16px;
 }
 
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-}
-/* ซ่อน sidebar */
-.sidebar.hide {
-  transform: translateX(-100%);
-}
-
-/* animation ให้ลื่น */
-.sidebar {
-  transition: all 0.3s ease;
+.cancel-btn {
+  padding: 10px 24px;
+  border-radius: 20px;
+  border: 1.5px solid #ccc;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* layout หลัก */
-.container {
-  display: flex;
+.cancel-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
 }
 
-/* sidebar ปกติ */
-.sidebar {
-  width: 250px;
-  transition: all 0.3s ease;
+.save-btn {
+  padding: 10px 24px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(90deg, #6E65BE, #9a94e6);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(110,101,190,0.3);
 }
 
-/* ตอนซ่อน */
-.sidebar.hide {
-  width: 0;
-  overflow: hidden;
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(110,101,190,0.4);
 }
 
-/* main ต้องขยาย */
-.main {
-  flex: 1;
-  transition: all 0.3s ease;
-  
+.save-btn:active {
+  transform: scale(0.97);
 }
 
-/* บีบ margin ออก */
-.sidebar.hide ~ .main {
-  margin-left: 0;
-}
-
-/* overlay พื้นหลัง */
+/* ========================= */
+/* MODAL */
+/* ========================= */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -205,11 +204,9 @@
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.4);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
@@ -227,7 +224,6 @@
   border-radius: 16px;
   text-align: center;
   width: 300px;
-
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   animation: popup 0.3s ease;
 }
@@ -243,30 +239,51 @@
   }
 }
 
-/* ปุ่มใหม่ */
+/* ปุ่ม confirm */
 .btn-confirm {
   margin-top: 20px;
   padding: 10px 20px;
-
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #6E65BE, #9a94e6);
   color: white;
   border: none;
   border-radius: 10px;
-
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-
   transition: all 0.25s ease;
 }
 
-/* hover */
 .btn-confirm:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-/* click */
 .btn-confirm:active {
   transform: scale(0.95);
+}
+
+/* ========================= */
+/* SIDEBAR */
+/* ========================= */
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+.sidebar.hide {
+  width: 0;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.sidebar.hide ~ .main {
+  margin-left: 0;
 }
