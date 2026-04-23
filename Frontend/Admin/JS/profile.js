@@ -29,16 +29,87 @@ document.addEventListener("DOMContentLoaded", () => {
     setText("lastName", currentUser.lastName);
     setText("phone", currentUser.phone);
   
+    // โหลดรูป
+    const img = document.getElementById("profileImage");
+    if (img && currentUser.profileImage) {
+      img.src = currentUser.profileImage;
+    }
+  // =========================
+// SYNC HEADER (ชื่อ + รูป)
+// =========================
+const headerName = document.getElementById("headerName");
+const headerAvatar = document.getElementById("headerAvatar");
+
+// ชื่อ
+if (headerName) {
+    headerName.innerText = currentUser.username || currentUser.name || "Admin";
+  }
+
+// รูป
+if (headerAvatar) {
+  if (currentUser.profileImage) {
+    headerAvatar.style.backgroundImage = `url('${currentUser.profileImage}')`;
+  } else {
+    headerAvatar.style.backgroundImage = "url('../../img/profile.png')";
+  }
+
+  headerAvatar.style.backgroundSize = "cover";
+  headerAvatar.style.backgroundPosition = "center";
+}
+    // =========================
+    // IMAGE UPLOAD 
+    // =========================
+    const imageInput = document.getElementById("imageUpload");
+  
+    if (imageInput) {
+      imageInput.addEventListener("change", function () {
+  
+        const file = this.files[0];
+        console.log("เลือกไฟล์:", file);
+  
+        if (!file) return;
+  
+        if (!file.type.startsWith("image/")) {
+          alert("กรุณาเลือกไฟล์รูปภาพ");
+          return;
+        }
+  
+        const reader = new FileReader();
+  
+        reader.onload = function (e) {
+  
+          const base64 = e.target.result;
+          console.log("โหลดรูปสำเร็จ");
+  
+          const img = document.getElementById("profileImage");
+  
+          if (!img) {
+            console.error("ไม่เจอ img profileImage");
+            return;
+          }
+  
+          // เปลี่ยนรูปทันที
+          img.src = base64;
+  
+          // save ลง user
+          currentUser.profileImage = base64;
+  
+          saveUser();
+        };
+  
+        reader.readAsDataURL(file);
+      });
+    }
+  
     // =========================
     // MODAL STATE
     // =========================
     let currentField = null;
   
     // =========================
-    // EDIT (เปิด modal)
+    // EDIT
     // =========================
     window.editField = function(field) {
-  
       currentField = field;
   
       const input = document.getElementById("editInput");
@@ -48,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     // =========================
-    // CLOSE MODAL
+    // CLOSE
     // =========================
     window.closeModal = function() {
       document.getElementById("editModal").classList.remove("show");
@@ -64,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
       if (!value) return;
   
-      // validate phone
       if (currentField === "phone") {
         if (!/^[0-9]{9,10}$/.test(value)) {
           alert("เบอร์ไม่ถูกต้อง");
@@ -90,15 +160,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     function saveUser() {
-      const index = users.findIndex(u => u.id === currentUser.id);
-  
-      if (index !== -1) {
-        users[index] = currentUser;
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+      
+        const index = users.findIndex(u => u.id === currentUser.id);
+      
+        if (index !== -1) {
+          users[index] = currentUser;
+        } else {
+          users.push(currentUser);
+        }
+      
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
       }
-  
-      localStorage.setItem("users", JSON.stringify(users));
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    }
   
   });
   

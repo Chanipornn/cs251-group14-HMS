@@ -499,9 +499,33 @@ tbody tr {
 /* HOVER EFFECT */
 /* ========================= */
 .search-box:hover .search-icon {
-  background: #5658a7;  
+  background: #7677c6;  
 }
 
 .search-box:hover .search-icon img {
   filter: brightness(0) invert(1); 
+}
+
+/* ========================= */
+/* TABLE AVATAR */
+/* ========================= */
+.table-avatar {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;     /* ทำให้กลม */
+  object-fit: cover;      /* crop รูปไม่ยืด */
+
+  display: block;
+}
+
+/* กันช่องแรกแคบเกิน */
+td:first-child {
+  width: 70px;
+  text-align: center;
+}
+
+/* จัดแนวกลาง */
+td {
+  vertical-align: middle;
 }
