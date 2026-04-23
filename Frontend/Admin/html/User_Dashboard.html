@@ -18,7 +18,7 @@
     <img src="../../img/hospital.png" class="circle-img">
   </div>
 
-  <div class="profile">
+  <div class="profile" onclick="goProfile()">
     <span>Admin 1</span>
     <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
   </div>
@@ -44,7 +44,10 @@
     <!-- TOP BAR -->
     <div class="top-bar">
 
-      <input type="text" placeholder="ค้นหา...">
+      <div class="search-box">
+        <input type="text" class="search" placeholder="ค้นหา...">
+        <img src="../../img/Search.png" class="search-icon">
+      </div>
 
       <!-- ROLE -->
       <div class="role-dropdown">

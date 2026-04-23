@@ -203,3 +203,6 @@ function selectRole(role) {
 document.addEventListener("DOMContentLoaded", () => {
   renderTable();
 });
+function goProfile() {
+  window.location.href = "profile.html";
+}

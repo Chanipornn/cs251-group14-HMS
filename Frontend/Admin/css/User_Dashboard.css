@@ -8,7 +8,8 @@
 }
 
 .top-bar input {
-  min-width: 180px;
+  width: 100%;    
+  min-width: 0;   
 }
 
 /* ========================= */
@@ -447,4 +448,60 @@ tbody tr {
 /* บีบ margin ออก */
 .sidebar.hide ~ .main {
   margin-left: 0;
+}
+
+.profile {
+  cursor: pointer;
+}
+
+/* ให้ input เว้นที่ด้านขวา */
+.search {
+  padding-right: 40px; 
+}
+
+/* ========================= */
+/* ICON ด้านขวา */
+/* ========================= */
+.search-box {
+  position: relative; 
+  flex: 1;
+  width: 100%;
+}
+
+/* ========================= */
+/* ICON */
+/* ========================= */
+.search-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 34px;
+  height: 34px;
+
+  margin-right: -13px;
+
+  background: #eee;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+/* ========================= */
+/* HOVER EFFECT */
+/* ========================= */
+.search-box:hover .search-icon {
+  background: #5658a7;  
+}
+
+.search-box:hover .search-icon img {
+  filter: brightness(0) invert(1); 
 }
