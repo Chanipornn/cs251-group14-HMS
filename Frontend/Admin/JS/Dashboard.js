@@ -5,60 +5,84 @@ function toggleSidebar() {
 
 function logout() {
   localStorage.clear();
-  window.location.href = "login.html";
+  window.location.href = "../../login.html";
 }
 
 function goProfile() {
   window.location.href = "profile.html";
 }
 
-// ================= DROPDOWN =================
-function toggleDropdown() {
-  const menu = document.getElementById("dropdownMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+// ================= DROPDOWN (แก้ใหม่) =================
+function toggleDropdown(menuId, btn) {
+  const menu = document.getElementById(menuId);
+  const arrow = btn.querySelector(".arrowdropdown");
+
+  // ปิด dropdown อื่นก่อน (กันบัค)
+  document.querySelectorAll(".dropdown-menu").forEach(m => {
+    if (m !== menu) m.classList.remove("show");
+  });
+
+  document.querySelectorAll(".arrowdropdown").forEach(a => {
+    if (a !== arrow) a.classList.remove("rotate");
+  });
+
+  // toggle ตัวที่กด
+  menu.classList.toggle("show");
+  arrow.classList.toggle("rotate");
 }
 
+// ================= FILTER ROLE =================
 function filterRole(role) {
+  document.getElementById("selectedRole").innerText =
+    role === "all" ? "All" : role;
+
   const cards = document.querySelectorAll(".user-card");
-  document.getElementById("selectedRole").innerText = role === "all" ? "All" : role;
 
   cards.forEach(card => {
     card.style.display =
-      role === "all" || card.classList.contains(role) ? "flex" : "none";
+      role === "all" || card.classList.contains(role)
+        ? "flex"
+        : "none";
   });
 
-  document.getElementById("dropdownMenu").style.display = "none";
+  // ปิด dropdown + reset arrow
+  document.getElementById("dropdownMenu").classList.remove("show");
+  document.querySelectorAll(".arrowdropdown").forEach(a => {
+    a.classList.remove("rotate");
+  });
 }
 
+// ================= CLICK OUTSIDE =================
 document.addEventListener("click", e => {
   if (!e.target.closest('.role-dropdown')) {
-    document.getElementById("dropdownMenu").style.display = "none";
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+      menu.classList.remove("show");
+    });
+
+    document.querySelectorAll(".arrowdropdown").forEach(arrow => {
+      arrow.classList.remove("rotate");
+    });
   }
 });
 
 // ================= DATA =================
-
-// 👉 ใช้ localStorage เป็นหลัก
-
-// ================= DATA =================
-
 let users = JSON.parse(localStorage.getItem('allUsers'));
 
-// เพิ่มเงื่อนไข: ถ้าไม่มีข้อมูล หรือ ข้อมูลมีน้อยผิดปกติ (เช่นมีแค่ 1-2 คน) ให้โหลดใหม่
-if (!users || users.length < 5) { 
-    users = [
-        { name: "นพ.สมชาย ศรีสุข", role: "Doctor", dept: "จิตเวช", img: "../../img/doctor_img1.png", type: "doctor", phone: "091-888-2321" },
-        { name: "น.ส. ศิริพร แสงทอง", role: "Staff", dept: "พยาบาล", img: "../../img/staff_img1.png", type: "staff", phone: "092-888-2322" },
-        { name: "พญ.วราภรณ์ ศิริชัย", role: "Doctor", dept: "ศัลยกรรม", img: "../../img/doctor_img2.png", type: "doctor", phone: "093-888-2323" },
-        { name: "นพ.นนทพัทธ์ ใจดี", role: "Doctor", dept: "หู คอ จมูก", img: "../../img/doctor_img3.png", type: "doctor", phone: "094-888-2324" },
-        { name: "น.ส. พรทิพย์ จิตดี", role: "Staff", dept: "เจ้าหน้าที่การเงิน", img: "../../img/staff_img2.png", type: "staff", phone: "095-888-2325" },
-        { name: "พญ.ชลธิชา คำดี", role: "Doctor", dept: "หู คอ จมูก", img: "../../img/doctor_img4.png", type: "doctor", phone: "096-888-2326" },
-        { name: "น.ส. นันทิชา กอดเสา", role: "Staff", dept: "เจ้าหน้าที่เวชระเบียน", img: "../../img/staff_img3.png", type: "staff", phone: "097-888-2327" },
-        { name: "นพ.อัครพล ศรีนวล", role: "Doctor", dept: "อายุรกรรม", img: "../../img/doctor_img5.png", type: "doctor", phone: "098-888-2328" },
-        { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff", dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย", img: "../../img/staff_img4.png", type: "staff", phone: "099-888-2329" }
-        
-    ];
-    localStorage.setItem('allUsers', JSON.stringify(users));
+// ถ้าไม่มีข้อมูล → mock
+if (!users || users.length < 5) {
+  users = [
+    { name: "นพ.สมชาย ศรีสุข", role: "Doctor", dept: "จิตเวช", img: "../../img/doctor_img1.png", type: "doctor", phone: "091-888-2321" },
+    { name: "น.ส. ศิริพร แสงทอง", role: "Staff", dept: "พยาบาล", img: "../../img/staff_img1.png", type: "staff", phone: "092-888-2322" },
+    { name: "พญ.วราภรณ์ ศิริชัย", role: "Doctor", dept: "ศัลยกรรม", img: "../../img/doctor_img2.png", type: "doctor", phone: "093-888-2323" },
+    { name: "นพ.นนทพัทธ์ ใจดี", role: "Doctor", dept: "หู คอ จมูก", img: "../../img/doctor_img3.png", type: "doctor", phone: "094-888-2324" },
+    { name: "น.ส. พรทิพย์ จิตดี", role: "Staff", dept: "เจ้าหน้าที่การเงิน", img: "../../img/staff_img2.png", type: "staff", phone: "095-888-2325" },
+    { name: "พญ.ชลธิชา คำดี", role: "Doctor", dept: "หู คอ จมูก", img: "../../img/doctor_img4.png", type: "doctor", phone: "096-888-2326" },
+    { name: "น.ส. นันทิชา กอดเสา", role: "Staff", dept: "เจ้าหน้าที่เวชระเบียน", img: "../../img/staff_img3.png", type: "staff", phone: "097-888-2327" },
+    { name: "นพ.อัครพล ศรีนวล", role: "Doctor", dept: "อายุรกรรม", img: "../../img/doctor_img5.png", type: "doctor", phone: "098-888-2328" },
+    { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff", dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย", img: "../../img/staff_img4.png", type: "staff", phone: "099-888-2329" }
+  ];
+
+  localStorage.setItem('allUsers', JSON.stringify(users));
 }
 
 // ================= RENDER =================
@@ -87,7 +111,6 @@ renderUsers();
 function goToEditPage(index) {
   const selectedUser = users[index];
 
-  // เก็บ "index" ไปด้วย (สำคัญมาก!)
   localStorage.setItem('editUser', JSON.stringify({
     ...selectedUser,
     index: index
@@ -98,52 +121,4 @@ function goToEditPage(index) {
   } else {
     window.location.href = "Staff_Edit_Add.html";
   }
-}
-
-// =========================
-// SIDEBAR
-// =========================
-function toggleSidebar() {
-  document.querySelector(".sidebar").classList.toggle("hide");
-}
-
-// =========================
-// DROPDOWN
-// =========================
-function toggleDropdown() {
-  document.getElementById("dropdownMenu").classList.toggle("show");
-}
-
-// =========================
-// FILTER ROLE
-// =========================
-function filterRole(role) {
-  document.getElementById("selectedRole").innerText = role;
-
-  const cards = document.querySelectorAll(".grid .card");
-
-  cards.forEach(card => {
-    const userRole = card.dataset.role;
-
-    if (role === "all" || userRole === role) {
-      card.style.display = "flex";
-    } else {
-      card.style.display = "none";
-    }
-  });
-}
-
-// =========================
-// PROFILE
-// =========================
-function goProfile() {
-  window.location.href = "profile.html";
-}
-
-// =========================
-// LOGOUT
-// =========================
-function logout() {
-  localStorage.clear();
-  window.location.href = "../../login.html";
 }

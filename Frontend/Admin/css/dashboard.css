@@ -401,6 +401,7 @@ body {
     vertical-align: middle; /* จัดให้กึ่งกลางแนวเดียวกับตัวอักษร */
     display: inline-block;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 .dropdown-menu {
   display: none;
@@ -408,5 +409,10 @@ body {
 
 .dropdown-menu.show {
   display: block;
+}
+
+/* ตอนกด */
+.arrowdropdown.rotate {
+  transform: rotate(180deg);
 }
 

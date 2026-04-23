@@ -46,24 +46,29 @@
 
     
 
-<div class="top-bar">
-   
-    <div class="search-box">
-        <input type="text" class="search" placeholder="ค้นหา...">
-        <img src="../../img/Search.png" class="search-icon">
-      </div>
-    <div class="role-dropdown">
-        <div class="role-btn" onclick="toggleDropdown()">
-            <span id="selectedRole">All</span>
-            <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
+    <div class="top-bar">
+
+        <!-- SEARCH -->
+        <div class="search-box">
+          <input type="text" class="search" placeholder="ค้นหา...">
+          <img src="../../img/Search.png" class="search-icon">
         </div>
-        <div id="dropdownMenu" class="dropdown-menu">
+      
+        <!-- ROLE -->
+        <div class="role-dropdown">
+          <div class="role-btn" onclick="toggleDropdown('dropdownMenu', this)">
+            <span id="selectedRole">Role</span>
+            <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
+          </div>
+      
+          <div id="dropdownMenu" class="dropdown-menu">
             <div onclick="filterRole('all')">All</div>
             <div onclick="filterRole('doctor')">Doctor</div>
             <div onclick="filterRole('staff')">Staff</div>
+          </div>
         </div>
-    </div>
-</div>
+      
+      </div>
 <div class="summary">
     <div class="card">
         <img src="../../img/doctor.png" class="icon">
