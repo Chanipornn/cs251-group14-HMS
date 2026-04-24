@@ -1,41 +1,80 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
-
-<link rel="stylesheet" href="../css/login.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log-in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/login.css">
 </head>
-
 <body>
 
-<div class="container">
+  <div class="page-wrapper">
 
-    <div class="logo">
-        <div class="plus"></div>
-    </div>
+    <!-- Full-width purple banner -->
+    <div class="banner">
 
-    <div class="login-box">
+      <!-- Left: Hospital icon circle -->
+      <div class="icon-circle">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="cross-svg">
+          <rect x="38" y="10" width="24" height="80" rx="6" ry="6" fill="#cc4444"/>
+          <rect x="10" y="38" width="80" height="24" rx="6" ry="6" fill="#cc4444"/>
+        </svg>
+      </div>
 
-        <h2>เข้าสู่ระบบ</h2>
-        <p class="sub">ระบบแพทย์</p>
+      <!-- Right: Login Card -->
+      <div class="login-card">
+        <h2 class="card-title">เข้าสู่ระบบ</h2>
+        <p class="card-subtitle">ระบบแพทย์</p>
 
-        <label>อีเมล :</label>
-        <input type="text">
-
-        <label>รหัสผ่าน :</label>
-        <div class="password">
-            <input type="password">
-            <i class="fa fa-eye-slash"></i>
+        <div class="form-group">
+          <label>อีเมล :</label>
+          <input class="input" type="email" id="email" autocomplete="off" />
         </div>
 
-        <button>เข้าสู่ระบบ</button>
+        <div class="form-group">
+          <label>รหัสผ่าน :</label>
+          <div class="password-wrap">
+            <input class="input" type="password" id="password" autocomplete="off" />
+            <button class="toggle-pw" type="button" onclick="togglePassword()">
+              <i class="fa-regular fa-eye-slash" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-login" onclick="doLogin()">เข้าสู่ระบบ</button>
+        </div>
+      </div>
 
     </div>
+  </div>
 
-</div>
+  <script>
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      } else {
+        pw.type = 'password';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      }
+    }
 
+    function doLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (!email || !password) {
+        alert('กรุณากรอกอีเมลและรหัสผ่าน');
+        return;
+      }
+      window.location.href = 'history.html';
+    }
+  </script>
 </body>
 </html>

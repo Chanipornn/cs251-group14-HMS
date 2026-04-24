@@ -1,61 +1,114 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>ไม่พบข้อมูล</title>
-
-<link rel="stylesheet" href="../css/history-empty.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ประวัติการจ่ายยา ไม่พบข้อมูล</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/history-empty.css">
 </head>
-
 <body>
 
-<div class="container">
-
-    <div class="sidebar">
-        <div class="menu-item">
-            <i class="fa fa-file-medical"></i> ประวัติการรักษา
-        </div>
-
-        <div class="menu-item active">
-            <i class="fa fa-pills"></i> การจ่ายยา
-        </div>
-
-        <div class="menu-item">
-            <i class="fa fa-clock"></i> การนัดหมาย
-        </div>
-
-        <div class="menu-item">
-            <i class="fa fa-file"></i> ใบรับรองแพทย์
-        </div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="left-section">
+      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
     </div>
+    <div class="profile">
+      <span>นพ.วิรุต</span>
+      <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+    </div>
+  </header>
 
-    <div class="main">
+  <div class="container">
 
-        <div class="header">
-            <i class="fa fa-bars"></i>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="nav-list">
+        <a href="medical_history.html" class="menu nav-item">
+          <i class="fa-solid fa-notes-medical"></i>
+          <span>ประวัติการรักษา</span>
+        </a>
+        <a href="history.html" class="menu nav-item active">
+          <i class="fa-solid fa-pills"></i>
+          <span>การจ่ายยา</span>
+        </a>
+        <a href="appointment.html" class="menu nav-item">
+          <i class="fa-regular fa-clock"></i>
+          <span>การนัดหมาย</span>
+        </a>
+        <a href="medical_certificate_history.html" class="menu nav-item">
+          <i class="fa-solid fa-file-medical"></i>
+          <span>การออกใบรับรองแพทย์</span>
+        </a>
+        <a href="invoice_history.html" class="menu nav-item">
+          <i class="fa-solid fa-dollar-sign"></i>
+          <span>ใบแจ้งหนี้</span>
+        </a>
+      </nav>
 
-            <div class="logo">
-                <i class="fa fa-plus"></i>
+      <div class="sidebar-footer">
+        <div class="profile-box">
+          <div class="profile-info">
+            <div class="profile-avatar">
+              <i class="fa-solid fa-user-doctor"></i>
             </div>
+            <span>นพ. วิศรุส</span>
+          </div>
+          <a href="#" class="logout-link" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
         </div>
+      </div>
+    </aside>
 
-        <div class="search">
-            <input type="text" value="6400013">
-            <i class="fa fa-search"></i>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- Search Row -->
+      <div class="search-row">
+        <div class="search-box">
+          <input type="text" id="searchInput" value="6400013" />
+          <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
+      </div>
 
-        <h2 class="title">ประวัติการจ่ายยา</h2>
+      <!-- Page Title -->
+      <div class="page-title">
+        <h1>ประวัติการจ่ายยา</h1>
+      </div>
 
-        <div class="empty-box">
-            <p>ไม่พบข้อมูลคนไข้*</p>
-        </div>
+      <!-- Empty State Panel -->
+      <div class="empty-panel">
+        <p class="empty-text">ไม่พบข้อมูลคนไข้*</p>
+      </div>
 
-        <button class="add-btn">+ เพิ่มรายการจ่ายยา</button>
+      <!-- Add Button -->
+      <div class="add-row">
+        <button class="add-link" onclick="addRecord()">
+          + เพิ่มรายการจ่ายยา
+        </button>
+      </div>
 
-    </div>
+    </main>
+  </div>
 
-</div>
-
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+    function logout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        window.location.href = 'login.html';
+      }
+    }
+    function addRecord() {
+      alert('เพิ่มรายการจ่ายยา');
+    }
+  </script>
 </body>
 </html>

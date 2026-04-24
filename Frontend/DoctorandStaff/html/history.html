@@ -1,111 +1,188 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>ประวัติจ่ายยา</title>
-
-<link rel="stylesheet" href="../css/history.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ประวัติการจ่ายยา</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/history.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="left-section">
-    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <img src="../../img/hospital.png" class="circle-img">
-  </div>
-
-  <div class="profile">
-    <span>นพ.วิรุต</span>
-    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
-  </div>
-</header>
-
-    <div class="container">
-        
-        <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h3>เมนู</h3><br>
-
-    <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
-    <a href="history.html" class="menu active">การจ่ายยา</a>
-    <a href="appointment.html" class="menu">การนัดหมาย</a>
-    <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-    <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
-
-    <div class="logout" onclick="logout()">
-      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+  <!-- HEADER -->
+  <header class="header">
+    <div class="left-section">
+      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
     </div>
-  </aside>
+    <div class="profile">
+      <span>นพ.วิรุต</span>
+      <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+    </div>
+  </header>
 
-    <div class="main">
+  <div class="container">
 
-        <div class="search">
-            <input type="text" placeholder="รหัสผู้ป่วย / รหัสใบสั่งยา">
-            <i class="fa fa-search"></i>
-        </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="nav-list">
+        <a href="medical_history.html" class="menu nav-item">
+          <i class="fa-solid fa-notes-medical"></i>
+          <span>ประวัติการรักษา</span>
+        </a>
+        <a href="history.html" class="menu nav-item active">
+          <i class="fa-solid fa-pills"></i>
+          <span>การจ่ายยา</span>
+        </a>
+        <a href="appointment.html" class="menu nav-item">
+          <i class="fa-regular fa-clock"></i>
+          <span>การนัดหมาย</span>
+        </a>
+        <a href="medical_certificate_history.html" class="menu nav-item">
+          <i class="fa-solid fa-file-medical"></i>
+          <span>การออกใบรับรองแพทย์</span>
+        </a>
+        <a href="invoice_history.html" class="menu nav-item">
+          <i class="fa-solid fa-dollar-sign"></i>
+          <span>ใบแจ้งหนี้</span>
+        </a>
+      </nav>
 
-        <h2>ประวัติการจ่ายยา</h2>
-
-        <div class="content">
-
-            <div class="list">
-
-                <div class="card active">
-                    <p>วันที่ 20/03/2569</p>
-                    <p>รหัสใบสั่งยา : AE2345-1</p>
-                    <p>รหัสผู้ป่วย : 6780987</p>
-                    <p>ชื่อยา : Enalapril, Metformin</p>
-                </div>
-
-                <div class="card">
-                    <p>วันที่ 20/03/2569</p>
-                    <p>รหัสใบสั่งยา : AE2377-2</p>
-                    <p>รหัสผู้ป่วย : 6780988</p>
-                    <p>ชื่อยา : Salbutamol, Omeprazole</p>
-                </div>
-
-                <div class="card">
-                    <p>วันที่ 19/03/2569</p>
-                    <p>รหัสใบสั่งยา : AE2967-4</p>
-                    <p>รหัสผู้ป่วย : 6780988</p>
-                    <p>ชื่อยา : ORS, Ondansetron, Paracetamol</p>
-                </div>
-
-                <button class="add-btn">+ สร้างรายการจ่ายยา</button>
-
+      <div class="sidebar-footer">
+        <div class="profile-box">
+          <div class="profile-info">
+            <div class="profile-avatar">
+              <i class="fa-solid fa-user-doctor"></i>
             </div>
+            <span>นพ. วิศรุส</span>
+          </div>
+          <a href="#" class="logout-link" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
 
-            <div class="detail">
-                <h3>ใบรายการจ่ายยา</h3>
-                <p>รหัสใบสั่งยา : AE2345-1</p>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
 
-                <hr>
+      <!-- Search Row -->
+      <div class="search-row">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="รหัสผู้ป่วย / รหัสใบสั่งยา" />
+          <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </div>
 
-                <p>ชื่อผู้ป่วย : นาย สอง เสื้อแดง</p>
+      <!-- Page Title -->
+      <div class="page-title">
+        <h1>ประวัติการจ่ายยา</h1>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="two-col">
+
+        <!-- Left: Card List -->
+        <div class="left-col">
+          <div class="card-list">
+
+            <!-- Card 1 (active) -->
+            <div class="record-card active" onclick="selectCard(this, 0)">
+              <div class="card-info">
+                <p class="card-date">วันที่ 20/03/2569</p>
+                <p>รหัสใบสั่ง : AE2345-1</p>
                 <p>รหัสผู้ป่วย : 6780987</p>
-                <p>ประวัติการแพ้ : -</p>
-
-                <p>ชื่อแพทย์ผู้จ่ายยา : นพ. วิศรุจ อินทร์เพ็ญ</p>
-                <p>รหัสประจำตัวแพทย์ : 111222333</p>
-
                 <p>ชื่อยา : Enalapril, Metformin</p>
-                <p>ปริมาณการใช้ยา : รับประทานครั้งละ 2 ครั้งหลังอาหาร</p>
-                <p>ระยะเวลาใช้ยา : 1 เดือน</p>
-
-                <p>คำแนะนำ : ถ้ามีอาการผิดปกติให้มาพบแพทย์</p>
-
-                <div class="edit">
-                    แก้ไข <i class="fa fa-pen"></i>
-                </div>
+              </div>
+              <button class="card-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
             </div>
 
+            <!-- Card 2 -->
+            <div class="record-card" onclick="selectCard(this, 1)">
+              <div class="card-info">
+                <p class="card-date">วันที่ 20/03/2569</p>
+                <p>รหัสใบสั่ง : AE2377-2</p>
+                <p>รหัสผู้ป่วย : 6780988</p>
+                <p>ชื่อยา : Salbutamol, Omeprazole</p>
+              </div>
+              <button class="card-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="record-card" onclick="selectCard(this, 2)">
+              <div class="card-info">
+                <p class="card-date">วันที่ 19/03/2569</p>
+                <p>รหัสใบสั่ง : AE2967-4</p>
+                <p>รหัสผู้ป่วย : 6780988</p>
+                <p>ชื่อยา : ORS, Ondansetron, Paracetamol</p>
+              </div>
+              <button class="card-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Add Button -->
+          <div class="add-row">
+            <button class="add-link">+ สร้างรายการจ่ายยา</button>
+          </div>
         </div>
 
-    </div>
+        <!-- Right: Preview Panel -->
+        <div class="preview-panel">
+          <div class="paper-center">
+            <h2>ใบรายการจ่ายยา</h2>
+            <p class="muted">รหัสใบสั่งยา : AE2345-1</p>
+          </div>
 
-</div>
+          <div class="paper-section">
+            <p>ชื่อผู้ป่วย : นาย สมิง เสือเต่ง</p>
+            <p>รหัสผู้ป่วย : 6780987</p>
+            <p>ประวัติการแพ้ยา : -</p>
+          </div>
 
+          <div class="paper-section">
+            <p>ชื่อแพทย์ผู้จ่ายยา : นพ. วิศรุส จันทร์เพ็ญ</p>
+            <p>รหัสประจำตัวแพทย์ :1112222333</p>
+            <p>ชื่อยา : Enalapril, Metformin</p>
+            <p>ปริมาณการใช้ : รับประทานวันละ 2 ครั้งหลังอาหาร</p>
+            <p>ระยะเวลาในการใช้ยา : 1 เดือน</p>
+            <p>ข้อแนะนำ : ถ้ารับประทานแล้วอาเจียนควรรีบพบแพทย์</p>
+          </div>
+
+          <div class="edit-link">
+            <span>แก้ไข</span>
+            <i class="fa-regular fa-pen-to-square"></i>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    function logout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    function selectCard(el, index) {
+      document.querySelectorAll('.record-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
 </body>
 </html>

@@ -1,79 +1,144 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>Edit Dispense Medication</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แก้ไขรายการสั่งยา</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../css/edit-dispense-medication.css">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
-
-  <div class="sidebar">
-    <div class="menu">
-      <div class="menu-item">ประวัติการรักษา</div>
-      <div class="menu-item active">การจ่ายยา</div>
-      <div class="menu-item">การนัดหมาย</div>
-      <div class="menu-item">การออกใบรับรองแพทย์</div>
-      <div class="menu-item">แบบฟอร์ม</div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="left-section">
+      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
     </div>
-
-    <div class="user">
-      <span>นพ. วีระ</span>
+    <div class="profile">
+      <span>นพ.วิรุต</span>
+      <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
     </div>
+  </header>
+
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="nav-list">
+        <a href="medical_history.html" class="menu nav-item">
+          <i class="fa-solid fa-notes-medical"></i>
+          <span>ประวัติการรักษา</span>
+        </a>
+        <a href="history.html" class="menu nav-item active">
+          <i class="fa-solid fa-pills"></i>
+          <span>การจ่ายยา</span>
+        </a>
+        <a href="appointment.html" class="menu nav-item">
+          <i class="fa-regular fa-clock"></i>
+          <span>การนัดหมาย</span>
+        </a>
+        <a href="medical_certificate_history.html" class="menu nav-item">
+          <i class="fa-solid fa-file-medical"></i>
+          <span>การออกใบรับรองแพทย์</span>
+        </a>
+        <a href="invoice_history.html" class="menu nav-item">
+          <i class="fa-solid fa-dollar-sign"></i>
+          <span>ใบแจ้งหนี้</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="profile-box">
+          <div class="profile-info">
+            <div class="profile-avatar">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <span>นพ. วิศรุส</span>
+          </div>
+          <a href="#" class="logout-link" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- Page Title -->
+      <div class="form-title">
+        <button class="back-link" onclick="history.back()">
+          <i class="fa-solid fa-circle-arrow-left"></i>
+        </button>
+        <h1>แก้ไขใบรายการจ่ายยา</h1>
+      </div>
+
+      <!-- Form -->
+      <div class="form-body">
+
+        <!-- Row 1: รหัสประจำตัวผู้ป่วย + รหัสประจำตัวแพทย์ -->
+        <div class="form-row-two">
+          <div class="form-group inline">
+            <label>รหัสประจำตัวผู้ป่วย :</label>
+            <input class="input input-short" type="text" value="6780987" />
+          </div>
+          <div class="form-group inline">
+            <label>รหัสประจำตัวแพทย์ :</label>
+            <input class="input input-short" type="text" value="1112222333" />
+          </div>
+        </div>
+
+        <!-- Row 2: ชื่อยา -->
+        <div class="form-group inline">
+          <label>ชื่อยา :</label>
+          <input class="input input-med" type="text" value="Enalapril, Metformin" />
+        </div>
+
+        <!-- Row 3: ปริมาณการใช้ยา -->
+        <div class="form-group block">
+          <label>ปริมาณการใช้ยา :</label>
+          <textarea class="textarea">รับประทานวันละ 2 ครั้งหลังอาหาร</textarea>
+        </div>
+
+        <!-- Row 4: ระยะเวลาการใช้ยา -->
+        <div class="form-group block">
+          <label>ระยะเวลาการใช้ยา :</label>
+          <input class="input input-full" type="text" value="1 เดือน" />
+        </div>
+
+        <!-- Row 5: ข้อแนะนำการใช้ยา -->
+        <div class="form-group block">
+          <label>ข้อแนะนำการใช้ยา :</label>
+          <textarea class="textarea">ถ้ารับประทานแล้วอาเจียนควรรีบพบแพทย์</textarea>
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="history.back()">ยกเลิก</button>
+        <button class="btn btn-primary" onclick="submitForm()">ยืนยัน</button>
+      </div>
+
+    </main>
   </div>
 
-  <div class="main">
-    
-    <div class="topbar">
-      <div class="menu-icon">☰</div>
-      <div class="add-btn">+</div>
-    </div>
-
-    <div class="content">
-      <h2>← แก้ไขใบรายการจ่ายยา</h2>
-
-      <div class="form-row">
-        <div>
-          <label>รหัสประจำตัวผู้ป่วย :</label>
-          <input type="text" value="6780987">
-        </div>
-        <div>
-          <label>รหัสประจำตัวแพทย์ :</label>
-          <input type="text" value="1112222333">
-        </div>
-      </div>
-
-      <div>
-        <label>ชื่อยา :</label>
-        <input type="text" value="Enalapril, Metformin">
-      </div>
-
-      <div>
-        <label>ปริมาณการใช้ยา :</label>
-        <textarea>รับประทานวันละ 2 ครั้งหลังอาหาร</textarea>
-      </div>
-
-      <div>
-        <label>ระยะเวลาการใช้ยา :</label>
-        <input type="text" value="1 เดือน">
-      </div>
-
-      <div>
-        <label>ข้อแนะนำการใช้ยา :</label>
-        <textarea>ถ้ามีอาการผิดปกติควรพบแพทย์</textarea>
-      </div>
-
-      <div class="buttons">
-        <button class="cancel">ยกเลิก</button>
-        <button class="confirm">ยืนยัน</button>
-      </div>
-
-    </div>
-  </div>
-
-</div>
-
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+    function logout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        window.location.href = 'login.html';
+      }
+    }
+    function submitForm() {
+      alert('บันทึกการแก้ไขเรียบร้อย');
+    }
+  </script>
 </body>
 </html>
