@@ -28,41 +28,18 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+      <h3>เมนู</h3>
+
       <nav class="nav-list">
-        <a href="medical_history.html" class="menu nav-item">
-          <i class="fa-solid fa-notes-medical"></i>
-          <span>ประวัติการรักษา</span>
-        </a>
-        <a href="history.html" class="menu nav-item active">
-          <i class="fa-solid fa-pills"></i>
-          <span>การจ่ายยา</span>
-        </a>
-        <a href="appointment.html" class="menu nav-item">
-          <i class="fa-regular fa-clock"></i>
-          <span>การนัดหมาย</span>
-        </a>
-        <a href="medical_certificate_history.html" class="menu nav-item">
-          <i class="fa-solid fa-file-medical"></i>
-          <span>การออกใบรับรองแพทย์</span>
-        </a>
-        <a href="invoice_history.html" class="menu nav-item">
-          <i class="fa-solid fa-dollar-sign"></i>
-          <span>ใบแจ้งหนี้</span>
-        </a>
+        <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+        <a href="history.html" class="menu active">การจ่ายยา</a>
+        <a href="appointment.html" class="menu">การนัดหมาย</a>
+        <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+        <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
       </nav>
 
-      <div class="sidebar-footer">
-        <div class="profile-box">
-          <div class="profile-info">
-            <div class="profile-avatar">
-              <i class="fa-solid fa-user-doctor"></i>
-            </div>
-            <span>นพ. วิศรุส</span>
-          </div>
-          <a href="#" class="logout-link" onclick="logout()">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </a>
-        </div>
+      <div class="logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
       </div>
     </aside>
 
@@ -71,7 +48,7 @@
 
       <!-- Page Title -->
       <div class="form-title">
-        <button class="back-link" onclick="history.back()">
+        <button class="back-link" onclick="window.location.href='history.html'">
           <i class="fa-solid fa-circle-arrow-left"></i>
         </button>
         <h1>แก้ไขใบรายการจ่ายยา</h1>
@@ -120,7 +97,7 @@
 
       <!-- Actions -->
       <div class="form-actions">
-        <button class="btn btn-secondary" onclick="history.back()">ยกเลิก</button>
+        <button class="btn btn-secondary" onclick="window.location.href='history.html'">ยกเลิก</button>
         <button class="btn btn-primary" onclick="submitForm()">ยืนยัน</button>
       </div>
 
