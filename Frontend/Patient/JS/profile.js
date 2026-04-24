@@ -1,46 +1,14 @@
 // =========================
-// DEFAULT AVATAR (SVG inline)
+// DEFAULT AVATAR
 // =========================
 const DEFAULT_AVATAR =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
 
 // =========================
-// MOCK DATA (ถ้ายังไม่มี user)
-// =========================
-(function ensureMockUser() {
-  const existing = localStorage.getItem("currentUser");
-  if (existing) return;
-
-  const mockUser = {
-    username: "Rose",
-    email: "Rose@gmail.com",
-    fullname: "กุหลาบ ใจดี",
-    firstname: "กุหลาบ",
-    lastname: "ใจดี",
-    phone: "0812345678",
-    idcard: "1234567890123",
-    gender: "female",
-    birth: "1-1-2000",
-    address: "กรุงเทพ",
-    blood: "O",
-    disease: "ไม่มี",
-    allergy: "",
-    weight: "50",
-    height: "160",
-    right: "สิทธิบัตรทอง",
-    role: "Patient",
-    status: "active",
-    profileImage: ""
-  };
-
-  localStorage.setItem("currentUser", JSON.stringify(mockUser));
-  localStorage.setItem("users", JSON.stringify([mockUser]));
-})();
-
-// =========================
 // MAIN
 // =========================
 document.addEventListener("DOMContentLoaded", function () {
+
   let user = JSON.parse(localStorage.getItem("currentUser")) || {};
 
   const img = document.getElementById("profileImage");
@@ -50,10 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // LOAD IMAGE
   // =========================
   if (img) {
-    img.src =
-      user.profileImage && user.profileImage !== ""
-        ? user.profileImage
-        : DEFAULT_AVATAR;
+    img.src = user.profileImage && user.profileImage !== ""
+      ? user.profileImage
+      : DEFAULT_AVATAR;
 
     img.style.cursor = "pointer";
     img.addEventListener("click", () => {
@@ -69,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const file = e.target.files[0];
       if (!file) return;
 
-      // เช็คว่าเป็นรูปจริง
       if (!file.type.startsWith("image/")) {
         alert("กรุณาเลือกรูปภาพ");
         return;
@@ -80,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       reader.onload = function (event) {
         const imageData = event.target.result;
 
-        // เปลี่ยนรูปทันที
+        // แสดงรูปทันที
         if (img) img.src = imageData;
 
         // update currentUser
@@ -94,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (index !== -1) {
           users[index].profileImage = imageData;
-        } else {
+        } else if (user.email) {
           users.push(user);
         }
 
@@ -121,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setText("phone", user.phone);
   setText("address", user.address);
 
-  // birth
+  // วันเกิด
   if (user.birth) {
     const parts = user.birth.split("-");
     setText(
@@ -134,6 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setText("birth", "-");
   }
 
+  // สุขภาพ
   setText("blood", user.blood);
   setText("disease", user.disease);
   setText("allergy", user.allergy || "ไม่มี");
@@ -141,8 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
   setText("height", user.height ? `${user.height} ซม.` : "-");
   setText("right", user.right);
 
+  // role / status
   setText("userRole", user.role || "Patient");
   setText("userStatus", user.status || "active");
+
 });
 
 // =========================
@@ -152,7 +121,9 @@ function setText(id, value) {
   const el = document.getElementById(id);
   if (!el) return;
   el.innerText =
-    value !== undefined && value !== null && value !== "" ? value : "-";
+    value !== undefined && value !== null && value !== ""
+      ? value
+      : "-";
 }
 
 function formatGender(gender) {
