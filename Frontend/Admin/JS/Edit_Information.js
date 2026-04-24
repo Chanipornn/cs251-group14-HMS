@@ -2,7 +2,6 @@
 // Edit_Information.js
 // ============================================================
 
-
 // DEFAULT AVATAR
 const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
 
@@ -22,15 +21,14 @@ const EDITABLE_BY_ROLE = {
   admin:   ["name", "emailInput", "firstName", "lastName", "role", "status"],
 };
 
-// normalize role string → key ใน EDITABLE_BY_ROLE
 function normalizeRole(role) {
   if (!role) return "patient";
   const r = role.toLowerCase().trim();
-  if (r === "patient"  || r === "ผู้ป่วย")                return "patient";
-  if (r === "doctor"   || r === "แพทย์" || r === "หมอ")   return "doctor";
-  if (r === "staff"    || r === "เจ้าหน้าที่")            return "staff";
-  if (r === "admin"    || r === "ผู้ดูแลระบบ")            return "admin";
-  return "patient"; // default
+  if (r === "patient"  || r === "ผู้ป่วย")               return "patient";
+  if (r === "doctor"   || r === "แพทย์" || r === "หมอ")  return "doctor";
+  if (r === "staff"    || r === "เจ้าหน้าที่")           return "staff";
+  if (r === "admin"    || r === "ผู้ดูแลระบบ")           return "admin";
+  return "patient";
 }
 
 // ============================================================
@@ -41,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const users  = JSON.parse(localStorage.getItem("users")) || [];
   const editId = localStorage.getItem("editUserId");
 
-  // ใช้ == เพราะ editId จาก localStorage เป็น string
   const user = users.find(u => u.id == editId);
   if (!user) {
     alert("ไม่พบข้อมูลผู้ใช้");
@@ -50,12 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // PROFILE IMAGE UPLOAD (Edit)
+  // PROFILE IMAGE UPLOAD
   // =========================
   const fileInput = document.getElementById("profileFileInput");
   const preview   = document.getElementById("profilePreview");
 
-  // โหลดรูปเดิมของ user
   if (preview) {
     preview.src = user.profileImage || DEFAULT_AVATAR;
   }
@@ -82,17 +78,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // -------------------------------------------------------
-  // 1. LOAD — แสดงข้อมูลเดิมทุกฟิล
+  // 1. LOAD
   // -------------------------------------------------------
   loadUserData(user);
 
-  // inject <span class="req"> ครอบ * ใน label ทุกอัน → CSS จะทำให้เป็นสีแดง
   document.querySelectorAll(".form-group label").forEach(label => {
     label.innerHTML = label.innerHTML.replace(/ \*/g, ' <span class="req">*</span>');
   });
 
   // -------------------------------------------------------
-  // 2. LOCK — ล็อกฟิลที่แก้ไขไม่ได้ตาม role
+  // 2. LOCK
   // -------------------------------------------------------
   const roleKey  = normalizeRole(user.role);
   const editable = EDITABLE_BY_ROLE[roleKey] || [];
@@ -113,17 +108,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ============================================================
-// LOAD USER DATA — เติมข้อมูลเดิมลงทุกฟิล
-// key map ตรงกับที่ create_users.js บันทึกลง localStorage
+// LOAD USER DATA
 // ============================================================
 function loadUserData(user) {
 
-  // Header
   setText("username", user.username || user.name || "-");
   setText("email",    user.email    || "-");
   setText("roleText", user.role     || "-");
 
-  // ฟิลทั่วไป
   setVal("name",       user.name    || "");
   setVal("emailInput", user.email   || "");
   setVal("role",       user.role    || "");
@@ -135,15 +127,11 @@ function loadUserData(user) {
   setVal("weight",     user.weight  || "");
   setVal("height",     user.height  || "");
 
-  // create_users.js บันทึก key ต่างกัน → map ให้ตรง
-  setVal("nationalId", user.idcard || "");   // idcard → nationalId
+  setVal("nationalId", user.idcard || "");
   setVal("gender",     user.gender || "");
-  setVal("birthdate",  user.birth  || "");   // birth  → birthdate
-  setVal("treatment",  user.right  || "");   // right  → treatment
+  setVal("birthdate",  user.birth  || "");
+  setVal("treatment",  user.right  || "");
 
-  // firstName / lastName
-  // create เก็บรวมใน fullname เช่น "สมชาย ใจดี" → ต้อง split ออก
-  // แต่ถ้าเคย save แยก key ไว้แล้ว (จาก edit ครั้งก่อน) ใช้ key นั้นเลย
   if (user.firstName || user.lastName) {
     setVal("firstName", user.firstName || "");
     setVal("lastName",  user.lastName  || "");
@@ -153,21 +141,18 @@ function loadUserData(user) {
     setVal("lastName",  parts.slice(1).join(" ") || "");
   }
 
-  // Dropdown — กรุ๊ปเลือด
   setDropdown("blood", user.blood || "เลือกกรุ๊ปเลือด");
 }
 
 // ============================================================
-// LOCK FIELDS — disable ฟิลที่ไม่อยู่ใน editable list
+// LOCK FIELDS
 // ============================================================
 function lockFields(editableIds) {
-  // รายการ id ของฟิลทั้งหมดในฟอร์ม
   const ALL_FIELDS = [
     "name", "emailInput", "role", "status",
     "disease", "allergy", "firstName", "lastName",
     "phone", "address", "weight", "height",
     "treatment", "blood",
-    // ฟิลที่ lock ตายตัวเสมอ (ไม่ต้องสน editable list)
     "nationalId", "gender", "birthdate"
   ];
 
@@ -175,7 +160,6 @@ function lockFields(editableIds) {
     const el = document.getElementById(id);
     if (!el) return;
 
-    // nationalId, gender, birthdate → disabled เสมอ
     const alwaysLocked = ["nationalId", "gender", "birthdate"];
     if (alwaysLocked.includes(id)) {
       el.disabled = true;
@@ -191,7 +175,6 @@ function lockFields(editableIds) {
     }
   });
 
-  // Dropdown กรุ๊ปเลือด — ถ้า blood ไม่อยู่ใน editable ให้ disable trigger
   const bloodDropdown = document.querySelector("#blood")
     ?.closest(".custom-dropdown")
     ?.querySelector(".dropdown-selected");
@@ -209,16 +192,11 @@ function lockFields(editableIds) {
 
 // ============================================================
 // SHOW / HIDE FIELDS BY ROLE
-// ใช้ data-roles attribute บน .form-group เพื่อกำหนดว่า role ไหนเห็นฟิลนี้
 // ============================================================
 function showFieldsByRole(roleKey) {
   document.querySelectorAll(".form-grid .form-group[data-roles]").forEach(group => {
     const allowed = group.getAttribute("data-roles").split(",").map(r => r.trim());
-    if (allowed.includes(roleKey)) {
-      group.style.display = "";
-    } else {
-      group.style.display = "none";
-    }
+    group.style.display = allowed.includes(roleKey) ? "" : "none";
   });
 }
 
@@ -231,12 +209,9 @@ function saveUser(editId, roleKey) {
   if (index === -1) return;
 
   const editable = EDITABLE_BY_ROLE[roleKey] || [];
-
-  // เริ่มจากข้อมูลเดิม แล้ว overwrite เฉพาะฟิลที่แก้ไขได้
-  const updated = { ...users[index] };
+  const updated  = { ...users[index] };
 
   const FIELD_MAP = {
-    // บันทึก key ตรงกับ create_users.js เสมอ
     name:       () => ({ name: getVal("name") }),
     emailInput: () => ({ email: getVal("emailInput") }),
     role:       () => ({ role: getVal("role") }),
@@ -248,9 +223,7 @@ function saveUser(editId, roleKey) {
     address:    () => ({ address: getVal("address") }),
     weight:     () => ({ weight: getVal("weight") }),
     height:     () => ({ height: getVal("height") }),
-    treatment:  () => ({ right: getVal("treatment") }),  // เก็บกลับเป็น right ตาม create
-
-    // firstName / lastName → อัปเดตทั้ง key แยก และ fullname รวม
+    treatment:  () => ({ right: getVal("treatment") }),
     firstName: () => {
       const fn = getVal("firstName");
       const ln = getVal("lastName");
@@ -263,19 +236,51 @@ function saveUser(editId, roleKey) {
     },
   };
 
+  // apply editable fields (dedupe firstName/lastName)
+  const applied = new Set();
   editable.forEach(id => {
-    if (FIELD_MAP[id]) {
+    if (FIELD_MAP[id] && !applied.has(id)) {
       Object.assign(updated, FIELD_MAP[id]());
+      // ถ้า apply firstName แล้วให้ mark lastName ว่า apply แล้วด้วย (เพราะ result เหมือนกัน)
+      if (id === "firstName") applied.add("lastName");
+      if (id === "lastName")  applied.add("firstName");
+      applied.add(id);
     }
   });
 
-  // บันทึกรูปโปรไฟล์ถ้ามีการเปลี่ยนใหม่
   if (selectedProfileImage) {
     updated.profileImage = selectedProfileImage;
   }
 
   users[index] = updated;
   localStorage.setItem("users", JSON.stringify(users));
+
+  // =========================
+  // SYNC กลับไป allUsers
+  // ถ้า role เป็น Doctor หรือ Staff ให้อัปเดตชื่อ/รูป/email ใน allUsers ด้วย
+  // =========================
+  const roleNorm = normalizeRole(updated.role);
+  if (roleNorm === "doctor" || roleNorm === "staff") {
+    let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+    const allIndex = allUsers.findIndex(
+      a => a.userId === updated.id || a.email === updated.email
+    );
+    if (allIndex !== -1) {
+      allUsers[allIndex] = {
+        ...allUsers[allIndex],
+        name:  updated.fullname || `${updated.firstName || ""} ${updated.lastName || ""}`.trim() || updated.name,
+        email: updated.email,
+        img:   updated.profileImage || allUsers[allIndex].img,
+        phone: updated.phone || allUsers[allIndex].phone,
+        role:  updated.role,
+        type:  roleNorm,
+      };
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+    }
+  }
+  // =========================
+  // END SYNC
+  // =========================
 
   alert("บันทึกสำเร็จ!");
   window.location.href = "User_Dashboard.html";
@@ -314,10 +319,11 @@ function toggleSidebar() {
 }
 
 // ============================================================
-// LOGOUT
+// LOGOUT — ล้างเฉพาะ session ไม่ล้าง allUsers / users
 // ============================================================
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem("editUserId");
+  localStorage.removeItem("editUser");
   window.location.href = "../../login.html";
 }
 
@@ -347,9 +353,6 @@ function selectOption(option, selectId) {
   dropdown.querySelector(".arrow").classList.remove("rotate");
 }
 
-// ============================================================
-// CLICK OUTSIDE
-// ============================================================
 document.addEventListener("click", function (e) {
   if (!e.target.closest(".custom-dropdown")) {
     document.querySelectorAll(".dropdown-options").forEach(d => d.classList.remove("show"));
@@ -358,7 +361,7 @@ document.addEventListener("click", function (e) {
 });
 
 // ============================================================
-// SET DROPDOWN
+// SET DROPDOWN — แก้ selector ให้ตรงกับ HTML structure
 // ============================================================
 function setDropdown(id, value) {
   const input = document.getElementById(id);
@@ -366,7 +369,9 @@ function setDropdown(id, value) {
   input.value = value;
   const container = input.closest(".custom-dropdown");
   if (container) {
-    const span = container.querySelector("span");
+    // รองรับทั้ง .dropdown-selected span และ span ตรงๆ
+    const span = container.querySelector(".dropdown-selected span") 
+              || container.querySelector("span");
     if (span) span.innerText = value;
   }
 }

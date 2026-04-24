@@ -10,17 +10,17 @@ let selectedProfileImage = null;
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  const form         = document.getElementById("createForm");
-  const roleButtons  = document.querySelectorAll(".role-btn");
-  const roleInput    = document.getElementById("role");
+  const form          = document.getElementById("createForm");
+  const roleButtons   = document.querySelectorAll(".role-btn");
+  const roleInput     = document.getElementById("role");
   const patientFields = document.getElementById("patientFields");
-  const extraFields  = document.getElementById("extraFields");
+  const extraFields   = document.getElementById("extraFields");
 
   // =========================
   // PROFILE IMAGE UPLOAD
   // =========================
-  const fileInput   = document.getElementById("profileFileInput");
-  const preview     = document.getElementById("profilePreview");
+  const fileInput = document.getElementById("profileFileInput");
+  const preview   = document.getElementById("profilePreview");
 
   // ตั้ง default avatar
   if (preview) preview.src = DEFAULT_AVATAR;
@@ -30,13 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const file = this.files[0];
       if (!file) return;
 
-      // ตรวจว่าเป็นไฟล์รูป
       if (!file.type.startsWith("image/")) {
         alert("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
         return;
       }
 
-      // ตรวจขนาดไม่เกิน 2MB
       if (file.size > 2 * 1024 * 1024) {
         alert("ขนาดไฟล์ต้องไม่เกิน 2MB");
         return;
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const reader = new FileReader();
       reader.onload = function (e) {
-        selectedProfileImage = e.target.result; // base64
+        selectedProfileImage = e.target.result;
         if (preview) preview.src = selectedProfileImage;
       };
       reader.readAsDataURL(file);
@@ -63,10 +61,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // =========================
   function updateFormByRole(role) {
     if (role === "Patient") {
-      extraFields.style.display  = "block";
+      extraFields.style.display   = "block";
       patientFields.style.display = "block";
     } else {
-      extraFields.style.display  = "none";
+      extraFields.style.display   = "none";
       patientFields.style.display = "none";
     }
   }
@@ -181,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // =========================
       // CREATE USER
-      // profileImage → base64 ถ้าอัปโหลด, DEFAULT_AVATAR ถ้าไม่ได้อัปโหลด
       // =========================
       const newUser = {
         id:           Date.now(),
@@ -211,9 +208,45 @@ document.addEventListener("DOMContentLoaded", function () {
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
 
+      // =========================
+      // SYNC ไป allUsers
+      // สำหรับหน้า dashboard จัดการบุคลากร
+      // =========================
+      if (currentRole === "Doctor" || currentRole === "Staff") {
+        let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+        const staffEntry = {
+          name:      `${firstName} ${lastName}`,
+          role:      currentRole,
+          dept:      "",           // ยังไม่มี — ให้ admin ตั้งที่หน้า edit
+          expertise: "",
+          img:       selectedProfileImage || DEFAULT_AVATAR,
+          type:      currentRole.toLowerCase(),  // "doctor" หรือ "staff"
+          phone:     phone,
+          email:     email,
+          userId:    newUser.id,   // เชื่อมกลับหา "users"
+        };
+
+        allUsers.push(staffEntry);
+
+        // อัปเดต index ให้ตรงเสมอ
+        allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
+
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
+      }
+      // =========================
+      // END SYNC
+      // =========================
+
       document.getElementById("successModal").classList.add("show");
       setTimeout(() => {
-        window.location.href = "User_Dashboard.html";
+        // ถ้าเป็น Doctor หรือ Staff → redirect ไปหน้า dashboard บุคลากรก่อน
+        // เพื่อให้ admin กรอกแผนกและความเชี่ยวชาญได้ทันที
+        if (currentRole === "Doctor" || currentRole === "Staff") {
+          window.location.href = "dashboard.html";
+        } else {
+          window.location.href = "User_Dashboard.html";
+        }
       }, 1500);
     });
   }
@@ -223,7 +256,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // =========================
   window.closeModal = function () {
     document.getElementById("successModal").classList.remove("show");
-    window.location.href = "User_Dashboard.html";
+    if (roleInput.value === "Doctor" || roleInput.value === "Staff") {
+      window.location.href = "dashboard.html";
+    } else {
+      window.location.href = "User_Dashboard.html";
+    }
   };
 
   // =========================
@@ -244,8 +281,8 @@ function toggleDropdown(el) {
 
 function selectOption(option, selectId) {
   const dropdown = option.closest(".custom-dropdown");
-  dropdown.querySelector("span").innerText       = option.innerText;
-  document.getElementById(selectId).value        = option.innerText;
+  dropdown.querySelector("span").innerText        = option.innerText;
+  document.getElementById(selectId).value         = option.innerText;
   dropdown.querySelector(".dropdown-options").classList.remove("show");
   dropdown.querySelector(".arrow").classList.remove("rotate");
 }

@@ -127,14 +127,23 @@ function confirmDelete() {
 }
 
 // =========================
-// SIDEBAR / LOGOUT
+// SIDEBAR — แก้: จำสถานะด้วย localStorage
 // =========================
 function toggleSidebar() {
-  document.querySelector(".sidebar").classList.toggle("hide");
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("hide");
+
+  // บันทึกสถานะ
+  localStorage.setItem("sidebarHidden", sidebar.classList.contains("hide"));
 }
 
+// =========================
+// LOGOUT
+// =========================
 function logout() {
-  localStorage.clear();
+  // ล้างเฉพาะ key ที่เกี่ยวกับ session ไม่ล้าง sidebarHidden
+  localStorage.removeItem("users");
+  localStorage.removeItem("editUserId");
   window.location.href = "../../login.html";
 }
 
@@ -201,8 +210,14 @@ function selectRole(role) {
 // INIT
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
+  // แก้: โหลดสถานะ sidebar จาก localStorage
+  if (localStorage.getItem("sidebarHidden") === "true") {
+    document.querySelector(".sidebar").classList.add("hide");
+  }
+
   renderTable();
 });
+
 function goProfile() {
   window.location.href = "profile.html";
 }
