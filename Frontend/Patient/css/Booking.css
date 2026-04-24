@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
 
-* { box-sizing: border-box; }
+* { 
+    box-sizing: border-box; 
+}
 
 body {
     font-family: 'Prompt', sans-serif;
@@ -8,7 +10,7 @@ body {
     margin: 0;
 }
 
-/* ✅ เต็มจอ */
+/* ================= CONTAINER ================= */
 .mobile-container {
     width: 100%;
     min-height: 100vh;
@@ -19,8 +21,10 @@ body {
     flex-direction: column;
 }
 
-/* HEADER */
-.header { margin-bottom: 20px; }
+/* ================= HEADER ================= */
+.header { 
+    margin-bottom: 20px; 
+}
 
 .back-btn {
     width: 42px;
@@ -31,7 +35,7 @@ body {
     cursor: pointer;
 }
 
-/* HERO */
+/* ================= HERO ================= */
 .doctor-hero {
     background: linear-gradient(135deg, #746BC3 0%, #a29bfe 100%);
     border-radius: 30px;
@@ -41,6 +45,8 @@ body {
     height: 220px;
     margin-bottom: 30px;
     box-shadow: 0 10px 20px rgba(116, 107, 195, 0.3);
+
+    overflow: hidden; /* 🔥 แก้ปัญหารูปล้น */
 }
 
 .hero-text {
@@ -60,18 +66,35 @@ body {
 
 .hero-img {
     position: absolute;
-    right: 20px;
-    bottom: 0;
-    height: 100%;
+    right: 8px;
+    bottom: 5px;
+
+    width: 150px;
+    height: auto;
+
+    object-fit: contain;
+    max-height: 95%;
+
+    background: none;
+    padding: 0;
+    border-radius: 25px;
+
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+
 }
 
-/* HEART */
+/* ================= HEART ================= */
+/* ❤️ อยู่มุม card เหมือนเดิม */
 .heart-badge {
     position: absolute;
     top: 15px;
     right: 15px;
+
+    z-index: 20;
+
     background: white;
     color: #ff4d4d;
+
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -82,8 +105,15 @@ body {
 
     border: 2px solid #eee;
 }
+/* ลบกรอบที่ครอบรูป */
+.hero-content div:has(.hero-img) {
+    background: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
-/* DATE */
+/* ================= DATE ================= */
 .section-title {
     display: flex;
     align-items: center;
@@ -113,7 +143,7 @@ body {
     border-radius: 10px;
 }
 
-/* DATE ITEM */
+/* ================= DATE ITEM ================= */
 .date-item {
     min-width: 60px;
     height: 80px;
@@ -134,7 +164,7 @@ body {
     color: white;
 }
 
-/* TIME */
+/* ================= TIME ================= */
 .time-container {
     background: #dbd8ff;
     border-radius: 20px;
@@ -146,7 +176,7 @@ body {
     margin-bottom: 12px;
 }
 
-/* 🔥 Responsive Grid */
+/* Responsive Grid */
 .time-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -168,7 +198,7 @@ body {
     font-weight: 600;
 }
 
-/* DROPDOWN */
+/* ================= DROPDOWN ================= */
 .custom-dropdown {
     border: 2px solid #746BC3;
     border-radius: 15px;
@@ -204,7 +234,7 @@ body {
     width: 60px;
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
 .btn-submit {
     width: 100%;
     padding: 16px;
@@ -236,7 +266,7 @@ body {
     }
 
     .hero-img {
-        height: 90%;
+        width: 110px;
     }
 
     .time-grid {
@@ -244,22 +274,21 @@ body {
     }
 }
 
-/* MODAL OVERLAY */
+/* ================= MODAL ================= */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* พื้นหลังดำโปร่งแสง */
-    display: none; /* ซ่อนไว้ก่อน */
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    backdrop-filter: blur(5px); /* พื้นหลังเบลอ */
+    backdrop-filter: blur(5px);
 }
 
-/* MODAL BOX */
 .modal-content {
     background: white;
     padding: 40px;
@@ -302,7 +331,6 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 .btn-close-modal:hover {

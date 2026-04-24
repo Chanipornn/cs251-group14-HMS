@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Detail</title>
+
     <link rel="stylesheet" href="../CSS/Booking.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="../JS/Booking.js" defer></script>
@@ -21,17 +22,26 @@
 
         <div class="doctor-hero">
             <div class="hero-content">
+
+                <!-- ✅ เปลี่ยนตรงนี้ -->
                 <div class="hero-text">
-                    <h2>นพ.สมชาย ศรีสุข</h2>
-                    <p>คลินิก ตา หู คอ จมูก</p>
+                    <h2 id="doctorName">-</h2>
+                    <p id="doctorDept">-</p>
                 </div>
-                <div class="heart-badge"><i class="fa-solid fa-heart"></i></div>
-                <img src="../../img/doctordicut.png" alt="Doctor" class="hero-img">
+
+                <div class="heart-badge">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <!-- ✅ เปลี่ยนตรงนี้ -->
+                <img id="doctorImg" src="" alt="Doctor" class="hero-img">
+
             </div>
         </div>
 
         <div class="section-title">
-            <span>เมษายน 2026</span> <i class="fa-regular fa-calendar-days"></i>
+            <span>เมษายน 2026</span> 
+            <i class="fa-regular fa-calendar-days"></i>
             <div class="nav-arrows">
                 <i class="fa-solid fa-chevron-left"></i>
                 <i class="fa-solid fa-chevron-right"></i>
@@ -69,14 +79,16 @@
             <div class="dropdown-list" id="drop-list">
                 <label class="option-item"><input type="radio" name="reason"> ตรวจทั่วไป</label>
                 <label class="option-item"><input type="radio" name="reason"> ติดตามอาการ</label>
-                <label class="option-item"><input type="radio" name="reason"> อื่น ๆ <input type="text"
-                        class="input-line"></label>
+                <label class="option-item">
+                    อื่น ๆ <input type="text" class="input-line">
+                </label>
             </div>
         </div>
 
         <button class="btn-submit">จองคิว</button>
     </div>
 
+    <!-- Modal -->
     <div id="successModal" class="modal-overlay">
         <div class="modal-content">
             <div class="success-icon">
@@ -87,6 +99,6 @@
             <button class="btn-close-modal" onclick="closeModal()">ตกลง</button>
         </div>
     </div>
-</body>
 
+</body>
 </html>

@@ -32,3 +32,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================
+// 🔙 BACK BUTTON (กันพลาด)
+// ==========================
+function handleBack(e) {
+    e.preventDefault();
+
+    // ถ้ามีหน้าก่อนหน้า → ย้อน
+    if (document.referrer && window.history.length > 1) {
+        window.history.back();
+    } else {
+        // ถ้าไม่มี → ไปหน้า Home
+        window.location.href = "home.html";
+    }
+}
+
+
+// ==========================
+// 💳 ปุ่มชำระเงิน
+// ==========================
+document.addEventListener("DOMContentLoaded", function () {
+
+    const payBtn = document.getElementById("btn-pay-now");
+
+    if (payBtn) {
+        payBtn.addEventListener("click", function () {
+            alert("ดำเนินการชำระเงินสำเร็จ ✅");
+
+            // ตัวอย่าง: เปลี่ยนสถานะ UI
+            const status = document.querySelector(".status-badge.unpaid");
+            if (status) {
+                status.classList.remove("unpaid");
+                status.classList.add("paid");
+                status.querySelector(".status-text").textContent = "สถานะ: ชำระแล้ว";
+            }
+        });
+    }
+
+});

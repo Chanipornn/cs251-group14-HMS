@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>ลงทะเบียนผู้ป่วย</title>
+    <link rel="stylesheet" href="../../Patient/css/request_certificate.css">
+
+</head>
+
+<body>
+
+<div class="main-content">
+    <div class="form-container">
+
+        <a href="home.html" class="back-btn-circle">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div class="certificate-card">
+            <h2 class="form-title">ตรวจสอบใบรับรองแพทย์</h2>
+
+            <form id="certificateForm">
+                <div class="input-group">
+                    <label><i class="fa-solid fa-calendar-days"></i> วันที่ตรวจ</label>
+                    <select id="visitDateSelect" required>
+                        <option value="">เลือกวันที่เคยเข้ารับการตรวจ</option>
+                        </select>
+                </div>
+
+                <div class="input-group">
+                    <label>วัตถุประสงค์</label>
+                    <select id="requestReason" required>
+                        <option value="ลาป่วย">ลาป่วย</option>
+                        <option value="สมัครงาน">สมัครงาน</option>
+                        <option value="ใบขับขี่">ทำใบขับขี่</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>รายละเอียดเพิ่มเติม</label>
+                    <textarea id="additionalDetail" rows="4" placeholder="ระบุรายละเอียดที่ต้องการให้ระบุในใบรับรอง..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-request">ขอใบรับรอง</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

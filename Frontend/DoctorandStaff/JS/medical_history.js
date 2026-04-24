@@ -35,7 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. ตัวแปรอ้างอิง HTML (Common)
     const toggleBtn = document.getElementById('sidebarToggle');
     const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
+    const container = document.querySelector('.container');
+
+    if (toggleBtn) {
+        toggleBtn.onclick = () => {
+            sidebar.classList.toggle('collapsed');
+            container.classList.toggle('full');
+        };
+    }
 
     //-------------------------------------------------------------------------
 
@@ -151,12 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //-------------------------------------------------------------------------
 
     // 6. ผูก Event ปุ่ม 3 ขีด (Sidebar)
+
     if (toggleBtn) {
         toggleBtn.onclick = () => {
             sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('full-width');
+            container.classList.toggle('full');
         };
-    }
+}
 
     //-------------------------------------------------------------------------
 

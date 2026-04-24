@@ -39,24 +39,19 @@ body {
     cursor: pointer;
 }
 
-/* ปรับแต่งวงกลมสีขาวและรูปภาพด้านใน */
 .avatar {
     width: 35px;              
     height: 35px;
     background-color: white;   
     border-radius: 50%;        
     border: 2px solid white;   
-    
-    
     background-size: cover;    
     background-position: center; 
     background-repeat: no-repeat; 
-    
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
-
-/* HEADER - ปรับให้ Fixed อยู่กับที่บนสุด */
+/* HEADER */
 .header {
   height: 80px;
   background: #6E65BE;
@@ -65,41 +60,36 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  
-  /* เพิ่มส่วนนี้ */
-  position: fixed;   /* ล็อคให้อยู่บนสุด */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;    /* ให้อยู่เหนือเลเยอร์อื่นๆ */
+  z-index: 1000;
 }
 
-/* CONTAINER - ปรับให้เลื่อนลงมาเท่ากับความสูง Header */
+/* CONTAINER */
 .container {
   display: flex;
-  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  margin-top: 80px;
   align-items: flex-start;
 }
 
-/* SIDEBAR - ปรับให้ล็อคอยู่กับที่และเลื่อนเฉพาะในตัวเอง */
+/* SIDEBAR */
 .sidebar {
   width: 250px;
   background: white;
   padding: 20px;
-  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
   height: calc(100vh - 80px); 
   display: flex;
   flex-direction: column;
   transition: 0.3s;
-
-  /* ล็อค Sidebar ให้อยู่กับที่ */
   position: sticky;
   top: 80px; 
   flex-shrink: 0;
-  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
+  overflow-y: auto;
 }
 
-/* MAIN - พื้นที่เนื้อหาหลัก */
+/* MAIN */
 .main {
   flex: 1;
   padding: 20px;
@@ -140,24 +130,56 @@ body {
     margin-top: -5px;
 }
 
-/* MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
-}
-
 /* TOP BAR */
 .top-bar {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
-.top-bar input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
+/* SEARCH BOX */
+.search-box {
+  position: relative;
+  flex: 1;          
+  min-width: 0;     
+}
+
+.search {
+  width: 100%;     
+  padding: 10px 40px 10px 15px;
+  border-radius: 25px;
   border: 1px solid #ccc;
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  margin-right: -8px;
+  background: #eee;        
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.search-icon img {
+  width: 16px;
+  height: 16px;
+  transition: 0.3s;
+}
+
+.search-box:hover .search-icon {
+  background: #7677c6;  
+}
+
+.search-box:hover .search-icon img {
+  filter: brightness(0) invert(1); 
 }
 
 .role-btn {
@@ -180,9 +202,9 @@ body {
 }
 
 .card {
-    display: flex;         /* จัดไอคอนกับกลุ่มข้อความให้อยู่ข้างกัน */
-    align-items: center;   /* จัดให้อยู่กึ่งกลางแนวตั้ง */
-    gap: 20px;             /* ระยะห่างระหว่างไอคอนกับข้อความ */
+    display: flex;
+    align-items: center;
+    gap: 20px;
     padding: 25px;
     background: white;
     border-radius: 20px;
@@ -213,17 +235,25 @@ body {
     margin-top: 0px; 
     width: 60px;           
     height: auto;
-    
 }
 
-/* GRID */
+/* ====================== */
+/* FLICKER FIX            */
+/* ซ่อน grid ไว้ก่อน      */
+/* JS จะเพิ่ม .ready       */
+/* เพื่อ fade in ทีหลัง   */
+/* ====================== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
-
+.grid.ready {
+  opacity: 1;
+}
 
 /* USER CARD */
 .user-card {
@@ -253,12 +283,12 @@ body {
 .user-info {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* ให้ Badge อยู่บนสุด */
+    justify-content: flex-start;
     flex: 1;
 }
 
 .text-content {
-    margin-top: 12px; /* ระยะห่างจาก Badge ลงมาที่ชื่อ */
+    margin-top: 12px;
 }
 
 .text-content h4 {
@@ -275,7 +305,7 @@ body {
 }
 
 .badge {
-    align-self: flex-start; /* ให้กว้างเท่าเนื้อหา */
+    align-self: flex-start;
     padding: 4px 12px;
     border-radius: 8px;
     font-size: 12px;
@@ -290,15 +320,14 @@ body {
   background: #96CEFE;
 }
 
-/* ปุ่มแก้ไขมุมขวาล่าง */
 .edit-btn {
     position: absolute;
     bottom: 15px;
     right: 15px;
-    font-size: 18px; /* ปรับขนาดให้กดง่ายขึ้น */
-    color: #6E65BE;  /* ใช้สีม่วงเดียวกับ Header เพื่อให้เด่น */
-    cursor: pointer; /* เปลี่ยนเมาส์เป็นรูปมือเมื่อชี้ */
-    background: #f0f0ff; /* เพิ่มพื้นหลังจางๆ ให้ดูเป็นปุ่ม */
+    font-size: 18px;
+    color: #6E65BE;
+    cursor: pointer;
+    background: #f0f0ff;
     width: 30px;
     height: 30px;
     display: flex;
@@ -310,9 +339,9 @@ body {
 }
 
 .edit-btn:hover {
-    background: #6E65BE; /* เปลี่ยนสีพื้นหลังเมื่อ Hover */
-    color: white;        /* เปลี่ยนไอคอนเป็นสีขาว */
-    transform: scale(1.1); /* ขยายใหญ่ขึ้นเล็กน้อย */
+    background: #6E65BE;
+    color: white;
+    transform: scale(1.1);
 }
 
 .role-dropdown {
@@ -327,16 +356,14 @@ body {
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-  display: none;
   overflow: hidden;
   cursor: pointer;
-  
+  display: none;
 }
 
 .dropdown-menu div {
   padding: 10px 20px;
   cursor: pointer;
-  
 }
 
 .dropdown-menu div:hover {
@@ -345,10 +372,62 @@ body {
 }
 
 .arrowdropdown {
-    width: 14px;      /* ปรับขนาดความกว้าง */
-    height: auto;     /* ให้ความสูงปรับตามสัดส่วนอัตโนมัติ */
-    margin-left: 8px; /* เว้นระยะห่างจากคำว่า All */
-    vertical-align: middle; /* จัดให้กึ่งกลางแนวเดียวกับตัวอักษร */
+    width: 14px;
+    height: auto;
+    margin-left: 8px;
+    vertical-align: middle;
     display: inline-block;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.arrowdropdown.rotate {
+  transform: rotate(180deg);
+}
+
+/* ========================= */
+/* SIDEBAR FIX REAL VERSION */
+/* ========================= */
+
+/* container ไม่ต้อง flex แล้ว */
+.container {
+  display: block;
+  margin-top: 80px;
+}
+
+/* sidebar ลอย */
+.sidebar {
+  position: fixed;
+  top: 80px; /* เผื่อ header */
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 80px);
+  background: white;
+  padding: 20px;
+  overflow-y: auto;
+
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+/* ซ่อน */
+.sidebar.hide {
+  transform: translateX(-100%);
+}
+
+/* main ขยับแทน */
+.main {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* ตอนปิด sidebar */
+.sidebar.hide ~ .main {
+  margin-left: 0;
 }

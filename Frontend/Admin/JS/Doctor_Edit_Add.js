@@ -13,87 +13,102 @@ const departmentList = [
     "ผู้ป่วยหนัก",
     "วิสัญญี",
     "เวชศาสตร์ฟื้นฟู"
-];  
+];
 
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
 
-// ================= HELPER =================
-function populateDepartment(selectEl, currentDept) {
-    let options = '<option value="">-- กรุณาเลือกแผนก --</option>';
-
-    departmentList.forEach(dept => {
-        const selected = dept === currentDept ? "selected" : "";
-        options += `<option value="${dept}" ${selected}>${dept}</option>`;
-    });
-
-    selectEl.innerHTML = options;
-}
-
-// ================= INIT PAGE =================
-document.addEventListener('DOMContentLoaded', () => {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
-    if (!userData) return;
-
-    // --- NAME ---
-    const nameEl = document.querySelector('.display-name');
-    if (nameEl) nameEl.innerText = userData.name;
-
-    // --- PHONE ---
-    const phoneEl = document.querySelector('.contact-info .value');
-    if (phoneEl && userData.phone) phoneEl.innerText = userData.phone;
-
-    // --- IMAGE ---
-    const imgEl = document.querySelector('.profile-main-img');
-    if (imgEl && userData.img) imgEl.src = userData.img;
-
-    // --- DEPARTMENT DROPDOWN ---
-    const deptSelect = document.getElementById('deptSelect');
-    if (deptSelect) {
-        populateDepartment(deptSelect, userData.dept);
+    const userData = JSON.parse(localStorage.getItem("editUser"));
+    if (!userData) {
+        alert("ไม่พบข้อมูลผู้ใช้");
+        window.location.href = "dashboard.html";
+        return;
     }
 
-    const expertiseInput = document.querySelector('input[placeholder="กรอกความเชี่ยวชาญ"]');
-        if (expertiseInput && userData.expertise) {
-            expertiseInput.value = userData.expertise; // นำค่าเดิมมาใส่ในช่อง Input
-        }
-});
+    // name
+    const nameEl = document.querySelector(".display-name");
+    if (nameEl) nameEl.innerText = userData.name || "";
 
+    // phone
+    const phoneEl = document.querySelector(".contact-info .value");
+    if (phoneEl) phoneEl.innerText = userData.phone || "-";
+
+    // image
+    const img = document.querySelector(".profile-main-img");
+    if (img) {
+        img.src = userData.img || "../../img/doctor_img1.png";
+        img.onerror = () => img.src = "../../img/doctor_img1.png";
+    }
+
+    // email
+    const email = document.querySelector(".user-meta .value");
+    if (email) email.innerText = userData.email || "-";
+
+    // role
+    const role = document.querySelector(".role-badge");
+    if (role) {
+        role.innerText = userData.role || "Doctor";
+        role.className = `role-badge ${(userData.type || "doctor")}`;
+    }
+
+    // department
+    const deptSelect = document.getElementById("deptSelect");
+    if (deptSelect) {
+        deptSelect.innerHTML = `<option value="">-- กรุณาเลือกแผนก --</option>`;
+        departmentList.forEach(d => {
+            const selected = d === userData.dept ? "selected" : "";
+            deptSelect.innerHTML += `<option ${selected}>${d}</option>`;
+        });
+    }
+
+    // expertise
+    const exp = document.getElementById("expertiseInput");
+    if (exp) exp.value = userData.expertise || "";
+});
 
 // ================= SAVE =================
 function saveData() {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
+    const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) return;
 
-    // ดึงค่าจาก Select
-    const updatedDept = document.getElementById('deptSelect').value;
+    const dept = document.getElementById("deptSelect")?.value;
+    const exp  = document.getElementById("expertiseInput")?.value;
 
-    // เจาะจงไปที่ช่องความเชี่ยวชาญ (ป้องกันการไปดึงค่าจากช่อง Search)
-    const expertiseInput = document.querySelector('input[placeholder="กรอกความเชี่ยวชาญ"]');
-    const updatedExpertise = document.getElementById('expertiseInput').value;
+    if (!dept) {
+        alert("กรุณาเลือกแผนก");
+        return;
+    }
 
-    const newData = {
-        ...userData,
-        dept: updatedDept,
-        expertise: updatedExpertise
-    };
+    const newData = { ...userData, dept, expertise: exp };
 
-    // ===== UPDATE LIST หลัก =====
-    let allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+    let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
 
-    // ตรวจสอบ Index และอัปเดตข้อมูล
     if (userData.index !== undefined && allUsers[userData.index]) {
         allUsers[userData.index] = newData;
-        
-        // บันทึกกลับลง localStorage
-        localStorage.setItem('allUsers', JSON.stringify(allUsers));
-        
-        alert("บันทึกข้อมูลของ " + newData.name + " สำเร็จ!");
-        window.location.href = "dashboard.html";
-    } else {
-        alert("เกิดข้อผิดพลาด: ไม่พบข้อมูลพนักงานในระบบ");
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
     }
+
+    localStorage.setItem("editUser", JSON.stringify(newData));
+
+    alert("บันทึกสำเร็จ");
+    window.location.href = "dashboard.html";
 }
 
 // ================= CANCEL =================
 function cancelEdit() {
     window.location.href = "dashboard.html";
+}
+
+// ================= BASIC =================
+function toggleSidebar() {
+    document.querySelector(".sidebar")?.classList.toggle("hide");
+}
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "../../login.html";
+}
+
+function goProfile() {
+    window.location.href = "profile.html";
 }
