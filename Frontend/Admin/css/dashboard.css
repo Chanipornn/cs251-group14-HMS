@@ -388,3 +388,46 @@ body {
 .arrowdropdown.rotate {
   transform: rotate(180deg);
 }
+
+/* ========================= */
+/* SIDEBAR FIX REAL VERSION */
+/* ========================= */
+
+/* container ไม่ต้อง flex แล้ว */
+.container {
+  display: block;
+  margin-top: 80px;
+}
+
+/* sidebar ลอย */
+.sidebar {
+  position: fixed;
+  top: 80px; /* เผื่อ header */
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 80px);
+  background: white;
+  padding: 20px;
+  overflow-y: auto;
+
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+/* ซ่อน */
+.sidebar.hide {
+  transform: translateX(-100%);
+}
+
+/* main ขยับแทน */
+.main {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* ตอนปิด sidebar */
+.sidebar.hide ~ .main {
+  margin-left: 0;
+}
