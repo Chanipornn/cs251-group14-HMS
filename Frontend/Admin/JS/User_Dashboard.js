@@ -127,13 +127,11 @@ function confirmDelete() {
 }
 
 // =========================
-// SIDEBAR — แก้: จำสถานะด้วย localStorage
+// SIDEBAR
 // =========================
 function toggleSidebar() {
   const sidebar = document.querySelector(".sidebar");
   sidebar.classList.toggle("hide");
-
-  // บันทึกสถานะ
   localStorage.setItem("sidebarHidden", sidebar.classList.contains("hide"));
 }
 
@@ -141,9 +139,8 @@ function toggleSidebar() {
 // LOGOUT
 // =========================
 function logout() {
-  // ล้างเฉพาะ key ที่เกี่ยวกับ session ไม่ล้าง sidebarHidden
-  localStorage.removeItem("users");
   localStorage.removeItem("editUserId");
+  localStorage.removeItem("editUser");
   window.location.href = "../../login.html";
 }
 
@@ -202,15 +199,15 @@ function closeRoleModal() {
   document.getElementById("roleModal").classList.remove("show");
 }
 
+// ส่ง role ที่เลือกไปพร้อมกับ URL เพื่อให้ create_users.js set role ได้ถูกต้องทันที
 function selectRole(role) {
-  window.location.href = "create_users.html";
+  window.location.href = `create_users.html?role=${role}`;
 }
 
 // =========================
 // INIT
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
-  // แก้: โหลดสถานะ sidebar จาก localStorage
   if (localStorage.getItem("sidebarHidden") === "true") {
     document.querySelector(".sidebar").classList.add("hide");
   }

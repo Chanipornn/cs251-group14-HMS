@@ -15,112 +15,82 @@ const departmentList = [
     "เวชศาสตร์ฟื้นฟู"
 ];
 
-// ================= HELPER =================
-function populateDepartment(selectEl, currentDept) {
-    let options = '<option value="">-- กรุณาเลือกแผนก --</option>';
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
 
-    departmentList.forEach(dept => {
-        const selected = dept === currentDept ? "selected" : "";
-        options += `<option value="${dept}" ${selected}>${dept}</option>`;
-    });
-
-    selectEl.innerHTML = options;
-}
-
-// ================= INIT PAGE =================
-document.addEventListener('DOMContentLoaded', () => {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
+    const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) {
         alert("ไม่พบข้อมูลผู้ใช้");
         window.location.href = "dashboard.html";
         return;
     }
 
-    // --- NAME ---
-    const nameEl = document.querySelector('.display-name');
-    if (nameEl) nameEl.innerText = userData.name;
+    // name
+    const nameEl = document.querySelector(".display-name");
+    if (nameEl) nameEl.innerText = userData.name || "";
 
-    // --- PHONE ---
-    const phoneEl = document.querySelector('.contact-info .value');
-    if (phoneEl && userData.phone) phoneEl.innerText = userData.phone;
+    // phone
+    const phoneEl = document.querySelector(".contact-info .value");
+    if (phoneEl) phoneEl.innerText = userData.phone || "-";
 
-    // --- IMAGE ---
-    const imgEl = document.querySelector('.profile-main-img');
-    if (imgEl) {
-        imgEl.src = userData.img || "../../img/doctor_img1.png";
-        imgEl.onerror = function () { this.src = "../../img/doctor_img1.png"; };
+    // image
+    const img = document.querySelector(".profile-main-img");
+    if (img) {
+        img.src = userData.img || "../../img/doctor_img1.png";
+        img.onerror = () => img.src = "../../img/doctor_img1.png";
     }
 
-    // --- USERNAME / EMAIL ---
-    const usernameEl = document.querySelector('.user-meta .value');
-    if (usernameEl && userData.email) usernameEl.innerText = userData.email;
+    // email
+    const email = document.querySelector(".user-meta .value");
+    if (email) email.innerText = userData.email || "-";
 
-    // --- ROLE BADGE ---
-    const roleBadge = document.querySelector('.role-badge');
-    if (roleBadge) {
-        roleBadge.innerText = userData.role || "Doctor";
-        roleBadge.className = `role-badge ${(userData.type || "doctor").toLowerCase()}`;
+    // role
+    const role = document.querySelector(".role-badge");
+    if (role) {
+        role.innerText = userData.role || "Doctor";
+        role.className = `role-badge ${(userData.type || "doctor")}`;
     }
 
-    // --- DEPARTMENT DROPDOWN ---
-    const deptSelect = document.getElementById('deptSelect');
+    // department
+    const deptSelect = document.getElementById("deptSelect");
     if (deptSelect) {
-        populateDepartment(deptSelect, userData.dept || "");
+        deptSelect.innerHTML = `<option value="">-- กรุณาเลือกแผนก --</option>`;
+        departmentList.forEach(d => {
+            const selected = d === userData.dept ? "selected" : "";
+            deptSelect.innerHTML += `<option ${selected}>${d}</option>`;
+        });
     }
 
-    // --- EXPERTISE ---
-    const expertiseInput = document.getElementById('expertiseInput');
-    if (expertiseInput && userData.expertise) {
-        expertiseInput.value = userData.expertise;
-    }
+    // expertise
+    const exp = document.getElementById("expertiseInput");
+    if (exp) exp.value = userData.expertise || "";
 });
 
 // ================= SAVE =================
 function saveData() {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
+    const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) return;
 
-    const deptSelect     = document.getElementById('deptSelect');
-    const expertiseInput = document.getElementById('expertiseInput');
+    const dept = document.getElementById("deptSelect")?.value;
+    const exp  = document.getElementById("expertiseInput")?.value;
 
-    const updatedDept      = deptSelect     ? deptSelect.value     : "";
-    const updatedExpertise = expertiseInput ? expertiseInput.value : "";
-
-    if (!updatedDept) {
+    if (!dept) {
         alert("กรุณาเลือกแผนก");
         return;
     }
 
-    const newData = {
-        ...userData,
-        dept:      updatedDept,
-        expertise: updatedExpertise
-    };
+    const newData = { ...userData, dept, expertise: exp };
 
-    // ===== UPDATE allUsers =====
-    let allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+    let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
 
     if (userData.index !== undefined && allUsers[userData.index]) {
         allUsers[userData.index] = newData;
-        localStorage.setItem('allUsers', JSON.stringify(allUsers));
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
     }
 
-    // ===== SYNC กลับไป "users" ด้วย =====
-    // เพื่อให้ข้อมูล dept/expertise อัปเดตใน User_Dashboard ด้วย
-    if (userData.userId) {
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = users.findIndex(u => u.id === userData.userId);
-        if (userIndex !== -1) {
-            users[userIndex].dept      = updatedDept;
-            users[userIndex].expertise = updatedExpertise;
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-    }
+    localStorage.setItem("editUser", JSON.stringify(newData));
 
-    // อัปเดต editUser ด้วยข้อมูลใหม่ (กรณีกด save แล้ว edit ต่อ)
-    localStorage.setItem('editUser', JSON.stringify(newData));
-
-    alert("บันทึกข้อมูลของ " + newData.name + " สำเร็จ!");
+    alert("บันทึกสำเร็จ");
     window.location.href = "dashboard.html";
 }
 
@@ -129,31 +99,16 @@ function cancelEdit() {
     window.location.href = "dashboard.html";
 }
 
-// ================= SIDEBAR =================
+// ================= BASIC =================
 function toggleSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    if (sidebar) sidebar.classList.toggle("hide");
+    document.querySelector(".sidebar")?.classList.toggle("hide");
 }
 
-// ================= LOGOUT =================
 function logout() {
     localStorage.clear();
     window.location.href = "../../login.html";
 }
 
-// ================= DROPDOWN (หน้านี้) =================
-function toggleDropdown() {
-    const menu  = document.getElementById("dropdownMenu");
-    const arrow = document.querySelector(".arrowdropdown");
-    if (menu)  menu.classList.toggle("show");
-    if (arrow) arrow.classList.toggle("rotate");
+function goProfile() {
+    window.location.href = "profile.html";
 }
-
-document.addEventListener("click", e => {
-    if (!e.target.closest('.role-dropdown')) {
-        const menu  = document.getElementById("dropdownMenu");
-        const arrow = document.querySelector(".arrowdropdown");
-        if (menu)  menu.classList.remove("show");
-        if (arrow) arrow.classList.remove("rotate");
-    }
-});

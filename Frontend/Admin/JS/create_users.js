@@ -79,6 +79,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // อ่าน role จาก URL (?role=Doctor)
+  const urlRole = new URLSearchParams(window.location.search).get("role");
+  if (urlRole) {
+    const matched = [...roleButtons].find(
+      b => b.dataset.role.toLowerCase() === urlRole.toLowerCase()
+    );
+    if (matched) {
+      roleButtons.forEach(b => b.classList.remove("active"));
+      matched.classList.add("active");
+      roleInput.value = matched.dataset.role;
+    }
+  }
+
   updateFormByRole(roleInput.value || "Patient");
 
   // =========================

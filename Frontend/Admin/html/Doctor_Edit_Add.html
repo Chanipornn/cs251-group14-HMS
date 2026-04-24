@@ -27,9 +27,10 @@
         <aside class="sidebar">
             <h3>เมนู</h3>
             <br>
+
             <a href="User_Dashboard.html" class="menu">จัดการผู้ใช้</a>
 
-            <a href="dashboard.html" class="menu active">จัดการบุคลากร</a>
+            <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
 
             <div class="logout" onclick="logout()">
                 <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
@@ -37,21 +38,9 @@
         </aside>
 
         <main class="main">
-            <div class="top-bar">
-                <input type="text" placeholder="ค้นหา...">
-                <div class="role-dropdown">
-                    <div class="role-btn" onclick="toggleDropdown()">
-                        <span id="selectedRole">All</span>
-                        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
-                    </div>
-                    <div id="dropdownMenu" class="dropdown-menu">
-                        <div onclick="filterRole('all')">All</div>
-                        <div onclick="filterRole('doctor')">Doctor</div>
-                        <div onclick="filterRole('staff')">Staff</div>
-                    </div>
-                </div>
 
-            </div>
+            <!-- ลบ top-bar ออกแล้ว -->
+
             <div class="edit-card">
                 <div class="edit-card-header">
                     <h3>แก้ไขข้อมูล</h3>
@@ -59,54 +48,56 @@
 
                 <div class="edit-card-body">
                     <div class="profile-layout">
+
                         <div class="profile-image-container">
-                            <img src="../../img/doctor_img1.png" alt="Profile" class="profile-main-img">
+                            <img src="../../img/doctor_img1.png" class="profile-main-img">
                         </div>
 
                         <div class="profile-details-form">
+
                             <div class="user-id-row">
                                 <div class="user-meta">
                                     <span class="label">Username</span>
-                                    <span class="value">Doctor@gmail.com</span>
+                                    <span class="value"></span>
                                 </div>
-                                <span class="role-badge doctor">Doctor</span>
+                                <span class="role-badge doctor"></span>
                             </div>
 
                             <hr class="divider">
 
-                            <h2 class="display-name">นพ.สมชาย ศรีสุข</h2>
+                            <h2 class="display-name"></h2>
+
                             <div class="contact-info">
                                 <span class="label">หมายเลขโทรศัพท์</span>
-                                <span class="value">0918882321</span>
+                                <span class="value"></span>
                             </div>
 
                             <div class="input-row">
                                 <div class="field-label">แผนก</div>
                                 <div class="field-input">
-                                    <select id="deptSelect" class="custom-select">
-                                        <option value="">-- กรุณาเลือกแผนก --</option>
-                                    </select>
+                                    <select id="deptSelect" class="custom-select"></select>
                                 </div>
                             </div>
 
                             <div class="input-row">
                                 <div class="field-label">ความเชี่ยวชาญ</div>
                                 <div class="field-input">
-                                    <input type="text" id="expertiseInput" placeholder="กรอกความเชี่ยวชาญ">
+                                    <input type="text" id="expertiseInput">
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="action-buttons">
-                        <button type="button" class="btn-secondary" onclick="cancelEdit()">ยกเลิก</button>
-
-                        <button type="button" class="btn-primary" onclick="saveData()">บันทึก</button>
+                        <button class="btn-secondary" onclick="cancelEdit()">ยกเลิก</button>
+                        <button class="btn-primary" onclick="saveData()">บันทึก</button>
                     </div>
                 </div>
             </div>
+
         </main>
     </div>
-</body>
 
+</body>
 </html>
