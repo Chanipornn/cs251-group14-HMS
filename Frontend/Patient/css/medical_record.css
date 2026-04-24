@@ -29,7 +29,6 @@ body {
 
 .app-container {
     width: 100%;
-    max-width: 1200px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -60,7 +59,6 @@ body {
 
 .app-header, .content-area {
     width: 100%;
-    max-width: 920px;
     z-index: 1;
 }
 
@@ -102,7 +100,7 @@ body {
 /* Tabs */
 .nav-tabs {
     display: flex;
-    gap: 62px;
+    gap: 67px;
     justify-content: center; 
 }
 
@@ -113,8 +111,8 @@ body {
 }
 
 .icon-box {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     background: var(--bg-gray);
     border-radius: 20px;
     display: flex;
@@ -243,8 +241,28 @@ body {
   stroke: rgba(255,255,255,0.75); fill: none;
   stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
 }
+
+.nav-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.15);
+}
+
 .nav-btn.active { background: var(--white); }
 .nav-btn.active svg { stroke: #6640a2; }
+
+.nav-btn svg,
+.menu-icon svg {
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover svg,
+.menu-item:hover svg {
+  stroke: #211c81;
+}
 
 @media (min-width: 768px) {
   .bottom-nav {
