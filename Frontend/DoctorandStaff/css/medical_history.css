@@ -112,6 +112,18 @@ body {
   align-items: flex-start;
 }
 
+/* ตอน sidebar หาย */
+.sidebar.collapsed {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* main ขยาย */
+.container.full .main-content {
+  width: 100%;
+}
+
 /* Main Content */
 
 .main-content {
