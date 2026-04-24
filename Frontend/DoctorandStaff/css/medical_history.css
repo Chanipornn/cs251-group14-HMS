@@ -223,7 +223,7 @@ body {
 .cards-wrapper {
     display: flex;
     justify-content: center;
-    gap: 25px;
+    gap: 90px;
     margin-top: 20px;
 }
 

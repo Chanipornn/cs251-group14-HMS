@@ -169,66 +169,66 @@ document.addEventListener('DOMContentLoaded', () => {
     //-------------------------------------------------------------------------
 
     // 7. เพิ่มประวัติการรักษา (จัดการผ่าน Form id="historyForm")
-    const historyForm = document.getElementById('historyForm'); // เปลี่ยนให้ตรงกับ ID ใน HTML ใหม่
-    if (historyForm) {
-        historyForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    const historyForm = document.getElementById('historyForm');
 
-            // 1. ดึงค่าจากหน้า HTML โดยใช้ ID ที่คุณตั้งไว้
-            const pId = document.getElementById('patientId').value;
-            const dId = document.getElementById('doctorId').value;
-            const vDate = document.getElementById('visitDate').value; 
-            const symptoms = document.getElementById('symptoms').value;
-            const diagnosis = document.getElementById('diagnosis').value;
-            const result = document.getElementById('treatmentResult').value; // ตรงตาม ID ใน HTML
-            const details = document.getElementById('treatmentDetail').value; // ตรงตาม ID ใน HTML
+if (historyForm) {
+    historyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-            // ตรวจสอบข้อมูลเบื้องต้น
-            if (!pId || !vDate) {
-                alert("กรุณากรอกรหัสผู้ป่วยและวันที่เข้าพบแพทย์");
-                return;
-            }
+        const patientIdEl = document.getElementById('patientId');
+        const doctorIdEl = document.getElementById('doctorId');
+        const visitDateEl = document.getElementById('visitDate');
+        const symptomsEl = document.getElementById('symptoms');
+        const diagnosisEl = document.getElementById('diagnosis');
+        const resultEl = document.getElementById('treatmentResult');
+        const detailsEl = document.getElementById('treatmentDetail');
 
-            // 2. เตรียม Key สำหรับวันที่ (YYYY-MM-DD)
-            const dateKey = vDate; 
+        // 🔥 กัน null ทุกตัว
+        if (!patientIdEl || !doctorIdEl || !visitDateEl) return;
 
-            // 3. ตรวจสอบและสร้างโครงสร้างวันที่ใน Database จำลอง
-            if (!mockDatabase[dateKey]) {
-                mockDatabase[dateKey] = {
-                    stats: { completed: 0, today: 0, total: 0 },
-                    patients: []
-                };
-            }
+        const pId = patientIdEl.value;
+        const dId = doctorIdEl.value;
+        const vDate = visitDateEl.value;
+        const symptoms = symptomsEl?.value || "";
+        const diagnosis = diagnosisEl?.value || "";
+        const result = resultEl?.value || "";
+        const details = detailsEl?.value || "";
 
-            // 4. สร้าง Object ข้อมูลใหม่
-            const newPatientData = {
-                id: pId,
-                name: "ผู้ป่วยใหม่ (รหัส: " + pId + ")", // จำลองชื่อ
-                date: new Date(vDate).toLocaleDateString('th-TH'), 
-                diagnosis: diagnosis,
-                doctor: dId,
-                symptoms: symptoms,
-                diag_result: diagnosis,
-                treatment: details,
-                final_result: result,
-                // ข้อมูลพื้นฐานจำลอง (เพื่อให้หน้าดีเทลไม่ว่าง)
-                age: "30", 
-                weight: "65",
-                height: "170"
+        if (!pId || !vDate) {
+            alert("กรุณากรอกข้อมูลให้ครบ");
+            return;
+        }
+
+        const dateKey = vDate;
+
+        if (!mockDatabase[dateKey]) {
+            mockDatabase[dateKey] = {
+                stats: { completed: 0, today: 0, total: 0 },
+                patients: []
             };
+        }
 
-            // 5. บันทึกเข้า Database จำลอง
-            mockDatabase[dateKey].patients.push(newPatientData);
-            mockDatabase[dateKey].stats.today += 1;
-            mockDatabase[dateKey].stats.total += 1;
+        const newPatientData = {
+            id: pId,
+            name: "ผู้ป่วยใหม่ (" + pId + ")",
+            date: new Date(vDate).toLocaleDateString('th-TH'),
+            diagnosis,
+            doctor: dId,
+            symptoms,
+            diag_result: diagnosis,
+            treatment: details,
+            final_result: result,
+            age: "30",
+            weight: "65",
+            height: "170"
+        };
 
-            console.log("บันทึกสำเร็จ วันที่:", dateKey, mockDatabase[dateKey]);
+        mockDatabase[dateKey].patients.push(newPatientData);
 
-            // 6. แจ้งเตือนและกลับหน้าหลัก
-            alert("เพิ่มประวัติการรักษาสำเร็จ!");
-            window.location.href = 'medical_history.html'; 
-        });
-    }
+        alert("เพิ่มสำเร็จ");
+        window.location.href = 'medical_history.html';
+    });
+}
     
     //-------------------------------------------------------------------------
 
@@ -286,4 +286,64 @@ function updateUI() {
     // เริ่มทำงานครั้งแรก
     updateUI();
     renderDetailPage();
+
+    //แก้ไขข้อมูลผู้ป่วย
+document.querySelectorAll('.edit-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+        const card = e.target.closest('.card-content');
+        const fields = card.querySelectorAll('.info-list p');
+
+        fields.forEach(p => {
+            const text = p.innerText;
+            const value = text.split(" : ")[1] || "";
+
+            p.innerHTML = `
+                ${text.split(" : ")[0]} :
+                <input type="text" value="${value}" />
+            `;
+        });
+
+        // เพิ่มปุ่ม Save
+        if (!card.querySelector('.save-btn')) {
+            const btn = document.createElement('button');
+            btn.innerText = "บันทึก";
+            btn.className = "save-btn";
+            card.appendChild(btn);
+
+            btn.onclick = () => saveData(card);
+        }
+    });
 });
+
+function saveData(card) {
+    const inputs = card.querySelectorAll('input');
+
+    const updatedData = {
+        id: document.getElementById('detId').innerText.replace("รหัสประจำตัวผู้ป่วย : ", ""),
+        name: inputs[0]?.value,
+        age: inputs[1]?.value,
+        weight: inputs[2]?.value,
+        height: inputs[3]?.value
+    };
+
+    fetch("http://localhost:8080/api/patient/update", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("บันทึกสำเร็จ");
+        location.reload();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("เกิดข้อผิดพลาด");
+    });
+}
+
+});
+
+
