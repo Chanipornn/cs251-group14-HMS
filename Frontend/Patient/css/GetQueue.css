@@ -37,7 +37,8 @@ body {
     align-items: center;
     gap: 15px;
     margin-bottom: 30px;
-    max-width: 600px;
+    width: 100%;        
+    max-width: 100%;  
 }
 
 .search-bar {
@@ -196,6 +197,21 @@ body {
     cursor: pointer;
 }
 
+.search-bar {
+    height: 45px; 
+}
+
+.search-bar input {
+    height: 100%;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
 /* ================= POPUP BACKDROP ================= */
 /* ================= BACKDROP ================= */
 .filter-popup {
