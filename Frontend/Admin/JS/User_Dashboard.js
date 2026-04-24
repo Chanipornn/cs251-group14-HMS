@@ -7,6 +7,11 @@ let selectedStatus = "all";
 let deleteId       = null;
 
 // =========================
+// DEFAULT AVATAR SVG (inline ใช้เมื่อไม่มีรูป)
+// =========================
+const DEFAULT_AVATAR_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
+
+// =========================
 // DEFAULT USERS
 // =========================
 const defaultUsers = [
@@ -18,7 +23,7 @@ const defaultUsers = [
     email: "krit@gmail.com",
     status: "active",
     role: "Patient",
-    profileImage: "../../img/profile.jpg"
+    profileImage: ""
   },
   {
     id: 2,
@@ -28,7 +33,7 @@ const defaultUsers = [
     email: "nicha@gmail.com",
     status: "inactive",
     role: "Doctor",
-    profileImage: "../../img/profile.jpg"
+    profileImage: ""
   }
 ];
 
@@ -45,25 +50,58 @@ function renderTable() {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  users.forEach((user) => {
+  // กรองก่อน render
+  const filtered = users.filter(user => {
+    const roleMatch   = selectedRole   === "all" || (user.role   || "").toLowerCase() === selectedRole;
+    const statusMatch = selectedStatus === "all" || (user.status || "").toLowerCase() === selectedStatus;
+    return roleMatch && statusMatch;
+  });
 
-    if (selectedRole !== "all" && user.role.toLowerCase() !== selectedRole) return;
-    if (selectedStatus !== "all" && user.status.toLowerCase() !== selectedStatus) return;
+  if (filtered.length === 0) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; color:#aaa; padding:24px;">
+          ไม่พบข้อมูลผู้ใช้
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach((user) => {
+    // ✅ รองรับทั้ง default users และ users จากการสมัครใหม่
+    const displayName = user.fullname
+      || user.name
+      || `${user.firstname || ""} ${user.lastname || ""}`.trim()
+      || "-";
+
+    // ✅ ถ้าไม่มีรูปโปรไฟล์ ใช้ DEFAULT_AVATAR_SVG
+    const avatar = (user.profileImage && user.profileImage !== "")
+      ? user.profileImage
+      : DEFAULT_AVATAR_SVG;
+
+    const statusText  = user.status  || "active";
+    const roleText    = user.role    || "Patient";
 
     table.innerHTML += `
       <tr>
         <td>
-          <img src="${user.profileImage || '../../img/profile.png'}" class="table-avatar">
+          <img src="${avatar}"
+               class="table-avatar"
+               onerror="this.src='${DEFAULT_AVATAR_SVG}'"
+               style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
         </td>
-        <td>${user.fullname || user.name || "-"}</td>
+        <td>${displayName}</td>
         <td>${user.username || "-"}</td>
         <td>${user.email || "-"}</td>
         <td>
-          <span class="status ${user.status}" onclick="toggleStatus(${user.id})">
-            ${user.status}
+          <span class="status ${statusText}"
+                onclick="toggleStatus(${user.id})"
+                style="cursor:pointer;">
+            ${statusText}
           </span>
         </td>
-        <td>${user.role}</td>
+        <td>${roleText}</td>
         <td class="actions">
           <img src="../../img/Edit2.png"
                class="action-icon"
@@ -152,7 +190,7 @@ function toggleDropdown(menuId, btn) {
   const arrow = btn.querySelector(".arrowdropdown");
 
   menu.classList.toggle("show");
-  arrow.classList.toggle("rotate");
+  if (arrow) arrow.classList.toggle("rotate");
 }
 
 document.addEventListener("click", function (e) {
@@ -199,9 +237,76 @@ function closeRoleModal() {
   document.getElementById("roleModal").classList.remove("show");
 }
 
-// ส่ง role ที่เลือกไปพร้อมกับ URL เพื่อให้ create_users.js set role ได้ถูกต้องทันที
 function selectRole(role) {
   window.location.href = `create_users.html?role=${role}`;
+}
+
+// =========================
+// SEARCH (ถ้ามี input search)
+// =========================
+function searchUsers(keyword) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const kw    = keyword.toLowerCase().trim();
+
+  const table = document.getElementById("userTable");
+  table.innerHTML = "";
+
+  const filtered = users.filter(u => {
+    const name = (u.fullname || u.name || "").toLowerCase();
+    const uname = (u.username || "").toLowerCase();
+    const email = (u.email || "").toLowerCase();
+    return name.includes(kw) || uname.includes(kw) || email.includes(kw);
+  });
+
+  if (filtered.length === 0) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; color:#aaa; padding:24px;">
+          ไม่พบผู้ใช้ที่ค้นหา
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  // render ผลลัพธ์ (ใช้โค้ด render เดิม)
+  filtered.forEach((user) => {
+    const displayName = user.fullname
+      || user.name
+      || `${user.firstname || ""} ${user.lastname || ""}`.trim()
+      || "-";
+
+    const avatar = (user.profileImage && user.profileImage !== "")
+      ? user.profileImage
+      : DEFAULT_AVATAR_SVG;
+
+    const statusText = user.status || "active";
+    const roleText   = user.role   || "Patient";
+
+    table.innerHTML += `
+      <tr>
+        <td>
+          <img src="${avatar}"
+               class="table-avatar"
+               onerror="this.src='${DEFAULT_AVATAR_SVG}'"
+               style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+        </td>
+        <td>${displayName}</td>
+        <td>${user.username || "-"}</td>
+        <td>${user.email || "-"}</td>
+        <td>
+          <span class="status ${statusText}" onclick="toggleStatus(${user.id})" style="cursor:pointer;">
+            ${statusText}
+          </span>
+        </td>
+        <td>${roleText}</td>
+        <td class="actions">
+          <img src="../../img/Edit2.png" class="action-icon" onclick="editUser(${user.id})">
+          <img src="../../img/delete.png" class="action-icon" onclick="openDeleteModal(${user.id})">
+        </td>
+      </tr>
+    `;
+  });
 }
 
 // =========================
@@ -209,7 +314,8 @@ function selectRole(role) {
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("sidebarHidden") === "true") {
-    document.querySelector(".sidebar").classList.add("hide");
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) sidebar.classList.add("hide");
   }
 
   renderTable();

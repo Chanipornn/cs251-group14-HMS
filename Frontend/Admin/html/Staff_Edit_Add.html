@@ -28,7 +28,6 @@
             <h3>เมนู</h3>
             <br>
             <a href="users.html" class="menu">จัดการผู้ใช้</a>
-
             <a href="dashboard.html" class="menu active">จัดการบุคลากร</a>
 
             <div class="logout" onclick="logout()">
@@ -37,21 +36,9 @@
         </aside>
 
         <main class="main">
-            <div class="top-bar">
-                <input type="text" placeholder="ค้นหา...">
-                <div class="role-dropdown">
-                    <div class="role-btn" onclick="toggleDropdown()">
-                        <span id="selectedRole">All</span>
-                        <img src="../../img/arrow-down-sign-to-navigate.png" class="arrowdropdown">
-                    </div>
-                    <div id="dropdownMenu" class="dropdown-menu">
-                        <div onclick="filterRole('all')">All</div>
-                        <div onclick="filterRole('doctor')">Doctor</div>
-                        <div onclick="filterRole('staff')">Staff</div>
-                    </div>
-                </div>
 
-            </div>
+            <!-- ลบ top-bar -->
+
             <div class="edit-card">
                 <div class="edit-card-header">
                     <h3>แก้ไขข้อมูล</h3>
@@ -77,6 +64,7 @@
                             <hr class="divider">
 
                             <h2 class="display-name">พยาบาลสมหญิง ใจดี</h2>
+
                             <div class="contact-info">
                                 <span class="label">หมายเลขโทรศัพท์</span>
                                 <span class="value">0836432215</span>
@@ -95,11 +83,11 @@
 
                     <div class="action-buttons">
                         <button type="button" class="btn-secondary" onclick="cancelEdit()">ยกเลิก</button>
-
                         <button type="button" class="btn-primary" onclick="saveData()">บันทึก</button>
                     </div>
                 </div>
             </div>
+
         </main>
     </div>
 </body>

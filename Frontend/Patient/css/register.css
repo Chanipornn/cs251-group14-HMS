@@ -38,6 +38,7 @@ input, select {
   transform: translateY(-50%);
   width: 20px;
   cursor: pointer;
+  margin-top: 14px;
 }
 
 /* ROW 2 */
@@ -174,4 +175,24 @@ input, select {
 
 .dropdown-options.show {
   display: block;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #6E65BE;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  opacity: 0;
+  transition: 0.3s ease;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

@@ -21,19 +21,19 @@
 
     <div class="profile-img-wrapper" onclick="document.getElementById('imageUpload').click()">
 
-      <img src="../../img/profile.jpg" class="profile-img" id="profileImage">
-    
+      <!-- 🔥 เอา src ออก ให้ JS จัดการ -->
+      <img class="profile-img" id="profileImage">
+
       <!-- ไอคอนแก้ไข -->
-      <div class="edit-icon">
-        ✎
-      </div>
-    
-      <!-- ซ่อน input -->
-      <input type="file" id="imageUpload" accept="image/*" style="display:none">
-    
+      <div class="edit-icon">✎</div>
+
+      <!-- input upload -->
+      <input type="file" id="imageUpload" accept="image/*" hidden>
+
     </div>
-    <h3 id="profileName">Username</h3>
-    <p id="profileEmail">email@gmail.com</p>
+
+    <h3 id="profileName">-</h3>
+    <p id="profileEmail">-</p>
 
     <div class="info-row">
       <span>ชื่อ-นามสกุล</span>
@@ -70,7 +70,6 @@
   <!-- BOTTOM NAV -->
   <div class="bottom-nav">
 
-    <!-- Home -->
     <div class="nav-btn" onclick="location.href='home.html'">
       <svg viewBox="0 0 24 24">
         <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
@@ -78,7 +77,6 @@
       </svg>
     </div>
 
-    <!-- Layers -->
     <div class="nav-btn" onclick="location.href='medical_record.html'">
       <svg viewBox="0 0 24 24">
         <path d="M12 2L2 7l10 5 10-5-10-5z"/>
@@ -87,7 +85,6 @@
       </svg>
     </div>
 
-    <!-- Profile -->
     <div class="nav-btn active">
       <svg viewBox="0 0 24 24">
         <circle cx="12" cy="8" r="4"/>

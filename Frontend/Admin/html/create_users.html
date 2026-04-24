@@ -10,53 +10,7 @@
 
   <script src="../js/create_users.js" defer></script>
 
-  <style>
-    /* ========================= */
-    /* PROFILE UPLOAD            */
-    /* ========================= */
-    .profile-upload-wrap {
-      position: relative;
-      width: 60px;
-      height: 60px;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-
-    .profile-img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* overlay กล้องตอน hover */
-    .upload-overlay {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .profile-upload-wrap:hover .upload-overlay {
-      opacity: 1;
-    }
-
-    .upload-overlay svg {
-      width: 22px;
-      height: 22px;
-      fill: white;
-    }
-
-    #profileFileInput {
-      display: none;
-    }
-  </style>
+ 
 </head>
 
 <body>
