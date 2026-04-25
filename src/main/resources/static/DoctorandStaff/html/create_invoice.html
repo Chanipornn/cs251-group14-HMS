@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สร้างใบแจ้งหนี้</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body data-page="invoice-create">
+  <header class="header">
+    <div class="left-section">
+      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
+    </div>
+
+    <div class="profile">
+      <span>นพ.วิรุต</span>
+      <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h3>เมนู</h3><br>
+
+      <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+      <a href="history.html" class="menu">การจ่ายยา</a>
+      <a href="appointment.html" class="menu">การนัดหมาย</a>
+      <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+      <a href="invoice_history.html" class="menu active">ใบแจ้งหนี้</a>
+
+      <div class="logout" onclick="logout()">
+        <img src="../../img/log out.png" class="logoutlogo" alt="Logout">ออกจากระบบ
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="form-title">
+        <button class="back-link" data-nav="invoice_history.html"><i class="fa-solid fa-circle-arrow-left"></i></button>
+        <h1>สร้างใบแจ้งหนี้</h1>
+      </div>
+      <form id="invoiceForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>รหัสผู้ป่วย :</label>
+            <input id="invoicePatientId" class="input" value="254623">
+          </div>
+          <div class="form-group">
+            <label>รหัสการรักษา :</label>
+            <input id="invoiceTreatmentId" class="input" value="1112222333">
+          </div>
+          <div class="form-group full">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th>ลำดับ</th><th>รายการ</th><th>ราคา</th></tr>
+                </thead>
+                <tbody id="invoiceItemsBody"></tbody>
+              </table>
+            </div>
+            <div class="table-tools"><a href="#" id="addItemLink" class="add-inline"><i class="fa-regular fa-square-plus"></i> Add</a></div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-nav="invoice_history.html">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ยืนยัน</button>
+        </div>
+      </form>
+
+    </main>
+  </div>
+  <script src="../js/app.js"></script>
+</body>
+</html>

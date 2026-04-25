@@ -1,0 +1,122 @@
+:root {
+
+    --primary-purple: #7B6FDB;
+
+    --light-bg: #F5F6FA;
+
+    --sidebar-text: #2D3142;
+
+}
+
+/* ส่วนฟอร์มเพิ่มประวัติ */
+.form-container {
+    background: white;
+    margin: 20px;
+    padding: 30px;
+    border-radius: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.back-btn-circle {
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-purple);
+    text-decoration: none;
+}
+
+.back-btn-circle:hover {
+    transform: translateX(-1px);
+    color: #4b4399;
+}
+
+.form-title {
+    font-size: 24px;
+    color: var(--primary-purple);
+    font-weight: 600;
+}
+
+.medical-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 40px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.input-group label {
+    font-weight: 500;
+    min-width: 140px;
+    color: #333;
+}
+
+.input-group input, 
+.input-group textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    outline: none;
+}
+
+.input-group textarea {
+    resize: none;
+}
+
+.full-width {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.full-width label {
+    margin-bottom: 8px;
+}
+
+/* ปุ่ม Action */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-cancel {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-confirm {
+    background: var(--primary-purple);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(123, 111, 219, 0.3);
+}
