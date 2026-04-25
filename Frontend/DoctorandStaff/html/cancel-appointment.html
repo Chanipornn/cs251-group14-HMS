@@ -23,7 +23,7 @@
 
 <div class="container">
 
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <h3>เมนู</h3>
 
   <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
@@ -39,31 +39,31 @@
 
   <main class="main">
     <div class="form-title">
-      <button class="back-link" onclick="history.back()">‹</button>
+      <button class="back-link" type="button" onclick="goBackToEdit()">‹</button>
       <h1>แก้ไขการนัดหมาย</h1>
     </div>
 
     <form class="appointment-form">
       <div class="row">
         <label>รหัสประจำตัวผู้ป่วย :</label>
-        <input type="text" value="6780987">
+        <input type="text" id="patientId" readonly>
         <label>รหัสประจำตัว แพทย์/เจ้าหน้าที่ :</label>
-        <input type="text" value="1112222333">
+        <input type="text" id="doctorId" readonly>
       </div>
 
       <div class="row single">
         <label>วันที่นัดหมาย :</label>
-        <input type="date" value="2026-03-30">
+        <input type="date" id="appointmentDate" readonly>
       </div>
 
       <div class="row single">
         <label>เวลาที่นัดหมาย :</label>
-        <input type="time" value="10:00">
+        <input type="time" id="appointmentTime" readonly>
       </div>
 
       <div class="row single">
         <label>รหัสประจำตัวแพทย์เจ้าของเคส :</label>
-        <input type="text" value="1112222333">
+        <input type="text" id="caseDoctorId" readonly>
       </div>
     </form>
 
@@ -73,8 +73,8 @@
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-secondary" onclick="location.href='cancel-appointment.html'">ยกเลิกการแก้ไข</button>
-      <button class="btn btn-primary">ยืนยันแก้ไข</button>
+      <button class="btn btn-secondary" type="button" onclick="goBackToEdit()">ยกเลิกการแก้ไข</button>
+      <button class="btn btn-primary" type="button" onclick="deleteAppointment()">ยืนยันแก้ไข</button>
     </div>
 
   </main>
@@ -83,17 +83,96 @@
 
 <div class="modal-overlay">
   <div class="modal">
-    <button class="modal-close" onclick="location.href='edit-appointment.html'">×</button>
+    <button class="modal-close" type="button" onclick="goBackToEdit()">×</button>
     <div class="modal-icon">×</div>
     <h2>คุณยืนยันที่จะยกเลิกการนัดหมายนี้มั้ย ?</h2>
-    <input class="modal-input" type="text" placeholder="กรุณากรอกรหัสประจำตัว แพทย์ / เจ้าหน้าที่ เช่น 1112222333">
+    <input class="modal-input" type="text" id="staffCode" placeholder="กรุณากรอกรหัสประจำตัว แพทย์ / เจ้าหน้าที่ เช่น 1112222333">
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="location.href='edit-appointment.html'">ยกเลิกการแก้ไข</button>
-      <button class="btn btn-danger">ยืนยันแก้ไข</button>
+      <button class="btn btn-secondary" type="button" onclick="goBackToEdit()">ยกเลิกการแก้ไข</button>
+      <button class="btn btn-danger" type="button" onclick="deleteAppointment()">ยืนยันแก้ไข</button>
     </div>
   </div>
 </div>
 
-<script src="../js/appointment.js"></script>
+<script>
+  const STORAGE_KEY = 'appointments_data';
+  const params = new URLSearchParams(window.location.search);
+  let appointmentId = params.get('id');
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) sidebar.classList.toggle('collapsed');
+  }
+
+  function logout() {
+    if (confirm('ต้องการออกจากระบบ?')) {
+      window.location.href = 'login.html';
+    }
+  }
+
+  function getAppointments() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  }
+
+  function saveAppointments(appointments) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+  }
+
+  function findAppointment() {
+    const appointments = getAppointments();
+    let appointment = appointments.find(item => item.id === appointmentId);
+
+    if (!appointment && appointments.length > 0) {
+      appointment = appointments[0];
+      appointmentId = appointment.id;
+    }
+
+    return appointment;
+  }
+
+  function loadAppointment() {
+    const appointment = findAppointment();
+
+    if (!appointment) {
+      alert('ไม่พบข้อมูลการนัดหมาย');
+      window.location.href = 'appointment.html';
+      return;
+    }
+
+    document.getElementById('patientId').value = appointment.patientId || '';
+    document.getElementById('doctorId').value = appointment.doctorId || '';
+    document.getElementById('appointmentDate').value = appointment.date || '';
+    document.getElementById('appointmentTime').value = appointment.time || '';
+    document.getElementById('caseDoctorId').value = appointment.caseDoctorId || '';
+  }
+
+  function goBackToEdit() {
+    window.location.href = appointmentId
+      ? 'edit-appointment.html?id=' + encodeURIComponent(appointmentId)
+      : 'edit-appointment.html';
+  }
+
+  function deleteAppointment() {
+    let appointments = getAppointments();
+
+    if (!appointmentId && appointments.length > 0) {
+      appointmentId = appointments[0].id;
+    }
+
+    const beforeDelete = appointments.length;
+    appointments = appointments.filter(item => item.id !== appointmentId);
+
+    if (appointments.length === beforeDelete) {
+      alert('ไม่พบรายการที่ต้องการลบ');
+      window.location.href = 'appointment.html';
+      return;
+    }
+
+    saveAppointments(appointments);
+    window.location.href = 'appointment.html';
+  }
+
+  loadAppointment();
+</script>
 </body>
 </html>

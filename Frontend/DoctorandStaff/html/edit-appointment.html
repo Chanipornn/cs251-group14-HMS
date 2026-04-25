@@ -67,7 +67,7 @@
       </div>
     </form>
 
-    <div class="notice">
+    <div class="notice" role="button" tabindex="0" onclick="goToCancelAppointment()" onkeydown="handleCancelNoticeKey(event)" style="cursor: pointer;">
       <span>⊠</span>
       <span>ยกเลิกการนัดหมาย : การนัดหมายนี้จะถูกลบทันที</span>
     </div>
@@ -103,6 +103,20 @@
 
   function saveAppointments(appointments) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+  }
+
+  function goToCancelAppointment() {
+    const id = appointmentId || '';
+    window.location.href = id
+      ? 'cancel-appointment.html?id=' + encodeURIComponent(id)
+      : 'cancel-appointment.html';
+  }
+
+  function handleCancelNoticeKey(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      goToCancelAppointment();
+    }
   }
 
   function loadAppointment() {
