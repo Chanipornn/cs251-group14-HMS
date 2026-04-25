@@ -9,6 +9,7 @@
   --danger: #ff5d5d;
 }
 
+/* === Reset === */
 * {
   margin: 0;
   padding: 0;
@@ -29,7 +30,7 @@ a {
 
 /* === HEADER === */
 .header {
-  height: 70px;
+  height: 80px;
   background: #6E65BE;
   color: white;
   display: flex;
@@ -57,33 +58,23 @@ a {
   font-weight: 300;
 }
 
-.circle-img {
-  width: 3rem;
-  height: 3rem;
-  object-fit: cover;
+.add-btn {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  border: 2px solid white;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+  border: none;
+  background: #e05c5c;
   color: white;
-  font-weight: 500;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: background 0.2s;
 }
 
-.avatar {
-  width: 35px;
-  height: 35px;
-  background-color: white;
-  border-radius: 50%;
-  border: 2px solid white;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.add-btn:hover {
+  background: #c94f4f;
 }
 
 /* === LAYOUT === */
@@ -95,14 +86,14 @@ a {
 
 /* === SIDEBAR === */
 .sidebar {
-  width: 240px;
+  width: 250px;
   background: white;
-  padding: 24px 16px;
+  padding: 28px 20px;
   height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 70px;
+  top: 80px;
   flex-shrink: 0;
   overflow-y: auto;
   border-right: 1px solid #eee9f7;
@@ -116,10 +107,10 @@ a {
 }
 
 .sidebar h3 {
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   padding-left: 12px;
 }
 
@@ -132,14 +123,15 @@ a {
 
 .menu {
   display: block;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-radius: 10px;
   font-size: 0.92rem;
-  font-weight: 500;
+  font-weight: 700;
   color: #27233a;
   text-decoration: none;
   transition: background 0.2s;
   white-space: nowrap;
+  margin-bottom: 10px;
 }
 
 .menu:hover {
@@ -177,6 +169,7 @@ a {
   flex-direction: column;
 }
 
+/* === PAGE TITLE === */
 .page-title {
   margin-bottom: 14px;
 }
@@ -252,11 +245,20 @@ a {
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  user-select: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.sort-label:hover {
+  background: #ece9fb;
 }
 
 .sort-label i {
   font-size: 15px;
   color: var(--primary);
+  transition: transform 0.3s;
 }
 
 /* === CARD LIST === */
@@ -365,4 +367,35 @@ a {
   .card-meta {
     min-width: 100px;
   }
+}
+
+/* === HEADER - profile right side (from styles.css) === */
+.circle-img {
+  width: 3.4rem;
+  height: 3.4rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

@@ -12,6 +12,7 @@
 </head>
 <body>
 
+  <!-- HEADER -->
   <header class="header">
     <div class="left-section">
       <div class="menu-icon" onclick="toggleSidebar()">☰</div>
@@ -25,6 +26,7 @@
 
   <div class="container">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <h3>เมนู</h3>
 
@@ -41,12 +43,15 @@
       </div>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
+      <!-- Page Title -->
       <div class="page-title">
         <h1>รายการนัดหมาย</h1>
       </div>
 
+      <!-- Search Row -->
       <div class="search-row">
         <div class="search-box">
           <input type="text" placeholder="PatientID / DoctorID" />
@@ -54,13 +59,19 @@
         </div>
       </div>
 
+      <!-- Sort Label -->
       <div class="sort-row">
-        <span class="sort-label">หมายเลขคิว <i class="fa-solid fa-sliders"></i></span>
+        <span class="sort-label" onclick="toggleSort()">
+          หมายเลขคิว
+          <i class="fa-solid fa-sliders" id="sortIcon"></i>
+        </span>
       </div>
 
-      <div class="card-list">
+      <!-- Appointment Cards -->
+      <div class="card-list" id="cardList">
 
-        <div class="appoint-card">
+        <!-- Card 1 -->
+        <div class="appoint-card" data-queue="1">
           <div class="card-body">
             <p class="card-date">วันที่ : 25/03/2569</p>
             <p>ชื่อ : น.ส. โยมิว แก้วหวาน</p>
@@ -74,7 +85,8 @@
           </div>
         </div>
 
-        <div class="appoint-card">
+        <!-- Card 2 -->
+        <div class="appoint-card" data-queue="2">
           <div class="card-body">
             <p class="card-date">วันที่ : 25/03/2569</p>
             <p>ชื่อ : นาย นวัต ตะสังโดน</p>
@@ -88,7 +100,8 @@
           </div>
         </div>
 
-        <div class="appoint-card">
+        <!-- Card 3 -->
+        <div class="appoint-card" data-queue="3">
           <div class="card-body">
             <p class="card-date">วันที่ : 25/03/2569</p>
             <p>ชื่อ : น.ส. บากินตา อิบาบู</p>
@@ -104,8 +117,11 @@
 
       </div>
 
+      <!-- Add Button -->
       <div class="add-row">
-        <button class="add-link" onclick="addAppointment()">+ เพิ่มการนัดหมาย</button>
+        <button class="add-link" onclick="window.location.href='add-appointment.html'">
+          + เพิ่มการนัดหมาย
+        </button>
       </div>
 
     </main>
@@ -122,6 +138,24 @@
     }
     function addAppointment() {
       alert('เพิ่มการนัดหมาย');
+    }
+
+    let sortAsc = true;
+
+    function toggleSort() {
+      sortAsc = !sortAsc;
+      const icon = document.getElementById('sortIcon');
+      icon.style.transform = sortAsc ? 'rotate(0deg)' : 'rotate(180deg)';
+      icon.style.transition = 'transform 0.3s';
+
+      const list = document.getElementById('cardList');
+      const cards = Array.from(list.querySelectorAll('.appoint-card'));
+      cards.sort((a, b) => {
+        const qa = parseInt(a.dataset.queue);
+        const qb = parseInt(b.dataset.queue);
+        return sortAsc ? qa - qb : qb - qa;
+      });
+      cards.forEach(card => list.appendChild(card));
     }
   </script>
 </body>
