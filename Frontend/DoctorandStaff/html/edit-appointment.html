@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แก้ไขการนัดหมาย</title>
+  <link rel="stylesheet" href="../css/appointment-styles.css">
+</head>
+<body>
+<div class="page-wrap">
+
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img" onerror="this.style.display='none'">
+  </div>
+
+  <div class="profile">
+    <span>นพ.วิรุต</span>
+    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+  </div>
+</header>
+
+<div class="container">
+
+<aside class="sidebar">
+  <h3>เมนู</h3>
+
+  <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+  <a href="history.html" class="menu">การจ่ายยา</a>
+  <a href="appointment.html" class="menu active">การนัดหมาย</a>
+  <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+  <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+
+  <div class="logout" onclick="logout()">
+    <img src="../../img/log out.png" class="logoutlogo" onerror="this.style.display='none'">ออกจากระบบ
+  </div>
+</aside>
+
+  <main class="main">
+    <div class="form-title">
+      <button class="back-link" onclick="history.back()">‹</button>
+      <h1>แก้ไขการนัดหมาย</h1>
+    </div>
+
+    <form class="appointment-form">
+      <div class="row">
+        <label>รหัสประจำตัวผู้ป่วย :</label>
+        <input type="text" value="6780987">
+        <label>รหัสประจำตัว แพทย์/เจ้าหน้าที่ :</label>
+        <input type="text" value="1112222333">
+      </div>
+
+      <div class="row single">
+        <label>วันที่นัดหมาย :</label>
+        <input type="date" value="2026-03-30">
+      </div>
+
+      <div class="row single">
+        <label>เวลาที่นัดหมาย :</label>
+        <input type="time" value="10:00">
+      </div>
+
+      <div class="row single">
+        <label>รหัสประจำตัวแพทย์เจ้าของเคส :</label>
+        <input type="text" value="1112222333">
+      </div>
+    </form>
+
+    <div class="notice">
+      <span>⊠</span>
+      <span>ยกเลิกการนัดหมาย : การนัดหมายนี้จะถูกลบทันที</span>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="location.href='cancel-appointment.html'">ยกเลิกการแก้ไข</button>
+      <button class="btn btn-primary">ยืนยันแก้ไข</button>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script src="../js/appointment.js"></script>
+</body>
+</html>
