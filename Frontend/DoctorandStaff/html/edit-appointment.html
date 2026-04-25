@@ -23,7 +23,7 @@
 
 <div class="container">
 
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <h3>เมนู</h3>
 
   <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
@@ -39,31 +39,31 @@
 
   <main class="main">
     <div class="form-title">
-      <button class="back-link" onclick="history.back()">‹</button>
+      <button class="back-link" type="button" onclick="location.href='appointment.html'">‹</button>
       <h1>แก้ไขการนัดหมาย</h1>
     </div>
 
-    <form class="appointment-form">
+    <form class="appointment-form" id="editAppointmentForm">
       <div class="row">
         <label>รหัสประจำตัวผู้ป่วย :</label>
-        <input type="text" value="6780987">
+        <input type="text" id="patientId" required>
         <label>รหัสประจำตัว แพทย์/เจ้าหน้าที่ :</label>
-        <input type="text" value="1112222333">
+        <input type="text" id="doctorId" required>
       </div>
 
       <div class="row single">
         <label>วันที่นัดหมาย :</label>
-        <input type="date" value="2026-03-30">
+        <input type="date" id="appointmentDate" required>
       </div>
 
       <div class="row single">
         <label>เวลาที่นัดหมาย :</label>
-        <input type="time" value="10:00">
+        <input type="time" id="appointmentTime" required>
       </div>
 
       <div class="row single">
         <label>รหัสประจำตัวแพทย์เจ้าของเคส :</label>
-        <input type="text" value="1112222333">
+        <input type="text" id="caseDoctorId" required>
       </div>
     </form>
 
@@ -73,14 +73,94 @@
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-secondary" onclick="location.href='cancel-appointment.html'">ยกเลิกการแก้ไข</button>
-      <button class="btn btn-primary">ยืนยันแก้ไข</button>
+      <button class="btn btn-secondary" type="button" onclick="location.href='appointment.html'">ยกเลิกการแก้ไข</button>
+      <button class="btn btn-primary" type="submit" form="editAppointmentForm">ยืนยันแก้ไข</button>
     </div>
 
   </main>
 </div>
 </div>
 
-<script src="../js/appointment.js"></script>
+<script>
+  const STORAGE_KEY = 'appointments_data';
+  const params = new URLSearchParams(window.location.search);
+  const appointmentId = params.get('id');
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) sidebar.classList.toggle('collapsed');
+  }
+
+  function logout() {
+    if (confirm('ต้องการออกจากระบบ?')) {
+      window.location.href = 'login.html';
+    }
+  }
+
+  function getAppointments() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  }
+
+  function saveAppointments(appointments) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+  }
+
+  function loadAppointment() {
+    const appointments = getAppointments();
+    let appointment = appointments.find(item => item.id === appointmentId);
+
+    if (!appointment && appointments.length > 0) {
+      appointment = appointments[0];
+    }
+
+    if (!appointment) {
+      alert('ไม่พบข้อมูลการนัดหมาย');
+      window.location.href = 'appointment.html';
+      return;
+    }
+
+    document.getElementById('patientId').value = appointment.patientId || '';
+    document.getElementById('doctorId').value = appointment.doctorId || '';
+    document.getElementById('appointmentDate').value = appointment.date || '';
+    document.getElementById('appointmentTime').value = appointment.time || '';
+    document.getElementById('caseDoctorId').value = appointment.caseDoctorId || '';
+  }
+
+  document.getElementById('editAppointmentForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const appointments = getAppointments();
+    let index = appointments.findIndex(item => item.id === appointmentId);
+
+    if (index === -1 && appointments.length > 0) {
+      index = 0;
+    }
+
+    if (index === -1) {
+      alert('ไม่พบข้อมูลการนัดหมาย');
+      window.location.href = 'appointment.html';
+      return;
+    }
+
+    const patientId = document.getElementById('patientId').value.trim();
+
+    appointments[index] = {
+      ...appointments[index],
+      patientId: patientId,
+      doctorId: document.getElementById('doctorId').value.trim(),
+      date: document.getElementById('appointmentDate').value,
+      time: document.getElementById('appointmentTime').value,
+      caseDoctorId: document.getElementById('caseDoctorId').value.trim(),
+      name: appointments[index].name && !appointments[index].name.startsWith('ผู้ป่วยรหัส')
+        ? appointments[index].name
+        : 'ผู้ป่วยรหัส ' + patientId
+    };
+
+    saveAppointments(appointments);
+    window.location.href = 'appointment.html';
+  });
+
+  loadAppointment();
+</script>
 </body>
 </html>
