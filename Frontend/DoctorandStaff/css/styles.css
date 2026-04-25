@@ -14,6 +14,7 @@
   --danger: #ff5d5d;
   --success: #45b75f;
   --warning: #f2b332;
+  --primary-purple: #7B6FDB;
 }
 
 * {
@@ -265,15 +266,21 @@ body {
 }
 
 .back-link {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 0;
-  background: transparent;
-  color: var(--primary);
-  font-size: 34px;
-  display: grid;
-  place-items: center;
+  width: 35px;
+    height: 35px;
+    border: 2px solid var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-purple);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.back-link:hover{
+  transform: translateX(-1px);
+  color: #4b4399;
 }
 
 .two-col {

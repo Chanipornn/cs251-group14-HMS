@@ -6,6 +6,7 @@
   --text: #27233a;
   --muted: #7d7895;
   --border: #c4bedd;
+  --primary-purple: #7B6FDB;
 }
 
 /* === Reset === */
@@ -188,15 +189,21 @@ a {
 }
 
 .back-link {
-  background: transparent;
-  border: none;
-  color: var(--primary);
-  font-size: 32px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  width: 35px;
+    height: 35px;
+    border: 2px solid var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-purple);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.back-link:hover{
+  transform: translateX(-1px);
+  color: #4b4399;
 }
 
 .form-title h1 {

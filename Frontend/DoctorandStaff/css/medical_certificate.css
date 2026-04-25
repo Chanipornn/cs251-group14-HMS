@@ -1,10 +1,13 @@
+:root{
+  --primary-purple: #7B6FDB;
+}
 /* Medical Certificate page - extra hover and card styles */
-button, .btn, .add-link, .back-link, .mc-edit-btn, [data-nav] {
+button, .btn, .add-link, .mc-edit-btn, [data-nav] {
   cursor: pointer;
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, background-color 0.18s ease, opacity 0.18s ease;
 }
 
-button:hover, .btn:hover, .add-link:hover, .back-link:hover, .mc-edit-btn:hover, [data-nav]:hover {
+button:hover, .btn:hover, .add-link:hover, .mc-edit-btn:hover, [data-nav]:hover {
   transform: translateY(-2px);
   filter: brightness(1.06);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);

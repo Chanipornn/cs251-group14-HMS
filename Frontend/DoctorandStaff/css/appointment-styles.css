@@ -10,6 +10,7 @@
   --text: #27233a;
   --border: #d7d2ec;
   --danger: #ff5d5d;
+  --primary-purple: #7B6FDB;
 }
 
 * {
@@ -169,17 +170,21 @@ body {
 }
 
 .back-link {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 0;
-  background: var(--primary);
-  color: white;
-  font-size: 38px;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
+  width: 35px;
+    height: 35px;
+    border: 2px solid var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-purple);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.back-link:hover{
+  transform: translateX(-1px);
+  color: #4b4399;
 }
 
 .appointment-form {
