@@ -330,36 +330,105 @@ function initMedicalCertificateForm(mode) {
   });
 }
 
+const INVOICE_STORAGE_KEY = 'invoices';
+const INVOICE_DRAFT_ITEMS_KEY = 'invoiceDraftItems';
+
+function getDefaultInvoices() {
+  return mockDB.invoices.map((invoice) => ({
+    ...invoice,
+    items: invoice.items.map((item) => ({ ...item }))
+  }));
+}
+
+function getInvoices() {
+  const saved = localStorage.getItem(INVOICE_STORAGE_KEY);
+
+  if (!saved) {
+    const defaults = getDefaultInvoices();
+    localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(defaults));
+    return defaults;
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed)) return parsed;
+  } catch (error) {
+    console.warn('Cannot read invoices from localStorage:', error);
+  }
+
+  const defaults = getDefaultInvoices();
+  localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(defaults));
+  return defaults;
+}
+
+function saveInvoices(list) {
+  localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(list));
+}
+
+function generateInvoiceId(list) {
+  const maxId = list.reduce((max, item) => {
+    const number = Number(String(item.id || '').replace(/[^0-9]/g, ''));
+    return Number.isFinite(number) && number > max ? number : max;
+  }, 123);
+
+  return maxId + 1;
+}
+
+function getTodayISODate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 async function loadInvoices() {
-  const list = await apiFetch('/invoices', {}, () => mockDB.invoices);
-  const selectedId = Number(params.get('id')) || list[0]?.id;
+  const list = getInvoices();
+  const selectedId = String(params.get('id') || list[0]?.id || '');
   renderInvoiceList(list, selectedId);
-  renderInvoicePreview(list.find(item => item.id === selectedId) || list[0]);
+  renderInvoicePreview(list.find(item => String(item.id) === selectedId) || list[0]);
 }
 
 function renderInvoiceList(list, selectedId) {
   const wrap = qs('#recordList');
   if (!wrap) return;
-  wrap.innerHTML = list.slice(0, 3).map(item => `
-    <article class="record-card ${item.id === selectedId ? 'active' : ''}">
+
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty-state">ยังไม่มีข้อมูลใบแจ้งหนี้</div>';
+    const preview = qs('#previewPanel');
+    if (preview) preview.innerHTML = '';
+    return;
+  }
+
+  wrap.innerHTML = list.map(item => `
+    <article class="record-card ${String(item.id) === String(selectedId) ? 'active' : ''}" data-id="${escapeHtml(item.id)}">
       <div>
         <h3>วันที่ ${formatThaiDate(item.date)}</h3>
-        <p>รหัสประจำตัวผู้ป่วย : ${item.patientId}</p>
+        <p>รหัสประจำตัวผู้ป่วย : ${escapeHtml(item.patientId)}</p>
+        <p>รหัสใบแจ้งหนี้ : ${escapeHtml(item.id)}</p>
         <p>รายการ : ตรวจทั่วไป</p>
         <p>${statusLabel(item.status)}</p>
       </div>
-      <button class="card-arrow" data-go="invoice_history.html?id=${item.id}">
+      <button class="card-arrow" type="button" data-go="invoice_history.html?id=${encodeURIComponent(item.id)}">
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </article>
   `).join('');
+
+  qsa('.record-card').forEach(card => {
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('[data-go]')) return;
+      const id = card.dataset.id;
+      const selected = getInvoices().find(item => String(item.id) === String(id));
+      qsa('.record-card').forEach(item => item.classList.remove('active'));
+      card.classList.add('active');
+      renderInvoicePreview(selected);
+    });
+  });
+
   qsa('[data-go]').forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.go)));
 }
 
 function renderInvoicePreview(item) {
   const preview = qs('#previewPanel');
   if (!preview || !item) return;
-  const subtotal = item.items.reduce((sum, it) => sum + Number(it.amount), 0);
+  const subtotal = item.items.reduce((sum, it) => sum + Number(it.amount || 0), 0);
   const total = subtotal + Number(item.coverage);
   preview.innerHTML = `
     <div class="invoice-paper">
@@ -373,7 +442,7 @@ function renderInvoicePreview(item) {
         <tr><td>แพทย์</td><td>${item.doctorName}</td><td class="text-right">นาย/นาง ตัวอย่าง</td></tr>
       </table>
       <table class="invoice-lines">
-        ${item.items.map(line => `<tr><td>${line.name}</td><td class="text-right">${line.amount} บาท</td></tr>`).join('')}
+        ${item.items.map(line => `<tr><td>${escapeHtml(line.name)}</td><td class="text-right">${Number(line.amount || 0).toLocaleString()} บาท</td></tr>`).join('')}
       </table>
       <table class="invoice-total">
         <tr><td>รวมทั้งหมด</td><td class="text-right">${subtotal} บาท</td></tr>
@@ -389,9 +458,9 @@ function renderInvoiceTable(items) {
   if (!tbody) return;
   tbody.innerHTML = items.map(item => `
     <tr>
-      <td>${item.order}</td>
-      <td>${item.name}</td>
-      <td>${item.amount}</td>
+      <td>${escapeHtml(item.order)}</td>
+      <td>${escapeHtml(item.name)}</td>
+      <td>${Number(item.amount || 0).toLocaleString()}</td>
     </tr>
   `).join('');
 }
@@ -399,48 +468,90 @@ function renderInvoiceTable(items) {
 async function initInvoiceCreate() {
   const form = qs('#invoiceForm');
   if (!form) return;
-  const invoiceId = params.get('invoiceId') || '124';
-  const existing = mockDB.invoices.find(x => String(x.id) === String(invoiceId)) || mockDB.invoices[0];
-  let items = JSON.parse(sessionStorage.getItem('invoiceDraftItems') || 'null') || existing.items;
+
+  const invoiceId = params.get('invoiceId') || 'new';
+  const savedInvoices = getInvoices();
+  const existing = savedInvoices.find(x => String(x.id) === String(invoiceId));
+  let items = JSON.parse(sessionStorage.getItem(INVOICE_DRAFT_ITEMS_KEY) || 'null')
+    || existing?.items
+    || [
+      { order: 1, name: 'ค่าตรวจแพทย์', amount: 300 },
+      { order: 2, name: 'ค่ายา', amount: 150 }
+    ];
+
   renderInvoiceTable(items);
 
   qs('#addItemLink')?.addEventListener('click', (e) => {
     e.preventDefault();
-    sessionStorage.setItem('invoiceDraftItems', JSON.stringify(items));
-    navigate(`add_invoice_item.html?invoiceId=${invoiceId}`);
+    sessionStorage.setItem(INVOICE_DRAFT_ITEMS_KEY, JSON.stringify(items));
+    navigate(`add_invoice_item.html?invoiceId=${encodeURIComponent(invoiceId)}`);
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const payload = {
-      patientId: qs('#invoicePatientId').value,
-      treatmentId: qs('#invoiceTreatmentId').value,
-      items
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const currentList = getInvoices();
+    const newId = generateInvoiceId(currentList);
+    const newInvoice = {
+      id: newId,
+      patientId: qs('#invoicePatientId')?.value.trim() || '-',
+      treatmentId: qs('#invoiceTreatmentId')?.value.trim() || '-',
+      date: getTodayISODate(),
+      patientName: 'ผู้ป่วยใหม่',
+      doctorName: 'นพ.วิรุต',
+      status: 'pending',
+      items: items.map((item, index) => ({
+        order: index + 1,
+        name: item.name,
+        amount: Number(item.amount || 0)
+      })),
+      coverage: 0
     };
-    await apiFetch('/invoices', { method: 'POST', body: JSON.stringify(payload) }, { success: true });
-    sessionStorage.removeItem('invoiceDraftItems');
-    navigate('invoice_history.html');
+
+    saveInvoices([newInvoice, ...currentList]);
+    sessionStorage.removeItem(INVOICE_DRAFT_ITEMS_KEY);
+    navigate(`invoice_history.html?id=${encodeURIComponent(newId)}`);
   });
 }
 
 async function initInvoiceAddItem() {
   const form = qs('#addInvoiceItemForm');
   if (!form) return;
-  const invoiceId = params.get('invoiceId') || '124';
-  const base = mockDB.invoices.find(x => String(x.id) === String(invoiceId)) || mockDB.invoices[0];
-  const items = JSON.parse(sessionStorage.getItem('invoiceDraftItems') || 'null') || base.items;
-  renderInvoiceTable([...items, { order: items.length + 1, name: 'เพิ่มรายการ', amount: '-' }]);
+
+  const invoiceId = params.get('invoiceId') || 'new';
+  const savedInvoices = getInvoices();
+  const base = savedInvoices.find(x => String(x.id) === String(invoiceId));
+  const items = JSON.parse(sessionStorage.getItem(INVOICE_DRAFT_ITEMS_KEY) || 'null')
+    || base?.items
+    || [
+      { order: 1, name: 'ค่าตรวจแพทย์', amount: 300 },
+      { order: 2, name: 'ค่ายา', amount: 150 }
+    ];
+
+  renderInvoiceTable(items);
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const newItem = {
       order: items.length + 1,
-      name: qs('#newItemName').value || 'รายการใหม่',
-      amount: Number(qs('#newItemAmount').value || 0)
+      name: qs('#newItemName')?.value.trim() || 'รายการใหม่',
+      amount: Number(qs('#newItemAmount')?.value || 0)
     };
+
     const nextItems = [...items, newItem];
-    sessionStorage.setItem('invoiceDraftItems', JSON.stringify(nextItems));
-    navigate(`create_invoice.html?invoiceId=${invoiceId}`);
+    sessionStorage.setItem(INVOICE_DRAFT_ITEMS_KEY, JSON.stringify(nextItems));
+    navigate(`create_invoice.html?invoiceId=${encodeURIComponent(invoiceId)}`);
   });
 }
 

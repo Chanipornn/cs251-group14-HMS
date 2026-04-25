@@ -500,3 +500,76 @@ body {
   .topbar { height: 78px; }
   .page-title h1, .form-title h1 { font-size: 1.75rem; }
 }
+
+
+/* Hover states for invoice pages */
+button,
+a,
+[data-nav],
+[data-go] {
+  transition: background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+button:hover,
+a:hover,
+[data-nav]:hover,
+[data-go]:hover {
+  cursor: pointer;
+}
+
+.record-card {
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+}
+
+.record-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 24px rgba(123, 113, 216, .18);
+}
+
+.card-arrow {
+  transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.card-arrow:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: scale(1.06);
+}
+
+.add-link:hover,
+.add-inline:hover {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(123, 113, 216, .22);
+  transform: translateY(-1px);
+}
+
+.add-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(77, 63, 149, .16);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary:hover {
+  background: #f4f1ff;
+  color: var(--primary-dark);
+}
+
+.back-link:hover {
+  color: var(--primary-dark);
+  transform: translateX(-2px) scale(1.04);
+}
