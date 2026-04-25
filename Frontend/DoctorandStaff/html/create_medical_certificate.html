@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/medical_certificate.css">
 </head>
 <body data-page="medical-create">
   <header class="header">
@@ -47,23 +48,23 @@
         <div class="form-grid">
           <div class="form-group">
             <label>รหัสประจำตัวผู้ป่วย :</label>
-            <input id="mcPatientId" class="input" readonly>
+            <input id="mcPatientId" class="input" placeholder="เช่น P001" required>
           </div>
           <div class="form-group">
             <label>รหัสประจำตัว แพทย์ :</label>
-            <input id="mcDoctorId" class="input" readonly>
+            <input id="mcDoctorId" class="input" placeholder="เช่น D001" required>
           </div>
           <div class="form-group full">
             <label>วันออกใบรับรองแพทย์ :</label>
-            <input id="mcDate" type="date" class="input">
+            <input id="mcDate" type="date" class="input" required>
           </div>
           <div class="form-group full">
             <label>อาการ :</label>
-            <textarea id="mcSymptoms" class="textarea" placeholder="เช่น มีไข้"></textarea>
+            <textarea id="mcSymptoms" class="textarea" required placeholder="เช่น มีไข้"></textarea>
           </div>
           <div class="form-group full">
             <label>วัตถุประสงค์ในการออกใบรับรองแพทย์ :</label>
-            <textarea id="mcPurpose" class="textarea" placeholder="เช่น ลางาน"></textarea>
+            <textarea id="mcPurpose" class="textarea" required placeholder="เช่น ลางาน"></textarea>
           </div>
         </div>
         <div class="form-actions">

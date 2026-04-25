@@ -114,82 +114,218 @@ function statusLabel(status) {
   return '<span class="status-dot status-warning"></span>รอดำเนินการ';
 }
 
-async function loadMedicalCertificates() {
-  const list = await apiFetch('/medical-certificates', {}, () => mockDB.medicalCertificates);
-  const selectedId = Number(params.get('id')) || list[0]?.id;
+const MC_STORAGE_KEY = 'medical_certificates';
+const MC_EDIT_ID_KEY = 'editing_medical_certificate_id';
+
+function getDefaultMedicalCertificates() {
+  return mockDB.medicalCertificates.map((item) => ({ ...item }));
+}
+
+function getMedicalCertificates() {
+  const saved = localStorage.getItem(MC_STORAGE_KEY);
+
+  if (!saved) {
+    const defaults = getDefaultMedicalCertificates();
+    localStorage.setItem(MC_STORAGE_KEY, JSON.stringify(defaults));
+    return defaults;
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed)) return parsed;
+  } catch (error) {
+    console.warn('Cannot read medical certificates from localStorage:', error);
+  }
+
+  const defaults = getDefaultMedicalCertificates();
+  localStorage.setItem(MC_STORAGE_KEY, JSON.stringify(defaults));
+  return defaults;
+}
+
+function saveMedicalCertificates(list) {
+  localStorage.setItem(MC_STORAGE_KEY, JSON.stringify(list));
+}
+
+function generateMedicalCertificateId(list) {
+  const maxId = list.reduce((max, item) => {
+    const number = Number(String(item.id || '').replace(/[^0-9]/g, ''));
+    return Number.isFinite(number) && number > max ? number : max;
+  }, 8000);
+
+  return maxId + 1;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function getMedicalCertificateFormData() {
+  return {
+    patientId: qs('#mcPatientId')?.value.trim() || '',
+    doctorId: qs('#mcDoctorId')?.value.trim() || '',
+    date: qs('#mcDate')?.value || '',
+    symptoms: qs('#mcSymptoms')?.value.trim() || '',
+    purpose: qs('#mcPurpose')?.value.trim() || '',
+    doctorName: 'นพ. วิรุต วินทรัพย์'
+  };
+}
+
+function fillMedicalCertificateForm(item) {
+  if (!item) return;
+  qs('#mcPatientId').value = item.patientId || '';
+  qs('#mcDoctorId').value = item.doctorId || '';
+  qs('#mcDate').value = item.date || '';
+  qs('#mcSymptoms').value = item.symptoms || '';
+  qs('#mcPurpose').value = item.purpose || '';
+}
+
+function loadMedicalCertificates() {
+  const list = getMedicalCertificates();
+  const selectedId = String(params.get('id') || list[0]?.id || '');
   renderMedicalCertificateList(list, selectedId);
-  renderMedicalCertificatePreview(list.find(item => item.id === selectedId) || list[0]);
+  renderMedicalCertificatePreview(list.find(item => String(item.id) === selectedId) || list[0]);
+
+  qs('#mcSearchInput')?.addEventListener('input', (event) => {
+    const keyword = event.target.value.trim().toLowerCase();
+    const filtered = getMedicalCertificates().filter((item) => {
+      return String(item.id).toLowerCase().includes(keyword)
+        || String(item.patientId).toLowerCase().includes(keyword)
+        || String(item.doctorId).toLowerCase().includes(keyword)
+        || String(item.purpose).toLowerCase().includes(keyword);
+    });
+
+    const nextSelectedId = String(filtered[0]?.id || '');
+    renderMedicalCertificateList(filtered, nextSelectedId);
+    renderMedicalCertificatePreview(filtered[0]);
+  });
 }
 
 function renderMedicalCertificateList(list, selectedId) {
   const wrap = qs('#recordList');
   if (!wrap) return;
-  wrap.innerHTML = list.slice(0, 3).map(item => `
-    <article class="record-card ${item.id === selectedId ? 'active' : ''}">
+
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty-state">ยังไม่มีข้อมูลใบรับรองแพทย์</div>';
+    const preview = qs('#previewPanel');
+    if (preview) preview.innerHTML = '';
+    return;
+  }
+
+  wrap.innerHTML = list.map(item => `
+    <article class="record-card ${String(item.id) === String(selectedId) ? 'active' : ''}" data-id="${escapeHtml(item.id)}">
       <div>
         <h3>วันที่ ${formatThaiDate(item.date)}</h3>
-        <p>รหัสประจำตัวผู้ป่วย : ${item.patientId}</p>
-        <p>รหัสใบรับรองแพทย์ : ${item.id}</p>
-        <p>วัตถุประสงค์ : ${item.purpose}</p>
+        <p>รหัสประจำตัวผู้ป่วย : ${escapeHtml(item.patientId)}</p>
+        <p>รหัสใบรับรองแพทย์ : ${escapeHtml(item.id)}</p>
+        <p>วัตถุประสงค์ : ${escapeHtml(item.purpose)}</p>
       </div>
-      <button class="card-arrow" data-go="medical_certificate_history.html?id=${item.id}">
+      <button class="card-arrow" type="button" data-edit-id="${escapeHtml(item.id)}">
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </article>
   `).join('');
-  qsa('[data-go]').forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.go)));
+
+  qsa('.record-card').forEach(card => {
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('[data-edit-id]')) return;
+      const id = card.dataset.id;
+      const selected = getMedicalCertificates().find(item => String(item.id) === String(id));
+      qsa('.record-card').forEach(item => item.classList.remove('active'));
+      card.classList.add('active');
+      renderMedicalCertificatePreview(selected);
+    });
+  });
+
+  qsa('[data-edit-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.editId;
+      localStorage.setItem(MC_EDIT_ID_KEY, id);
+      navigate(`edit_medical_certificate.html?id=${encodeURIComponent(id)}`);
+    });
+  });
 }
 
 function renderMedicalCertificatePreview(item) {
   const preview = qs('#previewPanel');
-  if (!preview || !item) return;
+  if (!preview) return;
+
+  if (!item) {
+    preview.innerHTML = '';
+    return;
+  }
+
   preview.innerHTML = `
     <div class="paper-center">
       <h3>ใบรับรองแพทย์</h3>
       <p class="mt-8">วันที่ ${formatThaiDate(item.date)}</p>
     </div>
     <div class="paper-section mt-24">
-      <p>ข้าพเจ้า ${item.doctorName} รหัสประจำตัวแพทย์ ${item.doctorId}</p>
-      <p>ได้ตรวจ นาย/นาง/นางสาว รหัสประจำตัวผู้ป่วย ${item.patientId}</p>
+      <p>ข้าพเจ้า ${escapeHtml(item.doctorName || 'นพ. วิรุต วินทรัพย์')} รหัสประจำตัวแพทย์ ${escapeHtml(item.doctorId)}</p>
+      <p>ได้ตรวจ นาย/นาง/นางสาว รหัสประจำตัวผู้ป่วย ${escapeHtml(item.patientId)}</p>
       <p>เมื่อวันที่ ${formatThaiDate(item.date)}</p>
-      <p>อาการเบื้องต้น ${item.symptoms}</p>
-      <p>ใบรับรองแพทย์นี้ออกให้เพื่อ ${item.purpose}</p>
+      <p>อาการเบื้องต้น ${escapeHtml(item.symptoms)}</p>
+      <p>ใบรับรองแพทย์นี้ออกให้เพื่อ ${escapeHtml(item.purpose)}</p>
     </div>
     <div class="paper-sign">
       <p>ลงชื่อ</p>
-      <p>${item.doctorName}</p>
+      <p>${escapeHtml(item.doctorName || 'นพ. วิรุต วินทรัพย์')}</p>
     </div>
-    <a class="edit-link" href="edit_medical_certificate.html?id=${item.id}">แก้ไข <i class="fa-solid fa-pen-to-square"></i></a>
+    <a class="edit-link" href="edit_medical_certificate.html?id=${encodeURIComponent(item.id)}">แก้ไข <i class="fa-solid fa-pen-to-square"></i></a>
   `;
 }
 
-async function initMedicalCertificateForm(mode) {
+function initMedicalCertificateForm(mode) {
   const form = qs('#medicalCertificateForm');
   if (!form) return;
-  const id = Number(params.get('id'));
-  let item = null;
-  if (mode === 'edit' && id) {
-    item = await apiFetch(`/medical-certificates/${id}`, {}, () => mockDB.medicalCertificates.find(x => x.id === id));
-  }
-  qs('#mcPatientId').value = item?.patientId || '6780987';
-  qs('#mcDoctorId').value = item?.doctorId || '1112222333';
-  qs('#mcDate').value = item?.date || '2026-03-30';
-  qs('#mcSymptoms').value = item?.symptoms || '';
-  qs('#mcPurpose').value = item?.purpose || '';
 
-  form.addEventListener('submit', async (e) => {
+  const id = params.get('id') || localStorage.getItem(MC_EDIT_ID_KEY);
+  const list = getMedicalCertificates();
+  const item = mode === 'edit'
+    ? list.find(x => String(x.id) === String(id))
+    : null;
+
+  if (mode === 'edit') {
+    if (!item) {
+      alert('ไม่พบข้อมูลใบรับรองแพทย์ที่ต้องการแก้ไข');
+      navigate('medical_certificate_history.html');
+      return;
+    }
+
+    localStorage.setItem(MC_EDIT_ID_KEY, item.id);
+    fillMedicalCertificateForm(item);
+  }
+
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const payload = {
-      patientId: qs('#mcPatientId').value,
-      doctorId: qs('#mcDoctorId').value,
-      date: qs('#mcDate').value,
-      symptoms: qs('#mcSymptoms').value,
-      purpose: qs('#mcPurpose').value
-    };
-    await apiFetch(mode === 'edit' ? `/medical-certificates/${id}` : '/medical-certificates', {
-      method: mode === 'edit' ? 'PUT' : 'POST',
-      body: JSON.stringify(payload)
-    }, { success: true });
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const currentList = getMedicalCertificates();
+    const payload = getMedicalCertificateFormData();
+
+    if (mode === 'edit') {
+      const updatedList = currentList.map(existing => {
+        if (String(existing.id) !== String(item.id)) return existing;
+        return { ...existing, ...payload };
+      });
+      saveMedicalCertificates(updatedList);
+      localStorage.removeItem(MC_EDIT_ID_KEY);
+    } else {
+      const newItem = {
+        id: generateMedicalCertificateId(currentList),
+        ...payload
+      };
+      saveMedicalCertificates([newItem, ...currentList]);
+    }
+
     navigate('medical_certificate_history.html');
   });
 }
