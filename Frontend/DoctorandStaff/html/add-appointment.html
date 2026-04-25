@@ -76,53 +76,6 @@
 </div>
 </div>
 
-<script>
-  const STORAGE_KEY = 'appointments_data';
-
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) sidebar.classList.toggle('collapsed');
-  }
-
-  function logout() {
-    if (confirm('ต้องการออกจากระบบ?')) {
-      window.location.href = 'login.html';
-    }
-  }
-
-  function getAppointments() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  }
-
-  function saveAppointments(appointments) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
-  }
-
-  document.getElementById('appointmentForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const appointments = getAppointments();
-    const nextQueue = appointments.length ? Math.max(...appointments.map(item => Number(item.queue) || 0)) + 1 : 1;
-    const patientId = document.getElementById('patientId').value.trim();
-
-    const newAppointment = {
-      id: 'apt-' + Date.now(),
-      queue: nextQueue,
-      patientId: patientId,
-      doctorId: document.getElementById('doctorId').value.trim(),
-      date: document.getElementById('appointmentDate').value,
-      time: document.getElementById('appointmentTime').value,
-      caseDoctorId: document.getElementById('caseDoctorId').value.trim(),
-      name: 'ผู้ป่วยรหัส ' + patientId,
-      age: '-',
-      weight: '-',
-      height: '-'
-    };
-
-    appointments.push(newAppointment);
-    saveAppointments(appointments);
-    window.location.href = 'appointment.html';
-  });
-</script>
+<script src="../JS/appointment.js"></script>
 </body>
 </html>
