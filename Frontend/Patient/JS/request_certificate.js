@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
             option.textContent = `${mockDatabase[dateKey].patients[0].date} - ตรวจทั่วไป`;
             dateSelect.appendChild(option);
         });
+
+
     }
 
     // 2. จัดการเมื่อกดยืนยันส่งฟอร์ม

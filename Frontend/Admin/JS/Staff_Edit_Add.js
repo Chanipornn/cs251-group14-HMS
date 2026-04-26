@@ -1,63 +1,66 @@
 // ================= DATA =================
-const doctorPositions = ["อายุรกรรม", "ศัลยกรรม", "หู คอ จมูก", "จิตเวช", "รังสีวิทยา", "กุมารเวชกรรม"];
-const staffPositions  = ["พยาบาล", "เจ้าหน้าที่เวชระเบียน", "เจ้าหน้าที่การเงิน", "เจ้าหน้าที่ลงทะเบียนผู้ป่วย"];
+const staffPositions = [
+    "พยาบาล",
+    "เจ้าหน้าที่เวชระเบียน",
+    "เจ้าหน้าที่การเงิน",
+    "เจ้าหน้าที่ลงทะเบียนผู้ป่วย"
+];
 
 // ================= HELPER =================
 function populateSelect(selectElement, dataArray, labelText, currentValue) {
     let optionsHtml = `<option value="">-- กรุณาเลือก${labelText} --</option>`;
-
     dataArray.forEach(name => {
         const selected = name === currentValue ? "selected" : "";
         optionsHtml += `<option value="${name}" ${selected}>${name}</option>`;
     });
-
     selectElement.innerHTML = optionsHtml;
 }
 
-// ================= INIT PAGE =================
-document.addEventListener('DOMContentLoaded', () => {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) {
-        alert("ไม่พบข้อมูลผู้ใช้");
-        window.location.href = "dashboard.html";
+        showModal("ไม่พบข้อมูลผู้ใช้", false, () => {
+            window.location.href = "dashboard.html";
+        });
         return;
     }
 
-    // --- NAME ---
-    const nameEl = document.querySelector('.display-name');
-    if (nameEl) nameEl.innerText = userData.name;
+    // name
+    const nameEl = document.querySelector(".display-name");
+    if (nameEl) nameEl.innerText = userData.name || "";
 
-    // --- PHONE ---
-    const phoneEl = document.querySelector('.contact-info .value');
-    if (phoneEl && userData.phone) phoneEl.innerText = userData.phone;
+    // phone
+    const phoneEl = document.querySelector(".contact-info .value");
+    if (phoneEl) phoneEl.innerText = userData.phone || "-";
 
-    // --- IMAGE ---
-    const imgEl = document.querySelector('.profile-main-img');
-    if (imgEl) {
-        imgEl.src = userData.img || "../../img/staff_img1.png";
-        imgEl.onerror = function () { this.src = "../../img/staff_img1.png"; };
+    // image
+    const img = document.querySelector(".profile-main-img");
+    if (img) {
+        img.src = userData.img || "../../img/staff_img1.png";
+        img.onerror = () => img.src = "../../img/staff_img1.png";
     }
 
-    // --- USERNAME / EMAIL ---
-    const usernameEl = document.querySelector('.user-meta .value');
-    if (usernameEl && userData.email) usernameEl.innerText = userData.email;
+    // email
+    const email = document.querySelector(".user-meta .value");
+    if (email) email.innerText = userData.email || "-";
 
-    // --- ROLE BADGE ---
-    const roleBadge = document.querySelector('.role-badge');
+    // role badge
+    const roleBadge = document.querySelector(".role-badge");
     if (roleBadge) {
         roleBadge.innerText = userData.role || "Staff";
         roleBadge.className = `role-badge ${(userData.type || "staff").toLowerCase()}`;
     }
 
-    // --- POSITION DROPDOWN ---
-    // ใช้ ID "deptSelect" ตาม HTML (Staff_Edit_Add.html ควรมี id="deptSelect")
-    const deptSelect = document.getElementById('deptSelect');
+    // position dropdown
+    const deptSelect = document.getElementById("deptSelect") || document.getElementById("staffDeptSelect");
     if (deptSelect) {
         populateSelect(deptSelect, staffPositions, "ตำแหน่ง", userData.dept || "");
     }
 
-    // --- EXPERTISE / NOTE (ถ้ามี input เพิ่มเติม) ---
-    const expertiseInput = document.getElementById('expertiseInput');
+    // expertise
+    const expertiseInput = document.getElementById("expertiseInput");
     if (expertiseInput && userData.expertise) {
         expertiseInput.value = userData.expertise;
     }
@@ -65,50 +68,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ================= SAVE =================
 function saveData() {
-    const userData = JSON.parse(localStorage.getItem('editUser'));
+    const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) return;
 
-    const deptSelect     = document.getElementById('deptSelect');
-    const expertiseInput = document.getElementById('expertiseInput');
+    const deptSelect     = document.getElementById("deptSelect") || document.getElementById("staffDeptSelect");
+    const expertiseInput = document.getElementById("expertiseInput");
 
-    const updatedDept      = deptSelect     ? deptSelect.value     : "";
-    const updatedExpertise = expertiseInput ? expertiseInput.value : "";
+    const updatedDept      = deptSelect     ? deptSelect.value      : "";
+    const updatedExpertise = expertiseInput ? expertiseInput.value  : "";
 
     if (!updatedDept) {
-        alert("กรุณาเลือกตำแหน่ง");
+        showModal("กรุณาเลือกตำแหน่ง", false);
         return;
     }
 
-    const newData = {
-        ...userData,
-        dept:      updatedDept,
-        expertise: updatedExpertise
-    };
+    const newData = { ...userData, dept: updatedDept, expertise: updatedExpertise };
 
-    // ===== UPDATE allUsers =====
-    let allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
-
+    // อัปเดต allUsers
+    let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
     if (userData.index !== undefined && allUsers[userData.index]) {
         allUsers[userData.index] = newData;
-        localStorage.setItem('allUsers', JSON.stringify(allUsers));
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
     }
 
-    // ===== SYNC กลับไป "users" ด้วย =====
+    // sync กลับ users
     if (userData.userId) {
-        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let users = JSON.parse(localStorage.getItem("users")) || [];
         const userIndex = users.findIndex(u => u.id === userData.userId);
         if (userIndex !== -1) {
             users[userIndex].dept      = updatedDept;
             users[userIndex].expertise = updatedExpertise;
-            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem("users", JSON.stringify(users));
         }
     }
 
-    // อัปเดต editUser ด้วยข้อมูลใหม่
-    localStorage.setItem('editUser', JSON.stringify(newData));
+    localStorage.setItem("editUser", JSON.stringify(newData));
 
-    alert("บันทึกข้อมูลของ " + newData.name + " สำเร็จ!");
-    window.location.href = "dashboard.html";
+    showModal("บันทึกสำเร็จ!", true, () => {
+        window.location.href = "dashboard.html";
+    });
+}
+
+// ================= MODAL =================
+function showModal(message, success = true, onClose = null) {
+    const overlay = document.getElementById("successModal");
+    const icon    = document.getElementById("modalIcon");
+    const msg     = document.getElementById("modalMessage");
+
+    if (!overlay) return;
+
+    if (icon) {
+        icon.textContent = success ? "✓" : "!";
+        icon.className   = success ? "modal-icon success" : "modal-icon warning";
+    }
+    if (msg) msg.textContent = message;
+
+    overlay._onClose = onClose;
+    overlay.classList.add("show");
+}
+
+function closeModal() {
+    const overlay = document.getElementById("successModal");
+    if (!overlay) return;
+    overlay.classList.remove("show");
+    if (typeof overlay._onClose === "function") {
+        overlay._onClose();
+        overlay._onClose = null;
+    }
 }
 
 // ================= CANCEL =================
@@ -116,19 +142,21 @@ function cancelEdit() {
     window.location.href = "dashboard.html";
 }
 
-// ================= SIDEBAR =================
+// ================= BASIC =================
 function toggleSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    if (sidebar) sidebar.classList.toggle("hide");
+    document.querySelector(".sidebar")?.classList.toggle("hide");
 }
 
-// ================= LOGOUT =================
 function logout() {
     localStorage.clear();
     window.location.href = "../../login.html";
 }
 
-// ================= DROPDOWN (หน้านี้) =================
+function goProfile() {
+    window.location.href = "profile.html";
+}
+
+// ================= DROPDOWN =================
 function toggleDropdown() {
     const menu  = document.getElementById("dropdownMenu");
     const arrow = document.querySelector(".arrowdropdown");
@@ -137,7 +165,7 @@ function toggleDropdown() {
 }
 
 document.addEventListener("click", e => {
-    if (!e.target.closest('.role-dropdown')) {
+    if (!e.target.closest(".role-dropdown")) {
         const menu  = document.getElementById("dropdownMenu");
         const arrow = document.querySelector(".arrowdropdown");
         if (menu)  menu.classList.remove("show");

@@ -324,3 +324,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function goProfile() {
   window.location.href = "profile.html";
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.querySelector(".search");
+
+  searchInput.addEventListener("input", function () {
+    searchUsers(this.value);
+  });
+});

@@ -62,8 +62,6 @@ document.addEventListener("click", e => {
 });
 
 // ================= SYNC users → allUsers =================
-// ดึง Doctor/Staff จาก "users" แล้ว merge เข้า "allUsers"
-// เขียน localStorage เฉพาะเมื่อมีรายการใหม่จริงๆ (ป้องกันหน้าจอกระพริบ)
 function syncUsersToAllUsers() {
   const users  = JSON.parse(localStorage.getItem("users"))    || [];
   let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
@@ -71,6 +69,25 @@ function syncUsersToAllUsers() {
   const staffRoles = ["doctor", "staff"];
   let changed = false;
 
+  // ถ้ายังไม่มีข้อมูลเลย → inject mock ครั้งเดียวตรงนี้ ไม่ใช่ใน renderUsers
+  if (allUsers.length === 0 && users.filter(u => staffRoles.includes(u.role?.toLowerCase())).length === 0) {
+    allUsers = [
+      { name: "นพ.สมชาย ศรีสุข",     role: "Doctor", dept: "จิตเวช",                        img: "../../img/doctor_img1.png", type: "doctor", phone: "091-888-2321" },
+      { name: "น.ส. ศิริพร แสงทอง",   role: "Staff",  dept: "พยาบาล",                        img: "../../img/staff_img1.png",  type: "staff",  phone: "092-888-2322" },
+      { name: "พญ.วราภรณ์ ศิริชัย",   role: "Doctor", dept: "ศัลยกรรม",                      img: "../../img/doctor_img2.png", type: "doctor", phone: "093-888-2323" },
+      { name: "นพ.นนทพัทธ์ ใจดี",     role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img3.png", type: "doctor", phone: "094-888-2324" },
+      { name: "น.ส. พรทิพย์ จิตดี",   role: "Staff",  dept: "เจ้าหน้าที่การเงิน",            img: "../../img/staff_img2.png",  type: "staff",  phone: "095-888-2325" },
+      { name: "พญ.ชลธิชา คำดี",       role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img4.png", type: "doctor", phone: "096-888-2326" },
+      { name: "น.ส. นันทิชา กอดเสา",  role: "Staff",  dept: "เจ้าหน้าที่เวชระเบียน",        img: "../../img/staff_img3.png",  type: "staff",  phone: "097-888-2327" },
+      { name: "นพ.อัครพล ศรีนวล",     role: "Doctor", dept: "อายุรกรรม",                     img: "../../img/doctor_img5.png", type: "doctor", phone: "098-888-2328" },
+      { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff",  dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย",  img: "../../img/staff_img4.png",  type: "staff",  phone: "099-888-2329" }
+    ];
+    allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
+    localStorage.setItem("allUsers", JSON.stringify(allUsers));
+    return allUsers;
+  }
+
+  // merge รายการใหม่จาก users
   users.forEach(u => {
     if (!staffRoles.includes(u.role?.toLowerCase())) return;
 
@@ -94,7 +111,6 @@ function syncUsersToAllUsers() {
     }
   });
 
-  // เขียนกลับเฉพาะเมื่อมีการเปลี่ยนแปลงจริงเท่านั้น
   if (changed) {
     allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
     localStorage.setItem("allUsers", JSON.stringify(allUsers));
@@ -104,31 +120,32 @@ function syncUsersToAllUsers() {
 }
 
 // ================= DATA =================
+// sync ครั้งเดียวตอน script โหลด — ก่อน DOMContentLoaded
 let users = syncUsersToAllUsers();
+
+// ================= UPDATE SUMMARY CARDS =================
+function updateSummary() {
+  const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+  const doctorCount = allUsers.filter(u => u.type === "doctor").length;
+  const staffCount  = allUsers.filter(u => u.type === "staff").length;
+
+  const elDoc   = document.getElementById("countDoctor");
+  const elStaff = document.getElementById("countStaff");
+
+  if (elDoc)   elDoc.textContent   = `${doctorCount} Users`;
+  if (elStaff) elStaff.textContent = `${staffCount} Users`;
+}
 
 // ================= RENDER =================
 function renderUsers() {
   const userGrid = document.getElementById("userGrid");
   if (!userGrid) return;
 
+  // โหลดจาก localStorage — sync เสร็จแล้วก่อนถึงบรรทัดนี้
   users = JSON.parse(localStorage.getItem("allUsers")) || [];
 
-  // ถ้ายังไม่มีข้อมูลเลย → ใส่ mock
-  if (users.length === 0) {
-    users = [
-      { name: "นพ.สมชาย ศรีสุข",     role: "Doctor", dept: "จิตเวช",                        img: "../../img/doctor_img1.png", type: "doctor", phone: "091-888-2321" },
-      { name: "น.ส. ศิริพร แสงทอง",   role: "Staff",  dept: "พยาบาล",                        img: "../../img/staff_img1.png",  type: "staff",  phone: "092-888-2322" },
-      { name: "พญ.วราภรณ์ ศิริชัย",   role: "Doctor", dept: "ศัลยกรรม",                      img: "../../img/doctor_img2.png", type: "doctor", phone: "093-888-2323" },
-      { name: "นพ.นนทพัทธ์ ใจดี",     role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img3.png", type: "doctor", phone: "094-888-2324" },
-      { name: "น.ส. พรทิพย์ จิตดี",   role: "Staff",  dept: "เจ้าหน้าที่การเงิน",            img: "../../img/staff_img2.png",  type: "staff",  phone: "095-888-2325" },
-      { name: "พญ.ชลธิชา คำดี",       role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img4.png", type: "doctor", phone: "096-888-2326" },
-      { name: "น.ส. นันทิชา กอดเสา",  role: "Staff",  dept: "เจ้าหน้าที่เวชระเบียน",        img: "../../img/staff_img3.png",  type: "staff",  phone: "097-888-2327" },
-      { name: "นพ.อัครพล ศรีนวล",     role: "Doctor", dept: "อายุรกรรม",                     img: "../../img/doctor_img5.png", type: "doctor", phone: "098-888-2328" },
-      { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff",  dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย",  img: "../../img/staff_img4.png",  type: "staff",  phone: "099-888-2329" }
-    ];
-    users = users.map((u, i) => ({ ...u, index: i }));
-    localStorage.setItem("allUsers", JSON.stringify(users));
-  }
+  updateSummary();
 
   userGrid.innerHTML = users.map((user, index) => {
     const deptText = user.dept
@@ -150,19 +167,24 @@ function renderUsers() {
     `;
   }).join("");
 
-  // fade in หลัง render เสร็จ — ป้องกันกระพริบ
   requestAnimationFrame(() => userGrid.classList.add("ready"));
 }
 
-// รอให้ DOM + CSS โหลดเสร็จก่อนค่อย render (ป้องกันหน้าจอกระพริบ)
+// render ครั้งเดียวหลัง DOM พร้อม — ไม่มี requestAnimationFrame ซ้อนอีกชั้น
 document.addEventListener("DOMContentLoaded", () => {
-  requestAnimationFrame(() => renderUsers());
+  renderUsers();
+
+  const searchInput = document.querySelector(".search");
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      searchUsers(this.value);
+    });
+  }
 });
 
 // ================= EDIT =================
 function goToEditPage(index) {
-  // โหลดจาก localStorage ใหม่เพื่อให้ index ตรงเสมอ
-  const allUsers    = JSON.parse(localStorage.getItem("allUsers")) || [];
+  const allUsers     = JSON.parse(localStorage.getItem("allUsers")) || [];
   const selectedUser = allUsers[index];
   if (!selectedUser) return;
 

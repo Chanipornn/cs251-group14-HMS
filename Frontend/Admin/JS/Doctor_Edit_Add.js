@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) {
-        alert("ไม่พบข้อมูลผู้ใช้");
-        window.location.href = "dashboard.html";
+        showModal("ไม่พบข้อมูลผู้ใช้", false, () => {
+            window.location.href = "dashboard.html";
+        });
         return;
     }
 
@@ -75,7 +76,7 @@ function saveData() {
     const exp  = document.getElementById("expertiseInput")?.value;
 
     if (!dept) {
-        alert("กรุณาเลือกแผนก");
+        showModal("กรุณาเลือกแผนก", false);
         return;
     }
 
@@ -90,8 +91,40 @@ function saveData() {
 
     localStorage.setItem("editUser", JSON.stringify(newData));
 
-    alert("บันทึกสำเร็จ");
-    window.location.href = "dashboard.html";
+    showModal("บันทึกสำเร็จ!", true, () => {
+        window.location.href = "dashboard.html";
+    });
+}
+
+// ================= MODAL =================
+// success=true → ไอคอนถูก (สีเขียว), false → ไอคอนแจ้งเตือน
+function showModal(message, success = true, onClose = null) {
+    const overlay = document.getElementById("successModal");
+    const icon    = document.getElementById("modalIcon");
+    const msg     = document.getElementById("modalMessage");
+
+    if (!overlay) return;
+
+    if (icon) {
+        icon.textContent = success ? "✓" : "!";
+        icon.className   = success ? "modal-icon success" : "modal-icon warning";
+    }
+    if (msg) msg.textContent = message;
+
+    // เก็บ callback ไว้ใน overlay
+    overlay._onClose = onClose;
+
+    overlay.classList.add("show");
+}
+
+function closeModal() {
+    const overlay = document.getElementById("successModal");
+    if (!overlay) return;
+    overlay.classList.remove("show");
+    if (typeof overlay._onClose === "function") {
+        overlay._onClose();
+        overlay._onClose = null;
+    }
 }
 
 // ================= CANCEL =================
