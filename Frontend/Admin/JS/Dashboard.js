@@ -12,6 +12,26 @@ function goProfile() {
   window.location.href = "profile.html";
 }
 
+// ================= DEFAULT AVATAR =================
+const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
+
+// ================= FIX BROKEN IMAGES IN LOCALSTORAGE =================
+// วิ่งครั้งเดียวตอน script โหลด — แทน path รูปเสียด้วย DEFAULT_AVATAR
+(function fixBrokenImages() {
+  let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+  let changed = false;
+
+  allUsers = allUsers.map(u => {
+    if (!u.img || !u.img.startsWith("data:")) {
+      changed = true;
+      return { ...u, img: DEFAULT_AVATAR };
+    }
+    return u;
+  });
+
+  if (changed) localStorage.setItem("allUsers", JSON.stringify(allUsers));
+})();
+
 // ================= DROPDOWN =================
 function toggleDropdown(menuId, btn) {
   const menu  = document.getElementById(menuId);
@@ -69,25 +89,23 @@ function syncUsersToAllUsers() {
   const staffRoles = ["doctor", "staff"];
   let changed = false;
 
-  // ถ้ายังไม่มีข้อมูลเลย → inject mock ครั้งเดียวตรงนี้ ไม่ใช่ใน renderUsers
   if (allUsers.length === 0 && users.filter(u => staffRoles.includes(u.role?.toLowerCase())).length === 0) {
     allUsers = [
-      { name: "นพ.สมชาย ศรีสุข",     role: "Doctor", dept: "จิตเวช",                        img: "../../img/doctor_img1.png", type: "doctor", phone: "091-888-2321" },
-      { name: "น.ส. ศิริพร แสงทอง",   role: "Staff",  dept: "พยาบาล",                        img: "../../img/staff_img1.png",  type: "staff",  phone: "092-888-2322" },
-      { name: "พญ.วราภรณ์ ศิริชัย",   role: "Doctor", dept: "ศัลยกรรม",                      img: "../../img/doctor_img2.png", type: "doctor", phone: "093-888-2323" },
-      { name: "นพ.นนทพัทธ์ ใจดี",     role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img3.png", type: "doctor", phone: "094-888-2324" },
-      { name: "น.ส. พรทิพย์ จิตดี",   role: "Staff",  dept: "เจ้าหน้าที่การเงิน",            img: "../../img/staff_img2.png",  type: "staff",  phone: "095-888-2325" },
-      { name: "พญ.ชลธิชา คำดี",       role: "Doctor", dept: "หู คอ จมูก",                    img: "../../img/doctor_img4.png", type: "doctor", phone: "096-888-2326" },
-      { name: "น.ส. นันทิชา กอดเสา",  role: "Staff",  dept: "เจ้าหน้าที่เวชระเบียน",        img: "../../img/staff_img3.png",  type: "staff",  phone: "097-888-2327" },
-      { name: "นพ.อัครพล ศรีนวล",     role: "Doctor", dept: "อายุรกรรม",                     img: "../../img/doctor_img5.png", type: "doctor", phone: "098-888-2328" },
-      { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff",  dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย",  img: "../../img/staff_img4.png",  type: "staff",  phone: "099-888-2329" }
+      { name: "นพ.สมชาย ศรีสุข",     role: "Doctor", dept: "จิตเวช",                        img: DEFAULT_AVATAR, type: "doctor", phone: "091-888-2321" },
+      { name: "น.ส. ศิริพร แสงทอง",   role: "Staff",  dept: "พยาบาล",                        img: DEFAULT_AVATAR, type: "staff",  phone: "092-888-2322" },
+      { name: "พญ.วราภรณ์ ศิริชัย",   role: "Doctor", dept: "ศัลยกรรม",                      img: DEFAULT_AVATAR, type: "doctor", phone: "093-888-2323" },
+      { name: "นพ.นนทพัทธ์ ใจดี",     role: "Doctor", dept: "หู คอ จมูก",                    img: DEFAULT_AVATAR, type: "doctor", phone: "094-888-2324" },
+      { name: "น.ส. พรทิพย์ จิตดี",   role: "Staff",  dept: "เจ้าหน้าที่การเงิน",            img: DEFAULT_AVATAR, type: "staff",  phone: "095-888-2325" },
+      { name: "พญ.ชลธิชา คำดี",       role: "Doctor", dept: "หู คอ จมูก",                    img: DEFAULT_AVATAR, type: "doctor", phone: "096-888-2326" },
+      { name: "น.ส. นันทิชา กอดเสา",  role: "Staff",  dept: "เจ้าหน้าที่เวชระเบียน",        img: DEFAULT_AVATAR, type: "staff",  phone: "097-888-2327" },
+      { name: "นพ.อัครพล ศรีนวล",     role: "Doctor", dept: "อายุรกรรม",                     img: DEFAULT_AVATAR, type: "doctor", phone: "098-888-2328" },
+      { name: "น.ส. ก้านแก้ว พงศ์ดี", role: "Staff",  dept: "เจ้าหน้าที่ลงทะเบียนผู้ป่วย",  img: DEFAULT_AVATAR, type: "staff",  phone: "099-888-2329" }
     ];
     allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
     localStorage.setItem("allUsers", JSON.stringify(allUsers));
     return allUsers;
   }
 
-  // merge รายการใหม่จาก users
   users.forEach(u => {
     if (!staffRoles.includes(u.role?.toLowerCase())) return;
 
@@ -101,7 +119,7 @@ function syncUsersToAllUsers() {
         role:      u.role,
         dept:      "",
         expertise: "",
-        img:       u.profileImage || "../../img/profile.jpg",
+        img:       u.profileImage || DEFAULT_AVATAR,
         type:      u.role.toLowerCase(),
         phone:     u.phone || "",
         email:     u.email || "",
@@ -120,7 +138,6 @@ function syncUsersToAllUsers() {
 }
 
 // ================= DATA =================
-// sync ครั้งเดียวตอน script โหลด — ก่อน DOMContentLoaded
 let users = syncUsersToAllUsers();
 
 // ================= UPDATE SUMMARY CARDS =================
@@ -142,7 +159,6 @@ function renderUsers() {
   const userGrid = document.getElementById("userGrid");
   if (!userGrid) return;
 
-  // โหลดจาก localStorage — sync เสร็จแล้วก่อนถึงบรรทัดนี้
   users = JSON.parse(localStorage.getItem("allUsers")) || [];
 
   updateSummary();
@@ -152,9 +168,11 @@ function renderUsers() {
       ? user.dept
       : `<span style="color:#E24B4A;font-size:12px;">ยังไม่มีแผนก — กรุณาตั้งค่า</span>`;
 
+    const imgSrc = user.img || DEFAULT_AVATAR;
+
     return `
       <div class="user-card ${user.type}">
-          <img src="${user.img}" class="user-img" onerror="this.src='../../img/profile.jpg'">
+          <img src="${imgSrc}" class="user-img" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}'">
           <div class="user-info">
               <span class="badge ${user.type}">${user.role}</span>
               <div class="text-content">
@@ -170,7 +188,6 @@ function renderUsers() {
   requestAnimationFrame(() => userGrid.classList.add("ready"));
 }
 
-// render ครั้งเดียวหลัง DOM พร้อม — ไม่มี requestAnimationFrame ซ้อนอีกชั้น
 document.addEventListener("DOMContentLoaded", () => {
   renderUsers();
 
