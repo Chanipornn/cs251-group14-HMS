@@ -17,7 +17,11 @@
   font-family: 'Prompt', sans-serif;
 }
 
-html, body {
+body {
+  background: #faf8fe;
+}
+
+html {
   height: 100%;
   background: #faf8fe;
   color: var(--text);
@@ -80,7 +84,7 @@ a {
 /* === LAYOUT === */
 .container {
   display: flex;
-  margin-top: 70px;
+  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
   align-items: flex-start;
 }
 
@@ -88,16 +92,18 @@ a {
 .sidebar {
   width: 250px;
   background: white;
-  padding: 28px 20px;
-  height: calc(100vh - 70px);
+  padding: 20px;
+  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
+  height: calc(100vh - 80px); 
   display: flex;
   flex-direction: column;
+  transition: 0.3s;
+
+  /* ล็อค Sidebar ให้อยู่กับที่ */
   position: sticky;
-  top: 80px;
+  top: 80px; 
   flex-shrink: 0;
-  overflow-y: auto;
-  border-right: 1px solid #eee9f7;
-  transition: width 0.3s, padding 0.3s;
+  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
 }
 
 .sidebar.collapsed {
@@ -122,16 +128,12 @@ a {
 }
 
 .menu {
-  display: block;
-  padding: 14px 16px;
-  border-radius: 10px;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #27233a;
+  padding: 12px;
+  border-radius: 8px;
   text-decoration: none;
-  transition: background 0.2s;
-  white-space: nowrap;
+  color: black;
   margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .menu:hover {
@@ -146,14 +148,9 @@ a {
 
 .logout {
   margin-top: auto;
-  padding: 10px 16px;
-  color: #ff5d5d;
-  font-weight: 500;
+  color: red;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.92rem;
+  margin-bottom: 10px;
 }
 
 .logout:hover {

@@ -112,6 +112,12 @@ body {
   align-items: flex-start;
 }
 
+.container {
+  display: flex;
+  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  align-items: flex-start;
+}
+
 /* ตอน sidebar หาย */
 .sidebar.collapsed {
   width: 0;

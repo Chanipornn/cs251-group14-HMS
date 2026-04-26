@@ -7,6 +7,10 @@ button, .btn, .add-link, .mc-edit-btn, [data-nav] {
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, background-color 0.18s ease, opacity 0.18s ease;
 }
 
+.add-link{
+  margin-top: 16px;
+}
+
 button:hover, .btn:hover, .add-link:hover, .mc-edit-btn:hover, [data-nav]:hover {
   transform: translateY(-2px);
   filter: brightness(1.06);
