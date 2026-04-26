@@ -209,3 +209,78 @@
 .role-dropdown {
     display: none;
   }
+
+  /* ========================= */
+/* MODAL                     */
+/* ========================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+  
+  .modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 30px 36px;
+    border-radius: 16px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: popup 0.3s ease;
+  }
+  
+  @keyframes popup {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  
+  .modal-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  
+  .modal-icon.success {
+    background: #e6f4ea;
+    color: #2e7d32;
+  }
+  
+  .modal-icon.warning {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  
+  .btn-confirm {
+    margin-top: 20px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #6E65BE, #9a94e6);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  
+  .btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  }
