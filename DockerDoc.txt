@@ -1,3 +1,0 @@
-คำสั่งติดตั้ง docker container
-
-docker run --name hospital-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=hospital_db -p 3306:3306

@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String loginPage() {
-        return "redirect:/login.html";  
+        return "redirect:/index.html";  
     }
 }

@@ -1,59 +1,82 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-  <meta charset="UTF-8">
-  <title>เข้าสู่ระบบ</title>
-  <link rel="stylesheet" href="./shared/base.css">
+	<meta charset="UTF-8">
+	<title>เข้าสู่ระบบ</title>
+	<link rel="stylesheet" href="./shared/base.css">
 </head>
 
 <body>
 
-<div class="container">
+	<div class="container">
 
-  <h2>เข้าสู่ระบบ</h2>
+		<h2>เข้าสู่ระบบ</h2>
 
-  <!-- 🔥 ใช้ form เพื่อควบคุม submit -->
-  <form onsubmit="event.preventDefault(); login();">
+		<!-- 🔥 ใช้ form เพื่อควบคุม submit -->
+		<form onsubmit="event.preventDefault(); login();">
 
-    <!-- Email -->
-    <label>อีเมล <span class="required">*</span></label>
-    <div class="input-group">
-      <input 
-        type="email" 
-        id="email" 
-        placeholder="กรอกอีเมล">
-    </div>
+			<!-- Email -->
+			<label>อีเมล <span class="required">*</span></label>
+			<div class="input-group">
+				<input type="email" id="email" placeholder="กรอกอีเมล">
+			</div>
 
-    <!-- Password -->
-    <label>รหัสผ่าน <span class="required">*</span></label>
-    <div class="input-group">
-      <input 
-        type="password" 
-        id="password" 
-        placeholder="กรอกรหัสผ่าน">
+			<!-- Password -->
+			<label>รหัสผ่าน <span class="required">*</span></label>
+			<div class="input-group">
+				<input type="password" id="password" placeholder="กรอกรหัสผ่าน">
 
-      <!-- รูปตา -->
-      <img 
-        src="./img/eye-off-c-os-208494.svg" 
-        id="eyeIcon" 
-        class="eye" 
-        onclick="togglePassword()">
-    </div>
+				<!-- รูปตา -->
+				<img src="./img/eye-off-c-os-208494.svg" id="eyeIcon" class="eye" onclick="togglePassword()">
+			</div>
 
-    <!-- BUTTON -->
-    <button type="submit">เข้าสู่ระบบ</button>
+			<!-- BUTTON -->
+			<button id="submitButton" type="submit">เข้าสู่ระบบ</button>
 
-  </form>
+		</form>
 
-  <!-- LINK -->
-  <div class="link">
-    ยังไม่มีบัญชี? 
-    <a href="./Patient/html/register.html">ลงทะเบียน</a>
-  </div>
+		<!-- LINK -->
+		<div class="link">
+			ยังไม่มีบัญชี?
+			<a href="./Patient/html/register.html">ลงทะเบียน</a>
+		</div>
 
-</div>
+	</div>
 
-<script src="./shared/script.js"></script>
+	<script src="./shared/script.js"></script>
 
 </body>
+
+<script>
+	document.getElementById("submitButton").addEventListener("click", async function (e) {
+		e.preventDefault();
+
+		const response = await fetch("/api/login", {
+			method: "POST",
+			headers: {"Content-Type": "application/json"},
+			credentials: "include",
+			body: JSON.stringify({
+				Email: document.getElementById("email").value,
+				Password: document.getElementById("password").value
+			})
+		});
+		
+		const data = await response.json();
+		console.log(data)
+		
+		if (data.status) {
+			if (data.role === "ADMIN") {
+				window.location.href = "/Admin/dashboard.html";
+			} else if (data.role === "DOCTOR") {
+				window.location.href = "/DoctorandStaff/dashboard.html";
+			} else if (data.role === "PATIENT") {
+				window.location.href = "/Patient/dashboard.html";
+			}
+		} else {
+			document.getElementById("errorMsg").textContent = data.message;
+		}
+	});
+</script>
+
 </html>
