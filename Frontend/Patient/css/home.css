@@ -156,6 +156,7 @@ body {
   white-space: nowrap;
   box-shadow: 0 4px 14px rgba(80,60,180,0.35);
   transition: transform 0.15s;
+  text-decoration: none;
 }
 .banner-btn:hover { transform: translateX(-50%) scale(1.04); }
  
