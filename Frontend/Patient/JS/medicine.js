@@ -2,22 +2,22 @@
 // จำลองข้อมูลยา อิงชื่อตัวแปรตาม Schema
 const medicineDatabase = [
     {
-        Record_ID: "REC001",
-        Patient_ID: "P1001",
-        Patient_Name: "นายสมิง เสือเก่ง",
-        Record_Date: "11/04/2026 09:46:15",
+        RecordID: "REC69001",
+        PatientID: "P1001",
+        PatientName: "นายสมิง เสือเก่ง",
+        VisitDate: "11/04/2026 09:46:15",
         Medicine_Name: "Paracetamol 500mg",
         Dept_Name: "หู คอ จมูก",
-        Doctor_Name: "นพ.สมชาย ศรีสุข"
+        DoctorName: "นพ.สมชาย ศรีสุข"
     },
     {
-        Record_ID: "REC002",
-        Patient_ID: "P1002",
-        Patient_Name: "นางสาวใยบัว แก้วหวาน",
-        Record_Date: "30/01/2026 11:23:08",
+        RecordID: "REC69002",
+        PatientID: "P1002",
+        PatientName: "นางสาวใยบัว แก้วหวาน",
+        VisitDate: "30/01/2026 11:23:08",
         Medicine_Name: "Amoxicillin",
         Dept_Name: "ศัลยกรรม",
-        Doctor_Name: "พญ.วราภรณ์ ศิริชัย"
+        DoctorName: "พญ.วราภรณ์ ศิริชัย"
     }
 ];
 // ฟังก์ชันแสดงผลการ์ด
@@ -34,9 +34,9 @@ function displayMedicine(dataList) {
     const html = dataList.map(item => `
         <div class="medical-card">
             <div class="card-top">
-                <span>${item.Record_Date}</span>
+                <span>${item.VisitDate}</span>
                 <i class="fa-solid fa-chevron-right arrow btn-detail" 
-                onclick="handleCardClick('${item.Record_ID}')" 
+                onclick="handleCardClick('${item.RecordID}')" 
                 style="cursor: pointer; padding: 10px;"></i>
             </div>
             
@@ -47,7 +47,7 @@ function displayMedicine(dataList) {
             </div>
 
             <div class="info-row"><span class="badge">แผนก</span><span class="info-text">${item.Dept_Name}</span></div>
-            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.Doctor_Name}</span></div>
+            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.DoctorName}</span></div>
         </div>
     `).join('');
 
@@ -55,22 +55,25 @@ function displayMedicine(dataList) {
 }
 
 function handleCardClick(id) {
-    console.log("Medicine ID " + id + " was clicked!");
-    // เปลี่ยนชื่อไฟล์เป็นของหน้ายา (ถ้ามี)
+    console.log("Medicine Record ID " + id + " was clicked!");
+    // ส่ง RecordID ไปที่หน้ารายละเอียดประวัติยา
     window.location.href = `medicine_details.html?id=${id}`;
 }
 
-// ระบบค้นหา
+// 4. ระบบค้นหา (กรองตาม ชื่อยา, RecordID, ชื่อหมอ, PatientID, PatientName)
 document.getElementById('searchInput').addEventListener('input', (e) => {
-    const keyword = e.target.value.toLowerCase();
+    const keyword = e.target.value.toLowerCase().trim();
+    
     const filtered = medicineDatabase.filter(item => 
-        item.Medicine_Name.toLowerCase().includes(keyword) || // ค้นหาชื่อยา
-        item.Record_ID.toLowerCase().includes(keyword) ||     // ค้นหารหัสประวัติ
-        item.Doctor_Name.toLowerCase().includes(keyword) ||   // ค้นหาชื่อหมอ
-        item.Patient_Name.toLowerCase().includes(keyword) ||  // ค้นหาชื่อคนไข้
-        item.Patient_ID.toLowerCase().includes(keyword)       // ค้นหาไอดีคนไข้
+        item.Medicine_Name.toLowerCase().includes(keyword) || 
+        item.RecordID.toLowerCase().includes(keyword) || 
+        item.DoctorName.toLowerCase().includes(keyword) || 
+        item.PatientName.toLowerCase().includes(keyword) || 
+        item.PatientID.toLowerCase().includes(keyword)
     );
-    displayRecords(filtered);
+    
+    // สำคัญ: ต้องเรียก displayMedicine ให้ถูกฟังก์ชัน
+    displayMedicine(filtered); 
 });
 
 // เริ่มการทำงานเมื่อโหลดหน้าเว็บเสร็จ
