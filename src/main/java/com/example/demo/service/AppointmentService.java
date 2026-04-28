@@ -1,0 +1,84 @@
+package com.example.demo.service;
+
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.example.demo.dto.AppointmentDTO;
+import com.example.demo.mapper.AppointmentMapper;
+
+@Service
+@RequiredArgsConstructor
+public class AppointmentService {
+	private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+
+    // CREATE
+    public AppointmentDTO create(Appointment a) {
+
+        if (a.getPatient() == null || a.getPatient().getPatientId() == null) {
+            throw new RuntimeException("Patient is required");
+        }
+
+        if (a.getDoctor() == null || a.getDoctor().getDoctorId() == null) {
+            throw new RuntimeException("Doctor is required");
+        }
+
+        Patient patient = patientRepository.findById(a.getPatient().getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        Doctor doctor = doctorRepository.findById(a.getDoctor().getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        a.setPatient(patient);
+        a.setDoctor(doctor);
+        a.setStatus(Appointment.AppointmentStatus.COMPLETED);
+        a.setQueueNumber(generateQueue());
+
+        Appointment saved = appointmentRepository.save(a);
+
+        return AppointmentMapper.toDTO(saved);   
+    }
+
+    // generate queue 
+    private Integer generateQueue() {
+        return (int) (Math.random() * 100);
+    }
+
+    // Cancel
+    public AppointmentDTO cancel(Integer id) {
+        Appointment a = getById(id);
+        a.setStatus(Appointment.AppointmentStatus.CANCELLED);
+        return AppointmentMapper.toDTO(appointmentRepository.save(a));
+    }
+
+    // reschedule
+    public AppointmentDTO reschedule(Integer id, LocalDate newDate) {
+        Appointment a = getById(id);
+        a.setAppointmentDate(newDate);
+        a.setStatus(Appointment.AppointmentStatus.POSTPONED);
+        return AppointmentMapper.toDTO(appointmentRepository.save(a));
+    }
+
+    // get by id
+    public List<AppointmentDTO> getByPatient(Integer patientId) {
+        return appointmentRepository.findByPatient_PatientId(patientId)
+                .stream()
+                .map(AppointmentMapper::toDTO)
+                .toList();
+    }
+
+    public Appointment getById(Integer id) {
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+    }
+    
+    
+    
+
+}

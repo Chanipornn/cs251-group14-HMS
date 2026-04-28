@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+
 @Entity
 @Table(name = "Appointment")
 @Data
@@ -31,10 +32,16 @@ public class Appointment {
     @Column(name = "Status", columnDefinition = "INT DEFAULT 1")
     private AppointmentStatus status = AppointmentStatus.COMPLETED;
 
+    //@Enumerated(EnumType.STRING)
+    //@Column(name = "Status", length = 20)
+    //private AppointmentStatus status = AppointmentStatus.COMPLETED;
+    
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DoctorID", nullable = false)
     private Doctor doctor;
 
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PatientID", nullable = false)
     private Patient patient;

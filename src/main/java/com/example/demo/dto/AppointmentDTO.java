@@ -3,10 +3,16 @@ package com.example.demo.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class AppointmentDTO {
 
     private Integer appointmentId;
+    
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate appointmentDate;
+    
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime appointmentTime;
     private Integer queueNumber;
     private String status;

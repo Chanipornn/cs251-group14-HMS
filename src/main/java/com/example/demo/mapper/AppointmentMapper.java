@@ -1,0 +1,20 @@
+package com.example.demo.mapper;
+
+import com.example.demo.dto.AppointmentDTO;
+import com.example.demo.model.Appointment;
+
+
+public class AppointmentMapper {
+	public static AppointmentDTO toDTO(Appointment a) {
+        return new AppointmentDTO(
+                a.getAppointmentId(),
+                a.getAppointmentDate(),
+                a.getAppointmentTime(),
+                a.getQueueNumber(),
+                a.getStatus().name(),
+                a.getDoctor().getDoctorId(),
+                a.getPatient().getPatientId()
+        );
+    }
+
+}
