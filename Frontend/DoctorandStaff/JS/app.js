@@ -82,6 +82,44 @@ const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
 const params = new URLSearchParams(window.location.search);
 
+
+function showModal(message, isSuccess = true, onClose = null) {
+  const modal = document.getElementById('successModal');
+  const modalMessage = document.getElementById('modalMessage');
+  const modalIcon = document.getElementById('modalIcon');
+  const modalTitle = document.getElementById('modalTitle');
+
+  if (!modal || !modalMessage || !modalIcon || !modalTitle) {
+    if (onClose) onClose();
+    return;
+  }
+
+  modalMessage.textContent = message;
+
+  if (isSuccess) {
+    modalIcon.className = 'modal-icon success';
+    modalIcon.textContent = '✓';
+    modalTitle.textContent = 'สำเร็จ!';
+  } else {
+    modalIcon.className = 'modal-icon warning';
+    modalIcon.textContent = '!';
+    modalTitle.textContent = 'แจ้งเตือน';
+  }
+
+  modal.classList.add('show');
+  window._modalCallback = onClose;
+}
+
+function closeModal() {
+  const modal = document.getElementById('successModal');
+  if (modal) modal.classList.remove('show');
+
+  if (window._modalCallback) {
+    window._modalCallback();
+    window._modalCallback = null;
+  }
+}
+
 function formatThaiDate(isoDate) {
   const d = new Date(isoDate);
   const day = String(d.getDate()).padStart(2, '0');
@@ -318,19 +356,26 @@ function initMedicalCertificateForm(mode) {
       });
       saveMedicalCertificates(updatedList);
       localStorage.removeItem(MC_EDIT_ID_KEY);
+
+      showModal('แก้ไขใบรับรองแพทย์สำเร็จ!', true, () => {
+        window.location.href = `medical_certificate_history.html?id=${encodeURIComponent(item.id)}`;
+      });
     } else {
       const newItem = {
         id: generateMedicalCertificateId(currentList),
         ...payload
       };
       saveMedicalCertificates([newItem, ...currentList]);
-    }
 
-    navigate('medical_certificate_history.html');
+      showModal('สร้างใบรับรองแพทย์สำเร็จ!', true, () => {
+        window.location.href = `medical_certificate_history.html?id=${encodeURIComponent(newItem.id)}`;
+      });
+    }
   });
 }
 
-const INVOICE_STORAGE_KEY = 'invoices';
+const INVOICE_STORAGE_KEY = 'invoice_list';
+const INVOICE_LEGACY_STORAGE_KEY = 'invoices';
 const INVOICE_DRAFT_ITEMS_KEY = 'invoiceDraftItems';
 
 function getDefaultInvoices() {
@@ -340,29 +385,61 @@ function getDefaultInvoices() {
   }));
 }
 
+function normalizeInvoiceItem(item, index = 0) {
+  return {
+    order: Number(item.order || index + 1),
+    name: item.name || item.item || item.description || 'รายการใหม่',
+    amount: Number(item.amount ?? item.price ?? 0)
+  };
+}
+
+function normalizeInvoice(invoice) {
+  const items = Array.isArray(invoice.items) ? invoice.items.map(normalizeInvoiceItem) : [];
+  const subtotal = items.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  return {
+    id: invoice.id,
+    patientId: invoice.patientId || invoice.patient_id || '-',
+    treatmentId: invoice.treatmentId || invoice.treatment_id || '-',
+    date: invoice.date || getTodayISODate(),
+    patientName: invoice.patientName || invoice.patient_name || 'ผู้ป่วยใหม่',
+    doctorName: invoice.doctorName || invoice.doctor_name || 'นพ.วิรุต',
+    status: invoice.status || 'pending',
+    items,
+    coverage: Number(invoice.coverage ?? 0),
+    total: Number(invoice.total ?? subtotal)
+  };
+}
+
 function getInvoices() {
-  const saved = localStorage.getItem(INVOICE_STORAGE_KEY);
+  const saved = localStorage.getItem(INVOICE_STORAGE_KEY) || localStorage.getItem(INVOICE_LEGACY_STORAGE_KEY);
 
   if (!saved) {
-    const defaults = getDefaultInvoices();
-    localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(defaults));
+    const defaults = getDefaultInvoices().map(normalizeInvoice);
+    saveInvoices(defaults);
     return defaults;
   }
 
   try {
     const parsed = JSON.parse(saved);
-    if (Array.isArray(parsed)) return parsed;
+    if (Array.isArray(parsed)) {
+      const normalized = parsed.map(normalizeInvoice);
+      saveInvoices(normalized);
+      return normalized;
+    }
   } catch (error) {
     console.warn('Cannot read invoices from localStorage:', error);
   }
 
-  const defaults = getDefaultInvoices();
-  localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(defaults));
+  const defaults = getDefaultInvoices().map(normalizeInvoice);
+  saveInvoices(defaults);
   return defaults;
 }
 
 function saveInvoices(list) {
-  localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(list));
+  const normalized = Array.isArray(list) ? list.map(normalizeInvoice) : [];
+  localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(normalized));
+  localStorage.setItem(INVOICE_LEGACY_STORAGE_KEY, JSON.stringify(normalized));
 }
 
 function generateInvoiceId(list) {
@@ -515,7 +592,10 @@ async function initInvoiceCreate() {
 
     saveInvoices([newInvoice, ...currentList]);
     sessionStorage.removeItem(INVOICE_DRAFT_ITEMS_KEY);
-    navigate(`invoice_history.html?id=${encodeURIComponent(newId)}`);
+
+    showModal('สร้างใบแจ้งหนี้สำเร็จ!', true, () => {
+      window.location.href = `invoice_history.html?id=${encodeURIComponent(newId)}`;
+    });
   });
 }
 
