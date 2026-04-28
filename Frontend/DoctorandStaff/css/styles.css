@@ -655,3 +655,66 @@ a:hover,
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,.2);
 }
+
+/* === FIX: แยก scroll ซ้าย-ขวา === */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  height: calc(100vh - 160px); /* จำกัดความสูง */
+}
+
+/* ฝั่ง list (ซ้าย) */
+.card-list {
+  overflow-y: auto;
+  max-height: 100%;
+  padding-right: 8px;
+}
+
+/* ฝั่ง preview (ขวา) */
+.preview-panel {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.card-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-list::-webkit-scrollbar-thumb {
+  background: #b4adee;
+  border-radius: 10px;
+}
+
+/* ===== FINAL FIX SCROLL LAYOUT ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  height: calc(100vh - 140px);
+}
+
+/* fix left section */
+.two-col > section:first-child {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* scroll list */
+.card-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 6px;
+}
+
+/* preview right */
+.preview-panel {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+}
