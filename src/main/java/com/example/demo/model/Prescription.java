@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import lombok.*;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Prescription")
@@ -14,18 +13,19 @@ public class Prescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PrescriptionID")
     private Integer prescriptionId;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "MedicineName", nullable = false, length = 100)
     private String medicineName;
 
-    @Column(length = 50)
+    @Column(name = "Dosage", length = 50)
     private String dosage;
 
-    @Column(length = 50)
+    @Column(name = "Duration", length = 50)
     private String duration;
 
-    @Column(length = 255)
+    @Column(name = "Instruction", length = 255)
     private String instruction;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,10 +35,4 @@ public class Prescription {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DoctorID", nullable = false)
     private Doctor doctor;
-
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
 }

@@ -49,25 +49,26 @@ public class Patient {
     @Column(name = "ThaiNationalID", unique = true, length = 13)
     private String thaiNationalId;
 
-    @Column(length = 255)
+    @Column(name = "ChronicIllness", length = 255)
     private String chronicIllness;
 
-    @Column(length = 50)
+    @Column(name = "RightToHealthcare", length = 50)
     private String rightToHealthcare;
 
-    @Column(length = 255)
+    @Column(name = "DrugAllergy", length = 255)
     private String drugAllergy;
 
-    @Column
+    @Column(name = "Weight")
     private Float weight;
 
-    @Column
+    @Column(name = "Height")
     private Float height;
 
     // User relation
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID", nullable = false, unique = true)
     private UserEntity user;
+
 
     //@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Column(name = "created_at", insertable = false, updatable = false)
