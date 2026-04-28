@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PatientDTO {
 
@@ -8,7 +9,10 @@ public class PatientDTO {
     private String name;
     private String surname;
     private Character gender;
+    
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
+    
     private String telephone;
     private String address;
     private String bloodType;

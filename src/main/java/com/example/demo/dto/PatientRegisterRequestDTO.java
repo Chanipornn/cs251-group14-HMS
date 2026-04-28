@@ -13,5 +13,6 @@ public class PatientRegisterRequestDTO {
 	    private String surname;
 	    private Character gender;
 	    private String dateOfBirth;
+	    private String thaiNationalId;
 
 }

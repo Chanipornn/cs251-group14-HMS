@@ -38,6 +38,10 @@ public class PatientService {
 	    if (userRepository.existsByEmail(req.getEmail())) {
 	        throw new RuntimeException("Email already exists");
 	    }
+	    
+	    if (repo.existsByThaiNationalId(req.getThaiNationalId())) {
+	        throw new RuntimeException("Thai National ID already exists");
+	    }
 
 	    // 1. สร้าง User
 	    UserEntity user = UserEntity.builder()

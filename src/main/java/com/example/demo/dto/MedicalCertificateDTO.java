@@ -1,11 +1,15 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class MedicalCertificateDTO {
 
     private Integer certificateId;
+    
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate issueDate;
+    
     private String description;
     private Integer patientId;
     private Integer doctorId;
