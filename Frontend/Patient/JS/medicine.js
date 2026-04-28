@@ -1,31 +1,30 @@
 //จำลองข้อมูล
+// จำลองข้อมูลยา อิงชื่อตัวแปรตาม Schema
 const medicineDatabase = [
     {
-        id: "MED-001",
-        date: "19/04/2026 09:46:15",
-        name: "Amoxicillin 500mg",
-        amount: "15 แคปซูล",
-        instruction: "รับประทานครั้งละ 1 เม็ด วันละ 3 ครั้ง หลังอาหารทันที (เช้า-กลางวัน-เย็น)",
-        note: "ต้องทานติดต่อกันจนหมด,",
-        dept: "หู คอ จมูก",
-        doctor: "นพ.สมชาย ศรีสุข"
+        Record_ID: "REC001",
+        Patient_ID: "P1001",
+        Patient_Name: "นายสมิง เสือเก่ง",
+        Record_Date: "11/04/2026 09:46:15",
+        Medicine_Name: "Paracetamol 500mg",
+        Dept_Name: "หู คอ จมูก",
+        Doctor_Name: "นพ.สมชาย ศรีสุข"
     },
     {
-        id: "MED-002",
-        date: "15/04/2026 11:23:08",
-        name: "Paracetamol 500mg",
-        amount: "10 เม็ด",
-        instruction: "รับประทานครั้งละ 1-2 เม็ด ทุก 4-6 ชั่วโมง เมื่อมีอาการปวดหรือไข้",
-        note: "ห้ามทานเกินวันละ 8 เม็ด",
-        dept: "ศัลยกรรม",
-        doctor: "พญ.วราภรณ์ ศิริชัย"
+        Record_ID: "REC002",
+        Patient_ID: "P1002",
+        Patient_Name: "นางสาวใยบัว แก้วหวาน",
+        Record_Date: "30/01/2026 11:23:08",
+        Medicine_Name: "Amoxicillin",
+        Dept_Name: "ศัลยกรรม",
+        Doctor_Name: "พญ.วราภรณ์ ศิริชัย"
     }
 ];
 // ฟังก์ชันแสดงผลการ์ด
 function displayMedicine(dataList) {
-    const listElement = document.getElementById('medicineList'); // ต้องตรงกับ ID ใน HTML
+    const listElement = document.getElementById('medicineList');
     
-    if (!listElement) return; // กัน Error ถ้าหา Element ไม่เจอ
+    if (!listElement) return;
 
     if (dataList.length === 0) {
         listElement.innerHTML = '<p style="text-align:center; padding:20px;">ไม่พบข้อมูลยา</p>';
@@ -35,21 +34,20 @@ function displayMedicine(dataList) {
     const html = dataList.map(item => `
         <div class="medical-card">
             <div class="card-top">
-                <span>${item.date}</span>
+                <span>${item.Record_Date}</span>
                 <i class="fa-solid fa-chevron-right arrow btn-detail" 
-                onclick="handleCardClick('${item.id}')" 
+                onclick="handleCardClick('${item.Record_ID}')" 
                 style="cursor: pointer; padding: 10px;"></i>
             </div>
             
+
             <div class="info-row">
                 <span class="badge badge-medicine">ชื่อยา</span>
-                <span class="info-text"">
-                    ${item.name}
-                </span>
+                <span class="info-text">${item.Medicine_Name}</span>
             </div>
 
-            <div class="info-row"><span class="badge">แผนก</span><span class="info-text">${item.dept}</span></div>
-            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.doctor}</span></div>
+            <div class="info-row"><span class="badge">แผนก</span><span class="info-text">${item.Dept_Name}</span></div>
+            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.Doctor_Name}</span></div>
         </div>
     `).join('');
 
@@ -66,7 +64,11 @@ function handleCardClick(id) {
 document.getElementById('searchInput').addEventListener('input', (e) => {
     const keyword = e.target.value.toLowerCase();
     const filtered = medicineDatabase.filter(item => 
-        item.name.toLowerCase().includes(keyword) // ค้นหาตามชื่อยา
+        item.Medicine_Name.toLowerCase().includes(keyword) || // ค้นหาชื่อยา
+        item.Record_ID.toLowerCase().includes(keyword) ||     // ค้นหารหัสประวัติ
+        item.Doctor_Name.toLowerCase().includes(keyword) ||   // ค้นหาชื่อหมอ
+        item.Patient_Name.toLowerCase().includes(keyword) ||  // ค้นหาชื่อคนไข้
+        item.Patient_ID.toLowerCase().includes(keyword)       // ค้นหาไอดีคนไข้
     );
     displayRecords(filtered);
 });
