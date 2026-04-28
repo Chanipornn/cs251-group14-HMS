@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "Patient")
@@ -69,11 +70,20 @@ public class Patient {
     @JoinColumn(name = "UserID", nullable = false, unique = true)
     private UserEntity user;
 
-
+    @JsonFormat(
+    	    pattern = "dd-MM-yyyy (HH:mm)",
+    	    timezone = "Asia/Bangkok",
+    	    locale = "en"
+    	)
     //@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonFormat(
+    	    pattern = "dd-MM-yyyy (HH:mm)",
+    	    timezone = "Asia/Bangkok",
+    	    locale = "en"
+    	)
     //@Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
