@@ -266,3 +266,70 @@ body {
 
 .btn-no:hover { background: #e0e0e0; }
 .btn-yes:hover { background: #b7281f; }
+
+/* 🔥 Reschedule UI Upgrade */
+.reschedule-box {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-title {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* form */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    align-self: flex-start; /* 🔥 บังคับ label ชิดซ้าย */
+    text-align: left;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    color: #666;
+}
+
+.form-group input {
+    padding: 12px 14px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    font-family: 'Prompt';
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+/* focus effect */
+.form-group input:focus {
+    outline: none;
+    border-color: #746BC3;
+    box-shadow: 0 0 0 3px rgba(116, 107, 195, 0.15);
+}
+
+/* ปุ่ม */
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.btn-yes {
+    background: #dd260d;
+}
+
+.btn-yes:hover {
+    background: #e70202;
+}

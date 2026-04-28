@@ -59,6 +59,25 @@ body {
     justify-content: center;
 }
 
+/* ลบเส้นใต้ลิงก์ */
+.back-btn,
+.back-btn:visited,
+.back-btn:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+/* hover effect */
+.back-btn:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+/* ตอนกด */
+.back-btn:active {
+    transform: scale(0.95);
+}
+
 /* --- ✅ ปรับ Content ให้การ์ดยืดเต็มจอ --- */
 .content-wrapper {
     padding: 25px 20px; /* ระยะห่างบนล่าง 25px ซ้ายขวา 20px */
@@ -213,21 +232,3 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* เงาลดลง */
 }
 
-/* ลบเส้นใต้ลิงก์ */
-.back-btn,
-.back-btn:visited,
-.back-btn:focus {
-    text-decoration: none;
-    outline: none;
-}
-
-/* hover effect */
-.back-btn:hover {
-    transform: scale(1.1);
-    transition: 0.2s ease;
-}
-
-/* ตอนกด */
-.back-btn:active {
-    transform: scale(0.95);
-}

@@ -6,12 +6,11 @@ body {
     margin: 0;
 }
 
-/* เต็มจอ */
+/* container */
 .mobile-container {
     width: 100%;
     min-height: 100vh;
     background: #F8F9FD;
-
     display: flex;
     flex-direction: column;
 }
@@ -31,7 +30,7 @@ body {
 .back-link {
     width: 40px;
     height: 40px;
-    border: 2px solid rgba(255,255,255,0.6);;
+    border: 2px solid rgba(255,255,255,0.6);
     background: transparent;
     border-radius: 50%;
     color: white;
@@ -41,28 +40,15 @@ body {
     justify-content: center;
 }
 
-/* 🔥 เรียงบนลงล่าง + scroll */
+/* CONTENT */
 .queue-content {
     flex: 1;
     padding: 20px;
-
     display: flex;
     flex-direction: column;
     gap: 20px;
-
     overflow-y: auto;
-}
-
-/* SCROLLBAR */
-.queue-content::-webkit-scrollbar {
-    width: 6px;
-}
-.queue-content::-webkit-scrollbar-thumb {
-    background: #c5c5e0;
-    border-radius: 10px;
-}
-.queue-content::-webkit-scrollbar-thumb:hover {
-    background: #6E65BE;
+    min-height: 0;
 }
 
 /* CARD */
@@ -80,7 +66,7 @@ body {
     margin-bottom: 8px;
 }
 
-/* QUEUE NO */
+/* QUEUE */
 .queue-number {
     background: #D1C4E9;
     color: #512DA8;
@@ -109,13 +95,7 @@ body {
     color: #444;
 }
 
-/* DATE */
-.date-time-box {
-    margin-top: 10px;
-    font-weight: 600;
-}
-
-/* BUTTONS */
+/* BUTTON */
 .card-actions {
     margin-top: 15px;
     display: flex;
@@ -129,7 +109,6 @@ body {
     padding: 8px 18px;
     border-radius: 20px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-cancel-red {
@@ -139,83 +118,145 @@ body {
     padding: 8px 18px;
     border-radius: 20px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* ================= MODAL SYSTEM ================= */
 
-/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none; /* ซ่อนเริ่มต้น */
+    background: rgba(0,0,0,0.6);
+
+    display: none;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+
+    z-index: 9999;
     padding: 20px;
     backdrop-filter: blur(4px);
 }
 
-/* Modal Content */
+.modal-overlay.active {
+    display: flex;
+}
+
 .modal-content {
     background: white;
     padding: 30px;
     border-radius: 30px;
-    text-align: center;
-    max-width: 380px;
     width: 100%;
+    max-width: 380px;
+
+    text-align: center;
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    transform: scale(0.8);
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    transform: scale(0.85);
+    transition: 0.2s ease;
 }
 
-.modal-overlay.active { display: flex; }
-.modal-overlay.active .modal-content { transform: scale(1); }
-
-.modal-icon-red {
-    font-size: 60px;
-    color: #D93025;
-    margin-bottom: 20px;
+.modal-overlay.active .modal-content {
+    transform: scale(1);
 }
 
-.modal-content h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #333;
+/* EDIT MODAL */
+.modal-content.reschedule-box {
+    text-align: left;
 }
 
-.modal-content p {
-    color: #777;
-    font-size: 0.95rem;
-    margin-bottom: 30px;
-    line-height: 1.6;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
 }
 
-/* Buttons */
+.form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.form-group input {
+    padding: 12px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #746BC3;
+}
+
+/* ICONS */
+.modal-icon-red { font-size: 60px; color: #D93025; }
+.modal-icon-green { font-size: 60px; color: #4CAF50; }
+
+/* BUTTONS */
 .modal-buttons {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .modal-buttons button {
     flex: 1;
-    padding: 14px;
-    border-radius: 18px;
+    padding: 12px;
+    border-radius: 15px;
     border: none;
-    font-family: 'Prompt';
-    font-weight: 600;
     cursor: pointer;
 }
 
-.btn-keep {
-    background: #F0F0F0;
-    color: #444;
+.btn-keep { background: #eee; }
+.btn-confirm-cancel { background: #D93025; color: white; }
+.btn-yes { background: #746BC3; color: white; }
+.btn-no { background: #eee; }
+
+
+.status-text {
+    font-weight: 600;
 }
 
-.btn-confirm-cancel {
-    background: #D93025;
+/* pending → ส้ม */
+.status-success.pending .status-text {
+    color: #FF9800;
+}
+
+/* confirmed → เขียว */
+.status-success.confirmed .status-text {
+    color: #4CAF50;
+}
+
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.1);
     color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ลบเส้นใต้ลิงก์ */
+.back-btn,
+.back-btn:visited,
+.back-btn:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+/* hover effect */
+.back-btn:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+/* ตอนกด */
+.back-btn:active {
+    transform: scale(0.95);
 }

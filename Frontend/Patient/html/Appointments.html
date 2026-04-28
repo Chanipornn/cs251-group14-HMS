@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายการนัดหมาย</title>
+
     <link rel="stylesheet" href="../css/Appointments.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -12,40 +12,102 @@
 
 <body>
 
-    <div class="mobile-container">
-        <header class="app-header">
-            <button class="back-link" onclick="window.history.back()">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <h1>รายการนัด</h1>
-        </header>
+<div class="mobile-container">
 
-        <div class="tab-section">
-            <div class="tab-wrapper">
-                <button class="tab-item active" onclick="switchTab(this, 'today')">รายการนัดวันนี้</button>
-                <button class="tab-item" onclick="switchTab(this, 'upcoming')">รายการนัดล่วงหน้า</button>
-            </div>
-        </div>
+    <!-- HEADER -->
+    <header class="app-header">
+        <button class="back-link" onclick="window.location.href='home.html'">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1>รายการนัด</h1>
+    </header>
 
-        <div class="appointments-content" id="appointmentsList"></div>
-        
-
-    </div>
-
-    <!-- Cancel Modal -->
-    <div class="modal-overlay" id="cancelModal">
-        <div class="modal-content">
-            <i class="fas fa-exclamation-triangle modal-icon"></i>
-            <h2>ยืนยันการยกเลิก</h2>
-            <p>คุณแน่ใจหรือไม่ที่จะยกเลิกการนัดหมายนี้?</p>
-            <div class="modal-buttons">
-                <button class="btn-no" onclick="closeCancelModal()">ยกเลิก</button>
-                <button class="btn-yes" id="confirmCancelBtn">ยืนยัน</button>
-            </div>
+    <!-- TAB -->
+    <div class="tab-section">
+        <div class="tab-wrapper">
+            <button class="tab-item active" onclick="switchTab(this, 'today')">รายการนัดวันนี้</button>
+            <button class="tab-item" onclick="switchTab(this, 'upcoming')">รายการนัดล่วงหน้า</button>
         </div>
     </div>
 
-    <script src="../js/Appointments.js"></script>
+    <!-- LIST -->
+    <div class="appointments-content" id="appointmentsList"></div>
+
+</div>
+
+<!-- 🔴 CANCEL POPUP -->
+<div class="modal-overlay" id="cancelModal">
+    <div class="modal-content">
+
+        <div class="modal-icon">⚠️</div>
+        <h2>ยกเลิกนัด</h2>
+        <p>คุณต้องการยกเลิกนัดนี้ใช่หรือไม่?</p>
+
+        <div class="modal-buttons">
+            <button class="btn-no" onclick="closeCancelModal()">ไม่</button>
+            <button class="btn-yes" id="confirmCancelBtn">ใช่</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- 🔵 RESCHEDULE POPUP -->
+<div class="modal-overlay" id="rescheduleModal">
+    <div class="modal-content reschedule-box">
+
+        <h2 class="modal-title">เลื่อนนัด</h2>
+
+        <div class="form-group">
+            <label>📅 วันที่นัด</label>
+            <input type="text" id="editDate">
+        </div>
+
+        <div class="form-group">
+            <label>🏥 แผนก</label>
+            <input type="text" id="editDept">
+        </div>
+
+        <div class="form-group">
+            <label>👨‍⚕️ แพทย์</label>
+            <input type="text" id="editDoctor">
+        </div>
+
+        <div class="form-group">
+            <label>📝 เหตุผล</label>
+            <input type="text" id="editReason">
+        </div>
+
+        <div class="form-group">
+            <label>⚠️ การเตรียมตัว</label>
+            <input type="text" id="editPrepare">
+        </div>
+
+        <div class="modal-buttons">
+            <button class="btn-no" onclick="closeRescheduleModal()">ยกเลิก</button>
+            <button class="btn-yes" onclick="saveReschedule()">บันทึก</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ✅ SUCCESS POPUP (สำคัญ) -->
+<div class="modal-overlay" id="successEditModal">
+    <div class="modal-content">
+
+        <div class="modal-icon">
+            <i class="fa-solid fa-circle-check" style="color:#4CAF50; font-size:60px;"></i>
+        </div>
+
+        <h2>เลื่อนนัดสำเร็จ</h2>
+        <p>ระบบได้อัปเดตข้อมูลของคุณเรียบร้อยแล้ว</p>
+
+        <div class="modal-buttons">
+            <button class="btn-yes" onclick="goToQueue()">ตกลง</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/Appointments.js"></script>
 </body>
-
 </html>

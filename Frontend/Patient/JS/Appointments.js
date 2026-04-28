@@ -1,43 +1,92 @@
-const appointments = [
+
+// =======================
+// 📌 INITIAL DATA (ตัวอย่าง)
+// =======================
+const baseAppointments = [
     {
+        id: "1",
         type: "today",
         date: "วันนี้",
         dept: "ตา หู จมูก",
         doctor: "นพ.สมชาย ศรีสุข",
         reason: "ตรวจทั่วไป",
-        prepare: "เสียบบัตรประชาชนที่ตู้ออกรหัสรับคิว"
+        prepare: "เสียบบัตรประชาชนที่ตู้ออกรหัสรับคิว",
+        status: "confirmed"
     },
     {
+        id: "2",
         type: "today",
         date: "วันนี้",
         dept: "อายุรกรรม",
         doctor: "นพ.พงศกร แก้วดี",
         reason: "ตรวจสุขภาพ",
-        prepare: "งดอาหาร 8 ชั่วโมง"
-    },
-    {
-        type: "upcoming",
-        date: "25 เมษายน 2026",
-        dept: "หู คอ จมูก",
-        doctor: "นพ.นนทพัทธ์ ใจดี",
-        reason: "ติดตามอาการ",
-        prepare: "มาถึงก่อน 15 นาที"
-    },
-    {
-        type: "upcoming",
-        date: "30 เมษายน 2026",
-        dept: "กุมารเวชกรรม",
-        doctor: "พญ.มินตรา จันทร์ทรา",
-        reason: "ตรวจเด็ก",
-        prepare: "นำสมุดวัคซีนมาด้วย"
+        prepare: "งดอาหาร 8 ชั่วโมง",
+        status: "confirmed"
     }
 ];
 
+// =======================
+// 📌 INIT LOCALSTORAGE (ชัวร์ 100%)
+// =======================
+function initAppointments() {
+    const data = localStorage.getItem("appointments");
+
+    if (!data) {
+        localStorage.setItem("appointments", JSON.stringify(baseAppointments));
+        return;
+    }
+
+    try {
+        const parsed = JSON.parse(data);
+
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            localStorage.setItem("appointments", JSON.stringify(baseAppointments));
+        }
+    } catch (e) {
+        localStorage.setItem("appointments", JSON.stringify(baseAppointments));
+    }
+}
+
+// =======================
+// 📌 STATE
+// =======================
 const container = document.getElementById("appointmentsList");
 
-// 🔥 render
+let deleteId = null;
+let editId = null;
+let currentType = "today";
+
+// =======================
+// 📌 LOAD DATA
+// =======================
+function loadAppointments() {
+    return JSON.parse(localStorage.getItem("appointments")) || [];
+}
+
+// =======================
+// 📌 SWITCH TAB
+// =======================
+function switchTab(btn, type) {
+    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    currentType = type;
+    renderAppointments(type);
+}
+
+// =======================
+// 📌 RENDER
+// =======================
 function renderAppointments(type = "today") {
-    const filtered = appointments.filter(a => a.type === type);
+    currentType = type;
+
+    const all = loadAppointments();
+    const filtered = all.filter(a => a.type === type);
+
+    if (filtered.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">ไม่พบรายการนัดหมาย</p>`;
+        return;
+    }
 
     container.innerHTML = filtered.map(a => `
         <div class="appointment-card">
@@ -46,6 +95,13 @@ function renderAppointments(type = "today") {
             </div>
 
             <div class="card-details">
+                <div class="detail-row">
+                    <span class="badge-label">สถานะ</span>
+                    <span class="detail-text">
+                        ${a.status === "pending" ? "⏳ รอยืนยัน" : "✅ ยืนยันแล้ว"}
+                    </span>
+                </div>
+
                 <div class="detail-row">
                     <span class="badge-label">แผนก</span>
                     <span class="detail-text">${a.dept}</span>
@@ -68,82 +124,120 @@ function renderAppointments(type = "today") {
             </div>
 
             <div class="card-actions">
-                <button class="btn-reschedule">เลื่อนนัด</button>
-                <button class="btn-cancel" onclick="cancelAppointment('${a.doctor}')">
-                    ยกเลิกนัด
-                </button>
+                <button class="btn-reschedule" onclick="openReschedule('${a.id}')">เลื่อนนัด</button>
+                <button class="btn-cancel" onclick="openCancelModal('${a.id}')">ยกเลิกนัด</button>
             </div>
         </div>
-    `).join('');
+    `).join("");
 }
 
-// 🔥 tab switch
-function switchTab(element, type) {
-    document.querySelectorAll('.tab-item')
-        .forEach(tab => tab.classList.remove('active'));
-
-    element.classList.add('active');
-
-    renderAppointments(type);
-}
-
-// 🔥 cancel (ลบจริง)
-function cancelAppointment(doctorName) {
-    if (confirm("ต้องการยกเลิกนัดใช่หรือไม่?")) {
-        const index = appointments.findIndex(a => a.doctor === doctorName);
-        if (index !== -1) {
-            appointments.splice(index, 1);
-        }
-
-        const activeTab = document.querySelector('.tab-item.active');
-        renderAppointments(activeTab.textContent.includes("วันนี้") ? "today" : "upcoming");
-    }
-}
-
-// โหลดครั้งแรก
-document.addEventListener("DOMContentLoaded", () => {
-    renderAppointments("today");
-});
-
-let doctorToDelete = null; // เก็บชื่อแพทย์ที่จะลบชั่วคราว
-
-// 1. ฟังก์ชันเปิด Modal
-function cancelAppointment(doctorName) {
-    doctorToDelete = doctorName; // ฝากชื่อไว้
+// =======================
+// 🔴 CANCEL
+// =======================
+function openCancelModal(id) {
+    deleteId = id;
     document.getElementById("cancelModal").style.display = "flex";
 }
 
-// 2. ฟังก์ชันปิด Modal
+function confirmCancel() {
+    let data = loadAppointments();
+
+    data = data.filter(item => item.id !== deleteId);
+
+    localStorage.setItem("appointments", JSON.stringify(data));
+
+    closeCancelModal();
+    renderAppointments(currentType);
+}
+
 function closeCancelModal() {
     document.getElementById("cancelModal").style.display = "none";
-    doctorToDelete = null;
 }
 
-// 3. ฟังก์ชันกดยืนยันลบจริง
-document.getElementById("confirmCancelBtn").addEventListener("click", () => {
-    if (doctorToDelete) {
-        const index = appointments.findIndex(a => a.doctor === doctorToDelete);
-        if (index !== -1) {
-            appointments.splice(index, 1);
-        }
-        
-        // ปิดหน้าต่าง
-        closeCancelModal();
-        
-        // Refresh รายการ
-        const activeTab = document.querySelector('.tab-item.active');
-        const type = activeTab.innerText.includes("วันนี้") ? "today" : "upcoming";
-        renderAppointments(type);
-        
-        // (Optional) แสดง alert สั้นๆ ว่าลบแล้ว
-        // alert("ยกเลิกการนัดหมายเรียบร้อยแล้ว");
+// =======================
+// 🔵 RESCHEDULE
+// =======================
+function openReschedule(id) {
+    editId = id;
+
+    const data = loadAppointments();
+    const item = data.find(a => a.id === id);
+
+    document.getElementById("editDate").value = item.date;
+    document.getElementById("editDept").value = item.dept;
+    document.getElementById("editDoctor").value = item.doctor;
+    document.getElementById("editReason").value = item.reason;
+    document.getElementById("editPrepare").value = item.prepare;
+
+    document.getElementById("rescheduleModal").style.display = "flex";
+}
+
+// =======================
+// 💾 SAVE RESCHEDULE
+// =======================
+function saveReschedule() {
+    let data = loadAppointments();
+
+    const newDate = document.getElementById("editDate").value;
+    const newType = (newDate === "วันนี้") ? "today" : "upcoming";
+    const newStatus = (newType === "upcoming") ? "pending" : "confirmed";
+
+    const index = data.findIndex(a => a.id === editId);
+
+    if (index !== -1) {
+        data[index] = {
+            ...data[index],
+            date: newDate,
+            type: newType,
+            dept: document.getElementById("editDept").value,
+            doctor: document.getElementById("editDoctor").value,
+            reason: document.getElementById("editReason").value,
+            prepare: document.getElementById("editPrepare").value,
+            status: newStatus   // 🔥 สำคัญ
+        };
     }
+
+    localStorage.setItem("appointments", JSON.stringify(data));
+
+    closeRescheduleModal();
+    renderAppointments(currentType);
+
+    document.getElementById("successEditModal").style.display = "flex";
+
+    setTimeout(() => {
+        closeSuccessModal();
+    }, 2000);
+}
+
+function openModal(id) {
+    document.getElementById(id).style.display = "flex";
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+
+
+//ปิดหน้าต่าง popup
+function closeSuccessModal() {
+    document.getElementById("successEditModal").style.display = "none";
+}
+
+// =======================
+// ❌ MODAL CLOSE
+// =======================
+function closeRescheduleModal() {
+    document.getElementById("rescheduleModal").style.display = "none";
+}
+
+// =======================
+// 🚀 INIT SYSTEM
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
+    initAppointments(); // 🔥 สำคัญที่สุด
+    renderAppointments("today");
+
+    document.getElementById("confirmCancelBtn")
+        .addEventListener("click", confirmCancel);
 });
-
-// คลิกข้างนอก Modal ให้ปิดได้ (UX ที่ดี)
-window.onclick = function(event) {
-    const modal = document.getElementById("cancelModal");
-    if (event.target == modal) {
-        closeCancelModal();
-    }
-}

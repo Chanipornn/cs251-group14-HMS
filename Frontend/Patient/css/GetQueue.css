@@ -174,18 +174,45 @@ body {
     }
 }
 
+
+
 .back-btn {
     width: 40px;
     height: 40px;
-    border: 2px solid rgba(255,255,255,0.6);;
-    background: transparent;
     border-radius: 50%;
-    color: white;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.1);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #000;
 }
+
+.back-btn i {
+    color: #383535 !important;
+}
+
+
+/* ลบเส้นใต้ลิงก์ */
+.back-btn,
+.back-btn:visited,
+.back-btn:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+/* hover effect */
+.back-btn:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+/* ตอนกด */
+.back-btn:active {
+    transform: scale(0.95);
+}
+
 
 
 
