@@ -80,7 +80,8 @@ public class Patient {
 
     
     // ความสัมพันธ์กับตารางอื่น
-    @JsonIgnore
+    //กัน loop
+    @JsonIgnore 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Appointment> appointments;
 
