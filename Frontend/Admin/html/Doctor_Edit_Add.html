@@ -67,10 +67,20 @@
                                 <span class="value"></span>
                             </div>
 
+                            <!-- แผนก — custom dropdown แทน <select> เดิม -->
                             <div class="input-row">
                                 <div class="field-label">แผนก</div>
                                 <div class="field-input">
-                                    <select id="deptSelect" class="custom-select"></select>
+                                    <div class="custom-select-wrapper">
+                                        <button type="button" class="custom-select-btn" onclick="toggleDeptDropdown()">
+                                            <span id="deptDisplay" class="placeholder">-- กรุณาเลือกแผนก --</span>
+                                            <span class="select-arrow">▾</span>
+                                        </button>
+                                        <div class="custom-select-menu" id="deptMenu">
+                                            <!-- options สร้างโดย buildDeptDropdown() ใน JS -->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="deptSelect">
                                 </div>
                             </div>
 

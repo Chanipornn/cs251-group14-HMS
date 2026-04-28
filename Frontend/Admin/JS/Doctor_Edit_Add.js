@@ -52,20 +52,91 @@ document.addEventListener("DOMContentLoaded", () => {
         role.className = `role-badge ${(userData.type || "doctor")}`;
     }
 
-    // department
-    const deptSelect = document.getElementById("deptSelect");
-    if (deptSelect) {
-        deptSelect.innerHTML = `<option value="">-- กรุณาเลือกแผนก --</option>`;
-        departmentList.forEach(d => {
-            const selected = d === userData.dept ? "selected" : "";
-            deptSelect.innerHTML += `<option ${selected}>${d}</option>`;
-        });
-    }
+    // สร้าง custom dropdown สำหรับแผนก
+    buildDeptDropdown(userData.dept || "");
 
     // expertise
     const exp = document.getElementById("expertiseInput");
     if (exp) exp.value = userData.expertise || "";
+
+    // ปิด dropdown เมื่อคลิกข้างนอก
+    document.addEventListener("click", e => {
+        if (!e.target.closest(".custom-select-wrapper")) {
+            closeDeptDropdown();
+        }
+    });
 });
+
+// ================= CUSTOM DROPDOWN =================
+function buildDeptDropdown(currentValue) {
+    const menu    = document.getElementById("deptMenu");
+    const display = document.getElementById("deptDisplay");
+    const hidden  = document.getElementById("deptSelect");
+
+    if (!menu) return;
+
+    menu.innerHTML = departmentList.map(d => `
+        <div class="select-option ${d === currentValue ? 'selected' : ''}"
+             onclick="selectDept('${d}')">
+            <span class="option-check">${d === currentValue ? '✓' : ''}</span>
+            <span>${d}</span>
+        </div>
+    `).join("");
+
+    if (currentValue && display) {
+        display.textContent = currentValue;
+        display.classList.remove("placeholder");
+    }
+    if (hidden) hidden.value = currentValue;
+}
+
+function toggleDeptDropdown() {
+    const menu  = document.getElementById("deptMenu");
+    const arrow = document.querySelector(".select-arrow");
+    if (!menu) return;
+    const isOpen = menu.classList.contains("show");
+    if (isOpen) {
+        menu.classList.remove("show");
+        if (arrow) arrow.classList.remove("rotate");
+    } else {
+        menu.classList.add("show");
+        if (arrow) arrow.classList.add("rotate");
+    }
+}
+
+function closeDeptDropdown() {
+    const menu  = document.getElementById("deptMenu");
+    const arrow = document.querySelector(".select-arrow");
+    if (menu)  menu.classList.remove("show");
+    if (arrow) arrow.classList.remove("rotate");
+}
+
+function selectDept(value) {
+    const display = document.getElementById("deptDisplay");
+    const hidden  = document.getElementById("deptSelect");
+    const menu    = document.getElementById("deptMenu");
+
+    if (display) {
+        display.textContent = value;
+        display.classList.remove("placeholder");
+    }
+    if (hidden) hidden.value = value;
+
+    // อัปเดต checkmark
+    menu.querySelectorAll(".select-option").forEach(opt => {
+        const text  = opt.querySelector("span:last-child").textContent;
+        const check = opt.querySelector(".option-check");
+        if (text === value) {
+            opt.classList.add("selected");
+            check.textContent = "✓";
+        } else {
+            opt.classList.remove("selected");
+            check.textContent = "";
+        }
+    });
+
+    closeDeptDropdown();
+}
 
 // ================= SAVE =================
 function saveData() {
@@ -97,7 +168,6 @@ function saveData() {
 }
 
 // ================= MODAL =================
-// success=true → ไอคอนถูก (สีเขียว), false → ไอคอนแจ้งเตือน
 function showModal(message, success = true, onClose = null) {
     const overlay = document.getElementById("successModal");
     const icon    = document.getElementById("modalIcon");
@@ -111,9 +181,7 @@ function showModal(message, success = true, onClose = null) {
     }
     if (msg) msg.textContent = message;
 
-    // เก็บ callback ไว้ใน overlay
     overlay._onClose = onClose;
-
     overlay.classList.add("show");
 }
 

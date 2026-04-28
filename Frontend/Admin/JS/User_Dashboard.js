@@ -7,7 +7,7 @@ let selectedStatus = "all";
 let deleteId       = null;
 
 // =========================
-// DEFAULT AVATAR SVG (inline ใช้เมื่อไม่มีรูป)
+// DEFAULT AVATAR SVG
 // =========================
 const DEFAULT_AVATAR_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
 
@@ -50,7 +50,6 @@ function renderTable() {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // กรองก่อน render
   const filtered = users.filter(user => {
     const roleMatch   = selectedRole   === "all" || (user.role   || "").toLowerCase() === selectedRole;
     const statusMatch = selectedStatus === "all" || (user.status || "").toLowerCase() === selectedStatus;
@@ -69,13 +68,11 @@ function renderTable() {
   }
 
   filtered.forEach((user) => {
-    // ✅ รองรับทั้ง default users และ users จากการสมัครใหม่
     const displayName = user.fullname
       || user.name
       || `${user.firstname || ""} ${user.lastname || ""}`.trim()
       || "-";
 
-    // ✅ ถ้าไม่มีรูปโปรไฟล์ ใช้ DEFAULT_AVATAR_SVG
     const avatar = (user.profileImage && user.profileImage !== "")
       ? user.profileImage
       : DEFAULT_AVATAR_SVG;
@@ -156,9 +153,31 @@ function confirmDelete() {
   if (deleteId === null) return;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
-  users = users.filter(u => u.id != deleteId);
 
+  // หา user ที่จะลบก่อน เพื่อใช้ sync allUsers
+  const deletedUser = users.find(u => u.id == deleteId);
+
+  // ลบออกจาก users
+  users = users.filter(u => u.id != deleteId);
   localStorage.setItem("users", JSON.stringify(users));
+
+  // =======================================
+  // SYNC: ลบออกจาก allUsers (หน้าบุคลากร) ด้วย
+  // =======================================
+  if (deletedUser) {
+    let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+    allUsers = allUsers.filter(a => {
+      // match ด้วย userId (ถ้ามี) หรือ email
+      const matchById    = a.userId !== undefined && a.userId == deletedUser.id;
+      const matchByEmail = a.email  && a.email === deletedUser.email;
+      return !(matchById || matchByEmail);
+    });
+
+    // reindex ใหม่หลังลบ
+    allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
+    localStorage.setItem("allUsers", JSON.stringify(allUsers));
+  }
 
   renderTable();
   closeDeleteModal();
@@ -242,7 +261,7 @@ function selectRole(role) {
 }
 
 // =========================
-// SEARCH (ถ้ามี input search)
+// SEARCH
 // =========================
 function searchUsers(keyword) {
   const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -252,7 +271,7 @@ function searchUsers(keyword) {
   table.innerHTML = "";
 
   const filtered = users.filter(u => {
-    const name = (u.fullname || u.name || "").toLowerCase();
+    const name  = (u.fullname || u.name || "").toLowerCase();
     const uname = (u.username || "").toLowerCase();
     const email = (u.email || "").toLowerCase();
     return name.includes(kw) || uname.includes(kw) || email.includes(kw);
@@ -269,7 +288,6 @@ function searchUsers(keyword) {
     return;
   }
 
-  // render ผลลัพธ์ (ใช้โค้ด render เดิม)
   filtered.forEach((user) => {
     const displayName = user.fullname
       || user.name
@@ -319,15 +337,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderTable();
+
+  const searchInput = document.querySelector(".search");
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      searchUsers(this.value);
+    });
+  }
 });
 
 function goProfile() {
   window.location.href = "profile.html";
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.querySelector(".search");
-
-  searchInput.addEventListener("input", function () {
-    searchUsers(this.value);
-  });
-});

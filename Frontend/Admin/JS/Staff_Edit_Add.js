@@ -6,16 +6,6 @@ const staffPositions = [
     "เจ้าหน้าที่ลงทะเบียนผู้ป่วย"
 ];
 
-// ================= HELPER =================
-function populateSelect(selectElement, dataArray, labelText, currentValue) {
-    let optionsHtml = `<option value="">-- กรุณาเลือก${labelText} --</option>`;
-    dataArray.forEach(name => {
-        const selected = name === currentValue ? "selected" : "";
-        optionsHtml += `<option value="${name}" ${selected}>${name}</option>`;
-    });
-    selectElement.innerHTML = optionsHtml;
-}
-
 // ================= INIT =================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -53,29 +43,102 @@ document.addEventListener("DOMContentLoaded", () => {
         roleBadge.className = `role-badge ${(userData.type || "staff").toLowerCase()}`;
     }
 
-    // position dropdown
-    const deptSelect = document.getElementById("deptSelect") || document.getElementById("staffDeptSelect");
-    if (deptSelect) {
-        populateSelect(deptSelect, staffPositions, "ตำแหน่ง", userData.dept || "");
-    }
+    // สร้าง custom dropdown สำหรับตำแหน่ง
+    buildPositionDropdown(userData.dept || "");
 
     // expertise
     const expertiseInput = document.getElementById("expertiseInput");
     if (expertiseInput && userData.expertise) {
         expertiseInput.value = userData.expertise;
     }
+
+    // ปิด dropdown เมื่อคลิกข้างนอก
+    document.addEventListener("click", e => {
+        if (!e.target.closest(".custom-select-wrapper")) {
+            closePositionDropdown();
+        }
+    });
 });
+
+// ================= CUSTOM DROPDOWN =================
+function buildPositionDropdown(currentValue) {
+    const menu    = document.getElementById("deptMenu");
+    const display = document.getElementById("deptDisplay");
+    const hidden  = document.getElementById("deptSelect");
+
+    if (!menu) return;
+
+    menu.innerHTML = staffPositions.map(p => `
+        <div class="select-option ${p === currentValue ? 'selected' : ''}"
+             onclick="selectPosition('${p}')">
+            <span class="option-check">${p === currentValue ? '✓' : ''}</span>
+            <span>${p}</span>
+        </div>
+    `).join("");
+
+    if (currentValue && display) {
+        display.textContent = currentValue;
+        display.classList.remove("placeholder");
+    }
+    if (hidden) hidden.value = currentValue;
+}
+
+function togglePositionDropdown() {
+    const menu  = document.getElementById("deptMenu");
+    const arrow = document.querySelector(".select-arrow");
+    if (!menu) return;
+    const isOpen = menu.classList.contains("show");
+    if (isOpen) {
+        menu.classList.remove("show");
+        if (arrow) arrow.classList.remove("rotate");
+    } else {
+        menu.classList.add("show");
+        if (arrow) arrow.classList.add("rotate");
+    }
+}
+
+function closePositionDropdown() {
+    const menu  = document.getElementById("deptMenu");
+    const arrow = document.querySelector(".select-arrow");
+    if (menu)  menu.classList.remove("show");
+    if (arrow) arrow.classList.remove("rotate");
+}
+
+function selectPosition(value) {
+    const display = document.getElementById("deptDisplay");
+    const hidden  = document.getElementById("deptSelect");
+    const menu    = document.getElementById("deptMenu");
+
+    if (display) {
+        display.textContent = value;
+        display.classList.remove("placeholder");
+    }
+    if (hidden) hidden.value = value;
+
+    // อัปเดต checkmark
+    menu.querySelectorAll(".select-option").forEach(opt => {
+        const text  = opt.querySelector("span:last-child").textContent;
+        const check = opt.querySelector(".option-check");
+        if (text === value) {
+            opt.classList.add("selected");
+            check.textContent = "✓";
+        } else {
+            opt.classList.remove("selected");
+            check.textContent = "";
+        }
+    });
+
+    closePositionDropdown();
+}
 
 // ================= SAVE =================
 function saveData() {
     const userData = JSON.parse(localStorage.getItem("editUser"));
     if (!userData) return;
 
-    const deptSelect     = document.getElementById("deptSelect") || document.getElementById("staffDeptSelect");
-    const expertiseInput = document.getElementById("expertiseInput");
-
-    const updatedDept      = deptSelect     ? deptSelect.value      : "";
-    const updatedExpertise = expertiseInput ? expertiseInput.value  : "";
+    const updatedDept      = document.getElementById("deptSelect")?.value || "";
+    const expertiseInput   = document.getElementById("expertiseInput");
+    const updatedExpertise = expertiseInput ? expertiseInput.value : "";
 
     if (!updatedDept) {
         showModal("กรุณาเลือกตำแหน่ง", false);
@@ -155,20 +218,3 @@ function logout() {
 function goProfile() {
     window.location.href = "profile.html";
 }
-
-// ================= DROPDOWN =================
-function toggleDropdown() {
-    const menu  = document.getElementById("dropdownMenu");
-    const arrow = document.querySelector(".arrowdropdown");
-    if (menu)  menu.classList.toggle("show");
-    if (arrow) arrow.classList.toggle("rotate");
-}
-
-document.addEventListener("click", e => {
-    if (!e.target.closest(".role-dropdown")) {
-        const menu  = document.getElementById("dropdownMenu");
-        const arrow = document.querySelector(".arrowdropdown");
-        if (menu)  menu.classList.remove("show");
-        if (arrow) arrow.classList.remove("rotate");
-    }
-});

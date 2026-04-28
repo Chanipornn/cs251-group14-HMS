@@ -28,7 +28,7 @@
             <h3>เมนู</h3>
             <br>
             <a href="User_Dashboard.html" class="menu">จัดการผู้ใช้</a>
-            <a href="dashboard.html" class="menu active">จัดการบุคลากร</a>
+            <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
             <div class="logout" onclick="logout()">
                 <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
             </div>
@@ -43,11 +43,13 @@
 
                 <div class="edit-card-body">
                     <div class="profile-layout">
+
                         <div class="profile-image-container">
-                            <img src="../../img/staff_img1.png" alt="Profile" class="profile-main-img">
+                            <img src="../../img/staff_img1.png" class="profile-main-img">
                         </div>
 
                         <div class="profile-details-form">
+
                             <div class="user-id-row">
                                 <div class="user-meta">
                                     <span class="label">Username</span>
@@ -65,10 +67,27 @@
                                 <span class="value"></span>
                             </div>
 
-                            <div class="input-row staff-form-group">
+                            <!-- ตำแหน่ง — custom dropdown แทน <select> เดิม -->
+                            <div class="input-row">
                                 <div class="field-label">ตำแหน่ง</div>
                                 <div class="field-input">
-                                    <select id="deptSelect" class="custom-select"></select>
+                                    <div class="custom-select-wrapper">
+                                        <button type="button" class="custom-select-btn" onclick="togglePositionDropdown()">
+                                            <span id="deptDisplay" class="placeholder">-- กรุณาเลือกตำแหน่ง --</span>
+                                            <span class="select-arrow">▾</span>
+                                        </button>
+                                        <div class="custom-select-menu" id="deptMenu">
+                                            <!-- options สร้างโดย buildPositionDropdown() ใน JS -->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="deptSelect">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <div class="field-label">ความเชี่ยวชาญ</div>
+                                <div class="field-input">
+                                    <input type="text" id="expertiseInput">
                                 </div>
                             </div>
 
@@ -76,8 +95,8 @@
                     </div>
 
                     <div class="action-buttons">
-                        <button type="button" class="btn-secondary" onclick="cancelEdit()">ยกเลิก</button>
-                        <button type="button" class="btn-primary" onclick="saveData()">บันทึก</button>
+                        <button class="btn-secondary" onclick="cancelEdit()">ยกเลิก</button>
+                        <button class="btn-primary" onclick="saveData()">บันทึก</button>
                     </div>
                 </div>
             </div>

@@ -8,6 +8,33 @@ const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
 // เก็บ base64 รูปที่เลือก (ยังไม่ได้ save)
 let selectedProfileImage = null;
 
+// =========================
+// ERROR HELPER
+// =========================
+function showFieldError(fieldId, message) {
+  clearFieldError(fieldId);
+  const field = document.getElementById(fieldId);
+  if (!field) return;
+  const errEl = document.createElement("p");
+  errEl.className = "field-error";
+  errEl.id = `err_${fieldId}`;
+  errEl.textContent = message;
+  field.parentNode.insertBefore(errEl, field.nextSibling);
+  field.classList.add("input-error");
+}
+
+function clearFieldError(fieldId) {
+  const old = document.getElementById(`err_${fieldId}`);
+  if (old) old.remove();
+  const field = document.getElementById(fieldId);
+  if (field) field.classList.remove("input-error");
+}
+
+function clearAllErrors() {
+  document.querySelectorAll(".field-error").forEach(e => e.remove());
+  document.querySelectorAll(".input-error").forEach(e => e.classList.remove("input-error"));
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
   const form          = document.getElementById("createForm");
@@ -102,11 +129,28 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // =========================
+  // CLEAR ERROR ON INPUT
+  // =========================
+  const confirmPasswordField = document.getElementById("confirmPassword");
+  const passwordField        = document.getElementById("password");
+
+  if (confirmPasswordField) {
+    confirmPasswordField.addEventListener("input", () => clearFieldError("confirmPassword"));
+  }
+  if (passwordField) {
+    passwordField.addEventListener("input", () => {
+      clearFieldError("password");
+      clearFieldError("confirmPassword");
+    });
+  }
+
+  // =========================
   // SUBMIT
   // =========================
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      clearAllErrors();
 
       const name            = document.getElementById("name")?.value.trim();
       const email           = document.getElementById("email")?.value.trim();
@@ -121,24 +165,31 @@ document.addEventListener("DOMContentLoaded", function () {
       // =========================
       // VALIDATE พื้นฐาน
       // =========================
-      if (!name || !email || !password || !confirmPassword || !firstName || !lastName || !phone) {
-        alert("กรุณากรอกข้อมูลพื้นฐานให้ครบ");
-        return;
-      }
+      let hasError = false;
+
+      if (!name) { showFieldError("name", "กรุณากรอกชื่อผู้ใช้"); hasError = true; }
+      if (!email) { showFieldError("email", "กรุณากรอกอีเมล"); hasError = true; }
+      if (!password) { showFieldError("password", "กรุณากรอกรหัสผ่าน"); hasError = true; }
+      if (!confirmPassword) { showFieldError("confirmPassword", "กรุณายืนยันรหัสผ่าน"); hasError = true; }
+      if (!firstName) { showFieldError("firstName", "กรุณากรอกชื่อ"); hasError = true; }
+      if (!lastName) { showFieldError("lastName", "กรุณากรอกนามสกุล"); hasError = true; }
+      if (!phone) { showFieldError("phone", "กรุณากรอกเบอร์โทรศัพท์"); hasError = true; }
+
+      if (hasError) return;
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert("รูปแบบอีเมลไม่ถูกต้อง");
+        showFieldError("email", "รูปแบบอีเมลไม่ถูกต้อง");
         return;
       }
 
       if (password.length < 6) {
-        alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
+        showFieldError("password", "รหัสผ่านต้องอย่างน้อย 6 ตัวอักษร");
         return;
       }
 
       if (password !== confirmPassword) {
-        alert("รหัสผ่านไม่ตรงกัน");
+        showFieldError("confirmPassword", "รหัสผ่านไม่ตรงกัน");
         return;
       }
 
@@ -186,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let users = JSON.parse(localStorage.getItem("users")) || [];
 
       if (users.some(u => u.email === email)) {
-        alert("อีเมลนี้ถูกใช้งานแล้ว");
+        showFieldError("email", "อีเมลนี้ถูกใช้งานแล้ว");
         return;
       }
 
@@ -231,30 +282,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const staffEntry = {
           name:      `${firstName} ${lastName}`,
           role:      currentRole,
-          dept:      "",           // ยังไม่มี — ให้ admin ตั้งที่หน้า edit
+          dept:      "",
           expertise: "",
           img:       selectedProfileImage || DEFAULT_AVATAR,
-          type:      currentRole.toLowerCase(),  // "doctor" หรือ "staff"
+          type:      currentRole.toLowerCase(),
           phone:     phone,
           email:     email,
-          userId:    newUser.id,   // เชื่อมกลับหา "users"
+          userId:    newUser.id,
         };
 
         allUsers.push(staffEntry);
-
-        // อัปเดต index ให้ตรงเสมอ
         allUsers = allUsers.map((u, i) => ({ ...u, index: i }));
-
         localStorage.setItem("allUsers", JSON.stringify(allUsers));
       }
-      // =========================
-      // END SYNC
-      // =========================
 
       document.getElementById("successModal").classList.add("show");
       setTimeout(() => {
-        // ถ้าเป็น Doctor หรือ Staff → redirect ไปหน้า dashboard บุคลากรก่อน
-        // เพื่อให้ admin กรอกแผนกและความเชี่ยวชาญได้ทันที
         if (currentRole === "Doctor" || currentRole === "Staff") {
           window.location.href = "dashboard.html";
         } else {
