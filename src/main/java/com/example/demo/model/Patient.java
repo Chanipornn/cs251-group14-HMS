@@ -3,7 +3,6 @@ package com.example.demo.model;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,62 +15,56 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PatientID")
     private Integer patientId;
 
-    @Column(nullable = false, length = 64)
+    @Column(name = "Name", nullable = false, length = 64)
     private String name;
 
-    @Column(nullable = false, length = 64)
+    @Column(name = "Surname", nullable = false, length = 64)
     private String surname;
 
-    @Column(length = 1)
+    @Column(name = "Gender", length = 1)
     private Character gender;
 
-    @Column
+    @Column(name = "DateOfBirth")
     private LocalDate dateOfBirth;
 
-    @Column(length = 10)
+    @Column(name = "Telephone", length = 10)
     private String telephone;
 
-    @Column(length = 255)
+    @Column(name = "Address", length = 255)
     private String address;
 
-    @Column(length = 3)
+    @Column(name = "BloodType", length = 3)
     private String bloodType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "StaffID")
     private Staff staff;
 
-    @Column(unique = true, length = 13)
+    @Column(name = "ThaiNationalID", unique = true, length = 13)
     private String thaiNationalId;
 
-    @Column(length = 255)
+    @Column(name = "ChronicIllness", length = 255)
     private String chronicIllness;
 
-    @Column(length = 50)
+    @Column(name = "RightToHealthcare", length = 50)
     private String rightToHealthcare;
 
-    @Column(length = 255)
+    @Column(name = "DrugAllergy", length = 255)
     private String drugAllergy;
 
-    @Column
+    @Column(name = "Weight")
     private Float weight;
 
-    @Column
+    @Column(name = "Height")
     private Float height;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID", nullable = false, unique = true)
     private UserEntity user;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
-
-    // ความสัมพันธ์กับตารางอื่น
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Appointment> appointments;
 

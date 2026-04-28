@@ -3,7 +3,6 @@ package com.example.demo.model;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -16,19 +15,20 @@ public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "AppointmentID")
     private Integer appointmentId;
 
-    @Column(nullable = false)
+    @Column(name = "AppointmentDate", nullable = false)
     private LocalDate appointmentDate;
 
-    @Column(nullable = false)
+    @Column(name = "AppointmentTime", nullable = false)
     private LocalTime appointmentTime;
 
-    @Column
+    @Column(name = "QueueNumber")
     private Integer queueNumber;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(columnDefinition = "INT DEFAULT 1")
+    @Column(name = "Status", columnDefinition = "INT DEFAULT 1")
     private AppointmentStatus status = AppointmentStatus.COMPLETED;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,16 +39,10 @@ public class Appointment {
     @JoinColumn(name = "PatientID", nullable = false)
     private Patient patient;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
-
     public enum AppointmentStatus {
-        CANCELLED,      // 0 = ยกเลิก
-        COMPLETED,      // 1 = นัดสำเร็จ
-        POSTPONED,      // 2 = เลื่อนนัด
-        WAITING         // 3 = รอเข้าพบ
+        CANCELLED,  // 0 = ยกเลิก
+        COMPLETED,  // 1 = นัดสำเร็จ
+        POSTPONED,  // 2 = เลื่อนนัด
+        WAITING     // 3 = รอเข้าพบ
     }
 }
