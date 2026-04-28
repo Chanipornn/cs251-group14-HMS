@@ -315,34 +315,7 @@ document.querySelectorAll('.edit-icon').forEach(icon => {
     });
 });
 
-function saveData(card) {
-    const inputs = card.querySelectorAll('input');
 
-    const updatedData = {
-        id: document.getElementById('detId').innerText.replace("รหัสประจำตัวผู้ป่วย : ", ""),
-        name: inputs[0]?.value,
-        age: inputs[1]?.value,
-        weight: inputs[2]?.value,
-        height: inputs[3]?.value
-    };
-
-    fetch("http://localhost:8080/api/patient/update", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updatedData)
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert("บันทึกสำเร็จ");
-        location.reload();
-    })
-    .catch(err => {
-        console.error(err);
-        alert("เกิดข้อผิดพลาด");
-    });
-}
 
 });
 

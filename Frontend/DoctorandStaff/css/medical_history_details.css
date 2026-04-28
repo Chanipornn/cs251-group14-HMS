@@ -339,3 +339,113 @@ body {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- เลเยอร์พื้นหลังมืด (Overlay) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* พื้นหลังดำจางๆ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* ให้อยู่หน้าสุดเสมอ */
+}
+
+/* --- กล่องข้อความ (Modal Content) --- */
+.modal-content-new {
+    background: white;
+    padding: 40px 25px;
+    border-radius: 35px; /* มนพิเศษตามรูปต้นแบบ */
+    text-align: center;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    animation: popupScale 0.3s ease-out; /* เอฟเฟกต์เด้งขึ้นมา */
+}
+
+/* --- ไอคอนวงกลมสีเขียว (Checkmark) --- */
+.icon-check-circle {
+    width: 75px;
+    height: 75px;
+    background-color: #4CAF50; /* สีเขียว Success */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    margin: 0 auto 20px;
+}
+
+/* --- หัวข้อตัวหนา --- */
+.modal-title-bold {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+/* --- รายละเอียดข้อความ --- */
+.modal-details-text p {
+    font-size: 15px;
+    color: #666;
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+/* --- ปุ่มตกลงทรงแคปซูล ไล่สีม่วง (Gradient) --- */
+.btn-purple-pill {
+    margin-top: 25px;
+    min-width: 130px;
+    padding: 12px 30px;
+    /* ไล่เฉดสีจากม่วงเข้มไปม่วงอ่อนตามรูป */
+    background: linear-gradient(135deg, #6E65BE 0%, #8E84E9 100%);
+    color: white;
+    border: none;
+    border-radius: 30px; /* ทรงแคปซูล */
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(110, 101, 190, 0.3);
+    transition: 0.3s ease;
+}
+
+/* --- เอฟเฟกต์เมื่อเอาเมาส์ไปวางบนปุ่ม --- */
+.btn-purple-pill:hover {
+    transform: scale(1.05); /* ขยายใหญ่ขึ้นนิดหน่อย */
+    box-shadow: 0 8px 20px rgba(110, 101, 190, 0.4);
+    opacity: 0.9;
+}
+
+/* --- อนิเมชั่นตอน Popup ปรากฏ --- */
+@keyframes popupScale {
+    from { 
+        opacity: 0; 
+        transform: scale(0.85) translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+}
+
+/* --- สไตล์ของช่อง Input ตอนแก้ไข (Inline Edit) --- */
+.edit-input {
+    width: auto;
+    min-width: 150px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.edit-input:focus {
+    border-color: #8E84E9;
+    background-color: #fcfbff;
+}
