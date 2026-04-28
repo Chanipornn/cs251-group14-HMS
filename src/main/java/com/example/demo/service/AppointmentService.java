@@ -65,7 +65,7 @@ public class AppointmentService {
         return AppointmentMapper.toDTO(appointmentRepository.save(a));
     }
 
-    // get by id
+    // getByPatient
     public List<AppointmentDTO> getByPatient(Integer patientId) {
         return appointmentRepository.findByPatient_PatientId(patientId)
                 .stream()
@@ -73,12 +73,10 @@ public class AppointmentService {
                 .toList();
     }
 
+ // get by id
     public Appointment getById(Integer id) {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
     }
     
-    
-    
-
 }

@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Patient;
 import com.example.demo.service.PatientService;
+import com.example.demo.dto.PatientDTO;
+import com.example.demo.dto.PatientRegisterRequestDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +20,13 @@ public class PatientController {
 
     // GET ALL
     @GetMapping
-    public List<Patient> getAll() {
+    public List<PatientDTO> getAll() {
         return service.getAll();
     }
 
     // GET BY ID
     @GetMapping("/{id}")
-    public Patient getById(@PathVariable Integer id) {
+    public PatientDTO getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -34,7 +36,7 @@ public class PatientController {
         return service.create(p);
     }
 
-    // UPDATE
+ // UPDATE
     @PutMapping("/{id}")
     public Patient update(@PathVariable Integer id, @RequestBody Patient p) {
         return service.update(id, p);
@@ -48,14 +50,18 @@ public class PatientController {
 
     // SEARCH
     @GetMapping("/search")
-    public List<Patient> search(@RequestParam String keyword) {
+    public List<PatientDTO> search(@RequestParam String keyword) {
         return service.search(keyword);
     }
 
     // FILTER BY STAFF
-    @GetMapping("/staff/{staffId}")
-    public List<Patient> getByStaff(@PathVariable Integer staffId) {
-        return service.getByStaff(staffId);
+    @GetMapping("/staff/{id}")
+    public List<PatientDTO> getByStaff(@PathVariable Integer id) {
+        return service.getByStaff(id);
     }
-
+    
+    @PostMapping("/register")
+    public Patient register(@RequestBody PatientRegisterRequestDTO req) {
+        return service.register(req);
+    }
 }
