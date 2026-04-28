@@ -1,0 +1,49 @@
+package com.example.demo.dto;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class AppointmentDTO {
+    private Integer appointmentId;
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
+    private Integer queueNumber;
+    private String status;
+    private Integer doctorId;
+    private Integer patientId;
+
+    public AppointmentDTO() {}
+
+    public AppointmentDTO(Integer appointmentId, LocalDate appointmentDate, LocalTime appointmentTime,
+                          Integer queueNumber, String status, Integer doctorId, Integer patientId) {
+        this.appointmentId = appointmentId;
+        this.appointmentDate = appointmentDate;
+        this.appointmentTime = appointmentTime;
+        this.queueNumber = queueNumber;
+        this.status = status;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
+    }
+
+    // Getters & Setters
+    public Integer getAppointmentId() { return appointmentId; }
+    public void setAppointmentId(Integer appointmentId) { this.appointmentId = appointmentId; }
+
+    public LocalDate getAppointmentDate() { return appointmentDate; }
+    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
+
+    public LocalTime getAppointmentTime() { return appointmentTime; }
+    public void setAppointmentTime(LocalTime appointmentTime) { this.appointmentTime = appointmentTime; }
+
+    public Integer getQueueNumber() { return queueNumber; }
+    public void setQueueNumber(Integer queueNumber) { this.queueNumber = queueNumber; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public Integer getDoctorId() { return doctorId; }
+    public void setDoctorId(Integer doctorId) { this.doctorId = doctorId; }
+
+    public Integer getPatientId() { return patientId; }
+    public void setPatientId(Integer patientId) { this.patientId = patientId; }
+}
