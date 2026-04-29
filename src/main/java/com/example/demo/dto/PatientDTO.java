@@ -22,6 +22,8 @@ public class PatientDTO {
     private String drugAllergy;
     private Float weight;
     private Float height;
+    
+    private String fullName;
 
     public PatientDTO() {}
 
@@ -73,4 +75,12 @@ public class PatientDTO {
     public void setWeight(Float weight) { this.weight = weight; }
     public Float getHeight() { return height; }
     public void setHeight(Float height) { this.height = height; }
+    
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 }
