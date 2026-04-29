@@ -3,21 +3,47 @@
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
 
- // ===== USERNAME =====
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-const usernameEl = document.getElementById("username");
+ // ===== LOAD USER =====
+ const user = JSON.parse(localStorage.getItem("currentUser"));
 
-if (usernameEl) {
-  usernameEl.textContent = currentUser?.username || "Guest";
-}
+  if (!user) {
+    window.location.href = "../../login.html";
+    return;
+  }
 
+  console.log("USER:", user);
+
+ // ===== LOAD PROFILE FROM BACKEND =====
+ if (user && user.patientId) {
+    fetch(`http://localhost:8080/api/patients/${user.patientId}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("PATIENT:", data);
+
+        const fullNameEl = document.getElementById("fullname");
+
+        if (fullNameEl) {
+          fullNameEl.innerText = data.name + " " + data.surname;
+        }
+      })
+      .catch(err => console.error("Fetch error:", err));
+  }
+
+  // ===== USERNAME (มุมขวา) =====
+  const usernameEl = document.querySelector(".user-name");
+  if (usernameEl) {
+    usernameEl.innerText = user.name || "Guest";
+  }
+
+ 
 // ===== PROFILE IMAGE =====
 const profileImg = document.getElementById("profileImage");
-const savedImage = currentUser?.profileImage || localStorage.getItem("profileImage");
+const savedImage = user?.profileImage
 
 if (profileImg && savedImage) {
   profileImg.src = savedImage;
 }
+
   // =========================
   // BANNER SLIDER
   // =========================
@@ -41,6 +67,7 @@ if (profileImg && savedImage) {
     updateSlider();
   }, 3000);
 
+
   // =========================
   // SWIPE (มือถือ)
   // =========================
@@ -63,6 +90,7 @@ if (profileImg && savedImage) {
     updateSlider();
   });
 
+  
   // =========================
   // CLICK DOT
   // =========================
@@ -73,4 +101,6 @@ if (profileImg && savedImage) {
     });
   });
 
-});
+}
+
+);

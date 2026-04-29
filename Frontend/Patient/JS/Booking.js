@@ -90,8 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // กดจอง
-    // กดจอง
+    
 // กดจอง
 document.querySelector(".btn-submit").addEventListener("click", async () => {
 
@@ -108,6 +107,7 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
         return; 
     }
     */
+
    if (!doctorData) {
     console.log("❌ ไม่มี doctor");
     return;
@@ -127,7 +127,15 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
     const monthYear = document.querySelector(".section-title span").innerText;
     const fullDate = `${dayNum} ${monthYear}`;
 
-    const patientId = localStorage.getItem("patientId");
+    //const patientId = localStorage.getItem("patientId");
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user || !user.patientId) {
+        console.error("❌ ไม่มี patientId");
+    return;
+    }
+
+    const patientId = user.patientId;
 
     const bookingData = {
         appointmentDate: formatToISO(fullDate),
@@ -135,8 +143,9 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
         reason: selectedReasonEl ? selectedReasonEl.parentElement.innerText.trim() : "",
         preparation: "กรุณามาก่อน 15 นาที",
         doctor: { doctorId: doctorData.id },
-        patient: { patientId: parseInt(patientId) }
+        patient: { patientId: Number(patientId) }
     };
+    console.log("BOOKING DATA:", bookingData);
     /*
     const bookingData = {
         type: "upcoming",

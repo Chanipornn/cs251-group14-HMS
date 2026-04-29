@@ -27,19 +27,65 @@ const insuranceDatabase = [
 ];
 
 // 2. ฟังก์ชันจัดการการค้นหา
-function handleSearch() {
+async function checkEligibility() {
     const idInput = document.getElementById('citizenId').value.trim();
     const resultArea = document.getElementById('resultArea');
     
     // ตรวจสอบความถูกต้องของเลขบัตร (เบื้องต้น)
-    if (idInput.length !== 13 || isNaN(idInput)) {
-        alert("กรุณากรอกหมายเลขบัตรประชาชนให้ครบ 13 หลัก (เฉพาะตัวเลข)");
+     if (!/^\d{13}$/.test(idInput)) {
+        alert("กรุณากรอกเลขบัตรประชาชน 13 หลัก");
+        return;
+    }
+
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user || !user.patientId) {
+        alert("ไม่พบผู้ใช้งาน");
         return;
     }
 
     // แสดงสถานะ Loading (ถ้าต้องการ)
     resultArea.style.display = 'none';
 
+    try {
+        // ยิง backend
+        const res = await fetch(
+            `http://localhost:8080/api/patients/${user.patientId}/thai-id`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ thaiNationalId: idInput })
+            }
+        );
+
+        const data = await res.json();
+
+        console.log("RESULT:", data);
+
+        document.getElementById('resType').innerText =
+            data.rightToHealthcare || "สิทธิบัตรทอง";
+
+        document.getElementById('resHospital').innerText =
+            "โรงพยาบาลของคุณ";
+
+        document.getElementById('resStatus').innerText =
+            data.rightToHealthcare ? "ใช้งานได้" : "ไม่พบสิทธิ";
+
+        const statusElement = document.getElementById('resStatus');
+
+        if (data.rightToHealthcare) {
+            statusElement.style.color = "#27ae60";
+        } else {
+            statusElement.style.color = "#e74c3c";
+        }
+
+        resultArea.style.display = 'block';
+
+    } catch (err) {
+        console.error(err);
+        alert("เกิดข้อผิดพลาด");
+    }
+    /*
     // ค้นหาข้อมูลใน Database จำลอง
     const result = insuranceDatabase.find(item => item.citizenId === idInput);
 
@@ -63,11 +109,29 @@ function handleSearch() {
             alert("ไม่พบข้อมูลสิทธิสำหรับเลขบัตรประชาชนนี้");
         }
     }, 400); // หน่วงเวลาเล็กน้อยเพื่อให้ดูเหมือนมีการประมวลผล
+    */
 }
 
-// 3. (Optional) ดักฟังการกดปุ่ม Enter
+
 document.getElementById('citizenId').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-        handleSearch();
+    checkEligibility();
+    }
+});
+
+document.getElementById("searchBtn")
+  .addEventListener("click", checkEligibility);
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user?.patientId) return;
+
+    const res = await fetch(`http://localhost:8080/api/patients/${user.patientId}`);
+    const patient = await res.json();
+
+    if (patient.thaiNationalId) {
+        document.getElementById("citizenId").value = patient.thaiNationalId;
     }
 });

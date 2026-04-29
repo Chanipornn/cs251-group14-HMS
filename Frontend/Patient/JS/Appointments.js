@@ -2,6 +2,7 @@
 // =======================
 // 📌 INITIAL DATA (ตัวอย่าง)
 // =======================
+/*
 const baseAppointments = [
     {
         id: "1",
@@ -24,6 +25,7 @@ const baseAppointments = [
         status: "confirmed"
     }
 ];
+*/
 
 // =======================
 // 📌 INIT LOCALSTORAGE (ชัวร์ 100%)
@@ -61,20 +63,24 @@ let currentType = "today";
 // =======================
 async function loadAppointments() {
     const API = "http://localhost:8080/api";
-    const patientId = localStorage.getItem("patientId") || 1;
+
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user || !user.patientId) {
+        console.error("No patientId");
+        return [];
+    }
+
+    const patientId = user.patientId;
 
     const res = await fetch(`${API}/appointments/patient/${patientId}`);
     const data = await res.json();
 
-    console.log("API:", data);
+    console.log("APPOINTMENTS:", data);
 
     return data.map(transform);
 }
 
-/*function loadAppointments() {
-    return JSON.parse(localStorage.getItem("appointments")) || [];
-}
-*/
 
 // =======================
 // 📌 SWITCH TAB
@@ -90,13 +96,10 @@ function switchTab(btn, type) {
 // =======================
 // 📌 RENDER
 // =======================
-//function renderAppointments(type = "today") 
 async function renderAppointments(type = "today") {
     currentType = type;
 
-    //const all = loadAppointments();
     const all = await loadAppointments();
-    //const filtered = all.filter(a => a.type === type);
     const filtered = all.filter(a => 
         a.type === type && a.status !== "CANCELLED"
     );
@@ -172,22 +175,12 @@ async function confirmCancel() {
     closeCancelModal();
     renderAppointments(currentType);
 }
-/*
-function confirmCancel() {
-    let data = loadAppointments();
 
-    data = data.filter(item => item.id !== deleteId);
-
-    localStorage.setItem("appointments", JSON.stringify(data));
-
-    closeCancelModal();
-    renderAppointments(currentType);
-}
-*/
 
 function closeCancelModal() {
     document.getElementById("cancelModal").style.display = "none";
 }
+
 
 // =======================
 // 🔵 RESCHEDULE
@@ -207,22 +200,6 @@ async function openReschedule(id) {
     document.getElementById("rescheduleModal").style.display = "flex";
 }
 
-/*
-function openReschedule(id) {
-    editId = id;
-
-    const data = loadAppointments();
-    const item = data.find(a => a.id === id);
-
-    document.getElementById("editDate").value = item.date;
-    document.getElementById("editDept").value = item.dept;
-    document.getElementById("editDoctor").value = item.doctor;
-    document.getElementById("editReason").value = item.reason;
-    document.getElementById("editPrepare").value = item.prepare;
-
-    document.getElementById("rescheduleModal").style.display = "flex";
-}
-*/
 
 // =======================
 // 💾 SAVE RESCHEDULE
@@ -258,41 +235,6 @@ async function saveReschedule() {
     document.getElementById("successEditModal").style.display = "flex";
 }
 
-/*
-function saveReschedule() {
-    let data = loadAppointments();
-
-    const newDate = document.getElementById("editDate").value;
-    const newType = (newDate === "วันนี้") ? "today" : "upcoming";
-    const newStatus = (newType === "upcoming") ? "pending" : "confirmed";
-
-    const index = data.findIndex(a => a.id === editId);
-
-    if (index !== -1) {
-        data[index] = {
-            ...data[index],
-            date: newDate,
-            type: newType,
-            dept: document.getElementById("editDept").value,
-            doctor: document.getElementById("editDoctor").value,
-            reason: document.getElementById("editReason").value,
-            prepare: document.getElementById("editPrepare").value,
-            status: newStatus   // 🔥 สำคัญ
-        };
-    }
-
-    localStorage.setItem("appointments", JSON.stringify(data));
-
-    closeRescheduleModal();
-    renderAppointments(currentType);
-
-    document.getElementById("successEditModal").style.display = "flex";
-
-    setTimeout(() => {
-        closeSuccessModal();
-    }, 2000);
-}
-*/
 
 function openModal(id) {
     document.getElementById(id).style.display = "flex";
@@ -303,11 +245,11 @@ function closeModal(id) {
 }
 
 
-
 //ปิดหน้าต่าง popup
 function closeSuccessModal() {
     document.getElementById("successEditModal").style.display = "none";
 }
+
 
 // =======================
 // ❌ MODAL CLOSE
@@ -316,13 +258,13 @@ function closeRescheduleModal() {
     document.getElementById("rescheduleModal").style.display = "none";
 }
 
+
 // =======================
 // 🚀 INIT SYSTEM
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
-    localStorage.setItem("patientId", 1);
-
-    initAppointments(); // 🔥 สำคัญที่สุด
+    
+    initAppointments(); 
     renderAppointments("today");
 
     document.getElementById("confirmCancelBtn")

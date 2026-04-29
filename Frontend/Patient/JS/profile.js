@@ -71,54 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // =========================
-  // TEXT DATA
-  // =========================
-  
-  /*
-  setText("profileName", user.username);
-  setText("profileEmail", user.email);
-
-  const fullname =
-    user.fullname ||
-    `${user.firstname || ""} ${user.lastname || ""}`.trim();
-  setText("fullname", fullname);
-
-  setText("idcard", user.idcard);
-  setText("gender", formatGender(user.gender));
-  setText("phone", user.phone);
-  setText("address", user.address);
-
-  // วันเกิด
-  if (user.birth) {
-    const parts = user.birth.split("-");
-    setText(
-      "birth",
-      parts.length === 3
-        ? `${parts[0]}/${parts[1]}/${parts[2]}`
-        : user.birth
-    );
-  } else {
-    setText("birth", "-");
-  }
-
-  // สุขภาพ
-  setText("blood", user.blood);
-  setText("disease", user.disease);
-  setText("allergy", user.allergy || "ไม่มี");
-  setText("weight", user.weight ? `${user.weight} กก.` : "-");
-  setText("height", user.height ? `${user.height} ซม.` : "-");
-  setText("right", user.right);
-
-  // role / status
-  setText("userRole", user.role || "Patient");
-  setText("userStatus", user.status || "active");
-*/
   loadProfileFromAPI();
-}
-
-
-);
+  
+});
 
 
 // =========================
@@ -149,20 +104,20 @@ function formatDate(date) {
 // LOAD PROFILE FROM API
 // =========================
 async function loadProfileFromAPI() {
-  const patientId = localStorage.getItem("patientId");
+  const user = JSON.parse(localStorage.getItem("currentUser"));
 
-  if (!patientId) {
+  if (!user || !user.patientId) {
     console.error("No patientId");
     return;
   }
 
   try {
-    const res = await fetch(`http://localhost:8080/api/patients/${patientId}`);
+    const res = await fetch(`http://localhost:8080/api/patients/${user.patientId}`);
     const data = await res.json();
 
     console.log("PATIENT:", data);
 
-    // ✅ ใช้ fullName จาก backend
+    // ใช้ fullName จาก backend
     setText("profileName", data.fullName);
     setText("fullname", data.fullName);
 
@@ -197,12 +152,6 @@ async function loadUser() {
 }
 loadUser();
 
-// =========================
-// Test
-// =========================
-if (!localStorage.getItem("patientId")) {
-  localStorage.setItem("patientId", 1);
-}
 
 // =========================
 // LOGOUT
