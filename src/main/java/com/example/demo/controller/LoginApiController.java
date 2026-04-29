@@ -36,7 +36,50 @@ public class LoginApiController {
 
 			if (userOptional.isPresent()) {
 				UserEntity user = userOptional.get();
+				
+				boolean isMatch = false;
 
+				String dbPassword = user.getPassword();
+				
+				//check output
+				System.out.println("INPUT EMAIL: " + email);
+				System.out.println("INPUT PASSWORD: " + password);
+				System.out.println("DB PASSWORD: " + dbPassword);
+				
+					
+				// ถ้าเป็น bcrypt
+				if (dbPassword.startsWith("$2a$")) {
+				    isMatch = org.springframework.security.crypto.bcrypt.BCrypt
+				                .checkpw(password, dbPassword);
+				}
+				// ถ้าเป็น plain
+				else {
+				    isMatch = dbPassword.equals(password);
+				}
+				
+				//check output
+				System.out.println("IS MATCH: " + isMatch);
+
+				if (isMatch) {
+					 HttpSession session = request.getSession();
+				        session.setAttribute("loggedInUser", user.getEmail());
+				        session.setAttribute("userRole", user.getRole());
+
+				        return ResponseEntity.ok(
+				            Map.of(
+				                "status", true,
+				                "message", "Login successful",
+				                "name", user.getUsername(),
+				                "email", user.getEmail(),
+				                "role", user.getRole()
+				               /* "patientId", user.getPatient() != null
+				                        ? user.getPatient().getPatientId()
+				                        : null*/
+				            )
+				        );
+				}
+
+				/*
 				if (user.getPassword().equals(password)) {
 
 					HttpSession session = request.getSession();
@@ -46,6 +89,7 @@ public class LoginApiController {
 					return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", true, "message",
 							"Login successful", "name", user.getUsername(), "role", user.getRole()));
 				}
+				*/
 			}
 
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
