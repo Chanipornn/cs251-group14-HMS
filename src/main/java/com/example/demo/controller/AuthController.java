@@ -7,7 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
 
     @GetMapping("/")
+    public String MainPage() {
+        return "forward:/login.html";  
+    }
+    @GetMapping("/login.html")
     public String loginPage() {
-        return "redirect:/index.html";  
+        return "forward:/login.html";  
+    }
+    @GetMapping("/doctorandstaff")
+    public String DoctorloginPage() {
+        return "forward:/DoctorandStaff/html/login.html";  
     }
 }

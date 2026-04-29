@@ -162,17 +162,17 @@ INSERT INTO Department (DepName) VALUES
 
 -- Insert Users (password = 'password123' แบบ BCrypt)
 INSERT INTO User (Username, Password, Role, Email, Telephone, Status) VALUES
-('admin01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Admin', 'admin01@hospital.com', '0800000001', 'Active'),
-('doctor01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Doctor', 'doctor01@hospital.com', '0800000002', 'Active'),
-('staff01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Staff', 'staff01@hospital.com', '0800000003', 'Active'),
-('patient01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Patient', 'patient01@hospital.com', '0800000004', 'Active');
+('admin01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Admin', 'admin01@admin.com', '0800000001', 'Active'),
+('doctor01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Doctor', 'doctor01@doctor.com', '0800000002', 'Active'),
+('staff01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Staff', 'staff01@staff.com', '0800000003', 'Active'),
+('patient01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Patient', 'patient01@patient.com', '0800000004', 'Active');
 
 -- Insert Admin
 INSERT INTO Admin (Name, UserID) VALUES ('Admin One', 1);
 
 -- Insert Doctor
 INSERT INTO Doctor (Name, Surname, Specialization, Telephone, Email, DepartmentID, UserID) VALUES
-('Anan', 'Wong', 'General Practitioner', '0800000002', 'doctor01@hospital.com', 1, 2);
+('Anan', 'Wong', 'General Practitioner', '0800000002', 'doctor01@doctor.com', 1, 2);
 
 -- Insert Staff
 INSERT INTO Staff (Name, Surname, Position, Telephone, UserID) VALUES

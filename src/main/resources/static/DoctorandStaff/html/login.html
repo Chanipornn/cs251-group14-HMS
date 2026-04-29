@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-<meta charset="UTF-8">
-<title>Login</title>
 
-<link rel="stylesheet" href="../css/login.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+
+	<link rel="stylesheet" href="/DoctorandStaff/css/login.css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="container">
+	<div class="container">
 
-    <div class="logo">
-        <div class="plus"></div>
-    </div>
+		<div class="logo">
+			<div class="plus"></div>
+		</div>
 
-    <div class="login-box">
+		<div class="login-box">
 
-        <h2>เข้าสู่ระบบ</h2>
-        <p class="sub">ระบบแพทย์</p>
+			<h2>เข้าสู่ระบบ</h2>
+			<p class="sub">ระบบแพทย์</p>
 
-        <label>อีเมล :</label>
-        <input type="text">
+			<label>อีเมล :</label>
+			<input type="text" id="email">
 
-        <label>รหัสผ่าน :</label>
-        <div class="password">
-            <input type="password">
-            <i class="fa fa-eye-slash"></i>
-        </div>
+			<label>รหัสผ่าน :</label>
+			<div class="password">
+				<input type="password" id="password">
+				<i class="fa fa-eye-slash"></i>
+			</div>
 
-        <button>เข้าสู่ระบบ</button>
+			<button id="submitButton">เข้าสู่ระบบ</button>
 
-    </div>
+		</div>
 
-</div>
+	</div>
 
 </body>
+
+<script>
+	document.getElementById("submitButton").addEventListener("click", async function (e) {
+		e.preventDefault();
+
+		const response = await fetch("/api/login", {
+			method: "POST",
+			headers: {"Content-Type": "application/json"},
+			credentials: "include",
+			body: JSON.stringify({
+				Email: document.getElementById("email").value,
+				Password: document.getElementById("password").value
+			})
+		});
+
+		console.log(response)
+		const data = await response.json();
+		console.log(data)
+
+		if (data.status) {
+			if (data.role === "Doctor" || data.role === "Staff") {
+				window.location.href = "/doctorandstaff/history";
+			} 
+		} else {
+			document.getElementById("errorMsg").textContent = data.message;
+		}
+	});
+</script>
+
+
 </html>
