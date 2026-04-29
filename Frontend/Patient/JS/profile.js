@@ -74,6 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // =========================
   // TEXT DATA
   // =========================
+  
+  /*
   setText("profileName", user.username);
   setText("profileEmail", user.email);
 
@@ -111,8 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // role / status
   setText("userRole", user.role || "Patient");
   setText("userStatus", user.status || "active");
+*/
+  loadProfileFromAPI();
+}
 
-});
+
+);
+
 
 // =========================
 // HELPER
@@ -127,10 +134,74 @@ function setText(id, value) {
 }
 
 function formatGender(gender) {
-  if (!gender) return "-";
-  if (gender === "male") return "ผู้ชาย";
-  if (gender === "female") return "ผู้หญิง";
-  return gender;
+  if (gender === "M") return "ผู้ชาย";
+  if (gender === "F") return "ผู้หญิง";
+  return "-";
+}
+
+function formatDate(date) {
+  if (!date) return "-";
+  const [d, m, y] = date.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+// =========================
+// LOAD PROFILE FROM API
+// =========================
+async function loadProfileFromAPI() {
+  const patientId = localStorage.getItem("patientId");
+
+  if (!patientId) {
+    console.error("No patientId");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/api/patients/${patientId}`);
+    const data = await res.json();
+
+    console.log("PATIENT:", data);
+
+    // ✅ ใช้ fullName จาก backend
+    setText("profileName", data.fullName);
+    setText("fullname", data.fullName);
+
+    setText("idcard", data.thaiNationalId);
+    setText("gender", formatGender(data.gender));
+    setText("phone", data.telephone);
+    setText("address", data.address);
+
+    setText("birth", formatDate(data.dateOfBirth));
+
+    setText("blood", data.bloodType);
+    setText("disease", data.chronicIllness);
+    setText("allergy", data.drugAllergy || "ไม่มี");
+    setText("weight", data.weight ? data.weight + " กก." : "-");
+    setText("height", data.height ? data.height + " ซม." : "-");
+    setText("right", data.rightToHealthcare);
+
+  } catch (err) {
+    console.error("โหลดข้อมูลไม่สำเร็จ", err);
+  }
+}
+
+async function loadUser() {
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) return;
+
+  const res = await fetch(`http://localhost:8080/api/users/${userId}`);
+  const data = await res.json();
+
+  setText("profileEmail", data.email);
+}
+loadUser();
+
+// =========================
+// Test
+// =========================
+if (!localStorage.getItem("patientId")) {
+  localStorage.setItem("patientId", 1);
 }
 
 // =========================
