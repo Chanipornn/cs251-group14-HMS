@@ -6,15 +6,22 @@ import com.example.demo.model.Appointment;
 
 public class AppointmentMapper {
 	public static AppointmentDTO toDTO(Appointment a) {
-        return new AppointmentDTO(
-                a.getAppointmentId(),
-                a.getAppointmentDate(),
-                a.getAppointmentTime(),
-                a.getQueueNumber(),
-                a.getStatus().name(),
-                a.getDoctor().getDoctorId(),
-                a.getPatient().getPatientId()
-        );
-    }
 
+	    AppointmentDTO dto = new AppointmentDTO(
+	            a.getAppointmentId(),
+	            a.getAppointmentDate(),
+	            a.getAppointmentTime(),
+	            a.getQueueNumber(),
+	            a.getStatus().name(),
+	            a.getDoctor().getDoctorId(),
+	            a.getPatient().getPatientId()
+	    );
+
+	    
+	    dto.setDoctorName(a.getDoctor().getName());
+	    dto.setReason(a.getReason());
+	    dto.setPreparation(a.getPreparation());
+
+	    return dto;
+	}
 }

@@ -32,9 +32,9 @@ public class AppointmentController {
 	@PutMapping("/{id}/reschedule")
 	public AppointmentDTO reschedule(
 	        @PathVariable Integer id,
-	        @RequestParam String date) {
+	        @RequestBody AppointmentDTO dto) {
 
-	    return service.reschedule(id, LocalDate.parse(date));
+	    return service.reschedule(id, dto);
 	}
 
     // search patient

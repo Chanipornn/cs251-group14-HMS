@@ -18,6 +18,10 @@ public class AppointmentDTO {
     private String status;
     private Integer doctorId;
     private Integer patientId;
+    
+    private String doctorName;
+    private String reason;
+    private String preparation;
 
     public AppointmentDTO() {}
 
@@ -46,4 +50,13 @@ public class AppointmentDTO {
     public void setDoctorId(Integer doctorId) { this.doctorId = doctorId; }
     public Integer getPatientId() { return patientId; }
     public void setPatientId(Integer patientId) { this.patientId = patientId; }
+    
+    public String getDoctorName() { return doctorName; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
+
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+
+    public String getPreparation() { return preparation; }
+    public void setPreparation(String preparation) { this.preparation = preparation; }
 }

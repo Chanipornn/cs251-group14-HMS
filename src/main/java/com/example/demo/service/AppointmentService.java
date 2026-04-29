@@ -37,7 +37,8 @@ public class AppointmentService {
 
         a.setPatient(patient);
         a.setDoctor(doctor);
-        a.setStatus(Appointment.AppointmentStatus.COMPLETED);
+        //a.setStatus(Appointment.AppointmentStatus.COMPLETED);
+        a.setStatus(Appointment.AppointmentStatus.WAITING);
         a.setQueueNumber(generateQueue());
 
         Appointment saved = appointmentRepository.save(a);
@@ -58,10 +59,15 @@ public class AppointmentService {
     }
 
     // reschedule
-    public AppointmentDTO reschedule(Integer id, LocalDate newDate) {
-        Appointment a = getById(id);
-        a.setAppointmentDate(newDate);
+    public AppointmentDTO reschedule(Integer id, AppointmentDTO dto) {
+        Appointment a = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        a.setAppointmentDate(dto.getAppointmentDate());
+        a.setReason(dto.getReason());
+        a.setPreparation(dto.getPreparation());
         a.setStatus(Appointment.AppointmentStatus.POSTPONED);
+
         return AppointmentMapper.toDTO(appointmentRepository.save(a));
     }
 

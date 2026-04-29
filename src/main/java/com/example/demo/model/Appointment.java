@@ -27,6 +27,9 @@ public class Appointment {
 
     @Column(name = "QueueNumber")
     private Integer queueNumber;
+    
+    private String reason;
+    private String preparation;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "Status", columnDefinition = "INT DEFAULT 1")
