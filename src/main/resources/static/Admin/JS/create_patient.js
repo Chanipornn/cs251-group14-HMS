@@ -238,6 +238,9 @@ function toggleSidebar() {
 // ============================================================
 // create_patient.js — ใช้ API แทน localStorage
 // ============================================================
+// ============================================================
+// create_patient.js — ใช้ API แทน localStorage
+// ============================================================
 const API_BASE = '/api/admin';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -288,22 +291,29 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const name            = document.getElementById("name")?.value.trim();
+      const username        = document.getElementById("username")?.value.trim();
+      const name            = document.getElementById("firstName")?.value.trim();
+      const surname         = document.getElementById("surname")?.value.trim();
       const email           = document.getElementById("email")?.value.trim();
       const password        = document.getElementById("password")?.value.trim();
       const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
       const phone           = document.getElementById("phone")?.value.trim();
       const idcard          = document.getElementById("idcard")?.value.trim();
+      const address         = document.getElementById("address")?.value.trim();
       const blood           = document.getElementById("blood")?.value;
       const right           = document.getElementById("right")?.value;
       const gender          = document.querySelector('input[name="gender"]:checked')?.value;
+      const chronicIllness  = document.getElementById("chronicIllness")?.value.trim();
+      const drugAllergy     = document.getElementById("drugAllergy")?.value.trim();
+      const weight          = parseFloat(document.getElementById("weight")?.value) || null;
+      const height          = parseFloat(document.getElementById("height")?.value) || null;
 
       const day   = document.getElementById("day")?.value;
       const month = document.getElementById("month")?.value;
       const year  = document.getElementById("year")?.value;
 
       // --- Validate ---
-      if (!name || !email || !password || !confirmPassword) {
+      if (!username || !name || !surname || !email || !password || !confirmPassword) {
         alert("กรุณากรอกข้อมูลพื้นฐานให้ครบ");
         return;
       }
@@ -335,19 +345,23 @@ document.addEventListener("DOMContentLoaded", function () {
       const dateOfBirth = `${year}-${paddedMonth}-${paddedDay}`;
 
       // --- Build payload ---
-      const nameParts = name.split(" ");
       const payload = {
-        username:         name.toLowerCase().replace(/\s+/g, "_"),
+        username,
         password,
         email,
-        telephone:        phone,
-        name:             nameParts[0] || name,
-        surname:          nameParts.slice(1).join(" ") || "-",
-        gender:           gender === "male" ? "M" : "F",
+        telephone:         phone,
+        name,
+        surname,
+        gender:            gender === "male" ? "M" : "F",
         dateOfBirth,
-        thaiNationalId:   idcard,
-        bloodType:        blood   || null,
-        rightToHealthcare: right  || null,
+        thaiNationalId:    idcard,
+        address:           address  || null,
+        bloodType:         blood    || null,
+        rightToHealthcare: right    || null,
+        chronicIllness:    chronicIllness || null,
+        drugAllergy:       drugAllergy    || null,
+        weight:            weight,
+        height:            height,
       };
 
       try {

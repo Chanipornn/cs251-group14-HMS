@@ -82,14 +82,14 @@
               <div class="form-group">
                 <label>ชื่อ-นามสกุล *</label>
                 <div class="inline-group">
-                  <input type="text" placeholder="ชื่อ">
-                  <input type="text" placeholder="นามสกุล">
+                  <input type="text" id="firstName" placeholder="ชื่อ">
+                  <input type="text" id="surname" placeholder="นามสกุล">
                 </div>
               </div>
       
               <div class="form-group">
                 <label>หมายเลขโทรศัพท์ *</label>
-                <input type="text">
+                <input type="text" id="telephone">
               </div>
       
             </div>
@@ -101,13 +101,13 @@
                 <label>Role *</label>
       
                 <div class="role-selector">
-                  <button type="button" class="role-btn active" data-role="Patient">Patient</button>
-                  <button type="button" class="role-btn" data-role="Doctor">Doctor</button>
+                  <button type="button" class="role-btn" data-role="Patient">Patient</button>
+                  <button type="button" class="role-btn active" data-role="Doctor">Doctor</button>
                   <button type="button" class="role-btn" data-role="Staff">Staff</button>
                   <button type="button" class="role-btn" data-role="Admin">Admin</button>
                 </div>
       
-                <input type="hidden" id="role" value="Patient">
+                <input type="hidden" id="role" value="Doctor">
               </div>
       
             </div>
