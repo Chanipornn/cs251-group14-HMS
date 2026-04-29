@@ -65,35 +65,35 @@
 
               <div class="form-group">
                 <label>ชื่อผู้ใช้ *</label>
-                <input type="text">
+                <input type="text" id="username">
               </div>
 
               <div class="form-group">
                 <label>อีเมล *</label>
-                <input type="email">
+                <input type="email" id="email">
               </div>
 
               <div class="form-group">
                 <label>รหัสผ่าน *</label>
-                <input type="password">
+                <input type="password" id="password">
               </div>
 
               <div class="form-group">
                 <label>ยืนยันรหัสผ่าน *</label>
-                <input type="password">
+                <input type="password" id="confirmPassword">
               </div>
 
               <div class="form-group">
                 <label>ชื่อ-นามสกุล *</label>
                 <div class="inline-group">
-                  <input type="text" placeholder="ชื่อ">
-                  <input type="text" placeholder="นามสกุล">
+                  <input type="text" id="firstName" placeholder="ชื่อ">
+                  <input type="text" id="surname" placeholder="นามสกุล">
                 </div>
               </div>
 
               <div class="form-group">
                 <label>หมายเลขบัตรประชาชน *</label>
-                <input type="text">
+                <input type="text" id="idcard">
               </div>
 
               <div class="gender-group">
@@ -113,7 +113,7 @@
               <div class="form-group">
                 <label>วันเกิด *</label>
               
-                <div? class="dob-group">
+                <div class="dob-group">
               
                   <!-- DAY -->
                   <div class="dob-item">
@@ -149,14 +149,17 @@
                   </div>
               
                 </div>
+                <input type="hidden" id="day">
+                <input type="hidden" id="month">
+                <input type="hidden" id="year">
                 <div class="form-group">
                   <label>หมายเลขโทรศัพท์ *</label>
-                  <input type="text" placeholder="กรอกหมายเลขโทรศัพท์">
+                  <input type="text" id="phone" placeholder="กรอกหมายเลขโทรศัพท์">
                 </div>
                 
                 <div class="form-group">
                   <label>ที่อยู่ *</label>
-                  <input type="text" placeholder="กรอกที่อยู่">
+                  <input type="text" id="address" placeholder="กรอกที่อยู่">
                 </div>
             </div>
 
@@ -166,10 +169,10 @@
                 <label>Role *</label>
               
                 <div class="role-selector">
-                  <button type="button" class="role-btn active" data-role="patient">Patient</button>
-                  <button type="button" class="role-btn" data-role="doctor">Doctor</button>
-                  <button type="button" class="role-btn" data-role="staff">Staff</button>
-                  <button type="button" class="role-btn" data-role="admin">Admin</button>
+                  <button type="button" class="role-btn active" data-role="Patient">Patient</button>
+                  <button type="button" class="role-btn" data-role="Doctor">Doctor</button>
+                  <button type="button" class="role-btn" data-role="Staff">Staff</button>
+                  <button type="button" class="role-btn" data-role="Admin">Admin</button>
                 </div>
               
                 <input type="hidden" id="role" value="Patient">
@@ -207,8 +210,8 @@
                 <div class="form-group">
                   <label>โรคประจำตัว *</label>
                   <div class="inline-group">
-                    <input type="text" placeholder="โรคประจำตัว">
-                    <input type="text" placeholder="ยาที่แพ้">
+                    <input type="text" id="chronicIllness" placeholder="โรคประจำตัว">
+                    <input type="text" id="drugAllergy" placeholder="ยาที่แพ้">
                   </div>
                 </div>
             
@@ -216,8 +219,8 @@
                 <div class="form-group">
                   <label>น้ำหนัก / ส่วนสูง *</label>
                   <div class="inline-group">
-                    <input type="text" placeholder="น้ำหนัก (กก.)">
-                    <input type="text" placeholder="ส่วนสูง (ซม.)">
+                    <input type="text" id="weight" placeholder="น้ำหนัก (กก.)">
+                    <input type="text" id="height" placeholder="ส่วนสูง (ซม.)">
                   </div>
                 </div>
             

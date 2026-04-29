@@ -142,6 +142,9 @@ function toggleSidebar() {
 // ============================================================
 // create_account.js — ใช้ API แทน localStorage
 // ============================================================
+// ============================================================
+// create_account.js — ใช้ API แทน localStorage
+// ============================================================
 const API_BASE = '/api/admin';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -185,14 +188,17 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const name            = document.getElementById("name").value.trim();
+      const username        = document.getElementById("name").value.trim();
+      const firstName       = document.getElementById("firstName")?.value.trim();
+      const surname         = document.getElementById("surname")?.value.trim();
+      const telephone       = document.getElementById("telephone")?.value.trim();
       const email           = document.getElementById("email").value.trim();
       const password        = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirmPassword").value.trim();
       const role            = roleInput.value || "Doctor";
 
       // --- Validate ---
-      if (!name || !email || !password || !confirmPassword) {
+      if (!username || !email || !password || !confirmPassword) {
         alert("กรุณากรอกข้อมูลให้ครบ");
         return;
       }
@@ -214,13 +220,13 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // --- Build payload ---
-      const nameParts = name.split(" ");
       const payload = {
-        username:  name.toLowerCase().replace(/\s+/g, "_"),
+        username,
         password,
         email,
-        name:    nameParts[0] || name,
-        surname: nameParts.slice(1).join(" ") || "-",
+        telephone: telephone || null,
+        name:      firstName || "-",
+        surname:   surname   || "-",
       };
 
       // Doctor fields
