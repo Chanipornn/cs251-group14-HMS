@@ -34,6 +34,26 @@ public class MedicalCertificateService {
 
 	        return MedicalCertificateMapper.toDTO(repo.save(c));
 	    }
+	    
+		// GET by ID
+	    public MedicalCertificateDTO getById(Integer id) {
+	        return repo.findById(id)
+	                .map(MedicalCertificateMapper::toDTO)
+	                .orElseThrow(() -> new RuntimeException("Certificate not found"));
+	    }
+
+	    // UPDATE
+	    public MedicalCertificateDTO update(Integer id, MedicalCertificateDTO dto) {
+	        MedicalCertificate existing = repo.findById(id)
+	                .orElseThrow(() -> new RuntimeException("Certificate not found"));
+	        
+	        existing.setDescription(dto.getDescription());
+	        if(dto.getIssueDate() != null) {
+	            existing.setIssueDate(dto.getIssueDate());
+	        }
+	        
+	        return MedicalCertificateMapper.toDTO(repo.save(existing));
+	    }
 
 	    // GET by patient
 	    public List<MedicalCertificateDTO> getByPatient(Integer patientId) {

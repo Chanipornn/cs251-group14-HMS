@@ -19,7 +19,7 @@
 		</div>
 
 		<div class="profile">
-			<span id = "displayName">นพ.วิรุต</span>
+			<span id = "displayName"></span>
 			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
 		</div>
 	</header>
@@ -30,11 +30,11 @@
 		<aside class="sidebar">
 			<h3>เมนู</h3><br>
 
-			<a href="/doctor/medical_history" class="menu">ประวัติการรักษา</a>
-			<a href="/history.html" class="menu active">การจ่ายยา</a>
-			<a href="/appointment.html" class="menu">การนัดหมาย</a>
-			<a href="/medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-			<a href="/invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
+			<a href="/doctorandstaff/history" class="menu active">การจ่ายยา</a>
+			<a href="/doctorandstaff/appointment" class="menu">การนัดหมาย</a>
+			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
+			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
 
 			<div class="logout" onclick="logout()">
 				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
@@ -117,22 +117,16 @@
 			console.log(response);
 			if (response.status === 401) {
 				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
-				window.location.href = "/"; 
+				window.location.href = "/doctorandstaff"; 
 				return;
 			}
 
 			const data = await response.json();
 			document.getElementById('displayName').textContent = data.name;
-
-
-			if (data.role === "Doctor") {
-			}
-
 		} catch (error) {
 			console.error("เกิดข้อผิดพลาด:", error);
 		}
 	};
-
 
 	async function logout() {
 		await fetch('/api/logout', {method: 'POST'});
