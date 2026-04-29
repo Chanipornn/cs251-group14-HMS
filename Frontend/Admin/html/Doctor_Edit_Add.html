@@ -67,7 +67,6 @@
                                 <span class="value"></span>
                             </div>
 
-                            <!-- แผนก — custom dropdown แทน <select> เดิม -->
                             <div class="input-row">
                                 <div class="field-label">แผนก</div>
                                 <div class="field-input">
@@ -76,9 +75,7 @@
                                             <span id="deptDisplay" class="placeholder">-- กรุณาเลือกแผนก --</span>
                                             <span class="select-arrow">▾</span>
                                         </button>
-                                        <div class="custom-select-menu" id="deptMenu">
-                                            <!-- options สร้างโดย buildDeptDropdown() ใน JS -->
-                                        </div>
+                                        <div class="custom-select-menu" id="deptMenu"></div>
                                     </div>
                                     <input type="hidden" id="deptSelect">
                                 </div>
@@ -107,7 +104,12 @@
     <!-- SUCCESS MODAL -->
     <div id="successModal" class="modal-overlay">
         <div class="modal-content">
-            <div id="modalIcon" class="modal-icon success">✓</div>
+            <div class="modal-icon-wrap">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <circle cx="18" cy="18" r="18" fill="#22c55e"/>
+                    <path d="M10 18.5l5.5 5.5 10.5-11" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <h2 id="modalTitle">สำเร็จ!</h2>
             <p id="modalMessage">บันทึกข้อมูลเรียบร้อยแล้ว</p>
             <button class="btn-confirm" onclick="closeModal()">ตกลง</button>

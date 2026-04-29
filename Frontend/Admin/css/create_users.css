@@ -84,8 +84,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px 20px;
-  /* ↑ ค่าแรก = ระยะห่างแนวตั้ง (row-gap)
-       ค่าสอง = ระยะห่างแนวนอน (column-gap) */
 }
 
 #patientFields {
@@ -124,6 +122,7 @@
 
 /* ป้องกัน dropdown อื่นโดนบังคับ */
 .custom-dropdown {
+  position: relative;
   width: 100%;
 }
 
@@ -336,9 +335,7 @@
 
 /* ========================= */
 /* FIELD ERROR STYLES        */
-/* เพิ่มไปใน CSS ของ create_users */
 /* ========================= */
-
 .field-error {
   color: #e53935;
   font-size: 12px;
@@ -368,4 +365,81 @@
 
 .input-error:focus {
   border-color: #e53935 !important;
+}
+
+/* ========================= */
+/* DROPDOWN SELECTED BOX     */
+/* ========================= */
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.arrow {
+  width: 14px;
+  transition: transform 0.3s;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* ========================= */
+/* ✅ DROPDOWN OPTIONS — แก้ scroll */
+/* ========================= */
+.dropdown-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  z-index: 999;
+
+  display: none;
+  max-height: 200px;       /* จำกัดความสูง */
+  overflow-y: auto;        /* scroll ภายใน */
+  overflow-x: hidden;
+
+  /* scrollbar บาง */
+  scrollbar-width: thin;
+  scrollbar-color: #c0b4f0 transparent;
+}
+
+.dropdown-options::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+  background: #c0b4f0;
+  border-radius: 4px;
+}
+
+.dropdown-options::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ✅ ลด padding แต่ละตัวเลือกให้กระชับ */
+.dropdown-options div {
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dropdown-options div:hover {
+  background: #f3f2ff;
+}
+
+.dropdown-options.show {
+  display: block;
 }

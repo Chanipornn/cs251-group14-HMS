@@ -47,7 +47,6 @@
         <div class="profile-upload-wrap" onclick="document.getElementById('profileFileInput').click()">
           <img id="profilePreview" src="../../img/profile.jpg" class="profile-img">
           <div class="upload-overlay">
-            <!-- ไอคอนกล้อง -->
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zm7-11.2h-1.4l-1.7-2H8.1L6.4 4H5A3 3 0 0 0 2 7v11a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-7 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
             </svg>
@@ -126,6 +125,8 @@
                 <div class="form-group">
                   <label>วันเกิด *</label>
                   <div class="dob-group">
+
+                    <!-- DAY -->
                     <div class="dob-item">
                       <div class="custom-dropdown">
                         <div class="dropdown-selected" onclick="toggleDropdown(this)">
@@ -134,7 +135,10 @@
                         </div>
                         <div class="dropdown-options" id="dayOptions"></div>
                       </div>
+                      <input type="hidden" id="day"> <!-- ✅ เพิ่ม -->
                     </div>
+
+                    <!-- MONTH -->
                     <div class="dob-item">
                       <div class="custom-dropdown">
                         <div class="dropdown-selected" onclick="toggleDropdown(this)">
@@ -143,7 +147,10 @@
                         </div>
                         <div class="dropdown-options" id="monthOptions"></div>
                       </div>
+                      <input type="hidden" id="month"> <!-- ✅ เพิ่ม -->
                     </div>
+
+                    <!-- YEAR -->
                     <div class="dob-item">
                       <div class="custom-dropdown">
                         <div class="dropdown-selected" onclick="toggleDropdown(this)">
@@ -152,7 +159,9 @@
                         </div>
                         <div class="dropdown-options" id="yearOptions"></div>
                       </div>
+                      <input type="hidden" id="year"> <!-- ✅ เพิ่ม -->
                     </div>
+
                   </div>
                 </div>
 
@@ -221,9 +230,9 @@
                     </div>
                     <div class="dropdown-options">
                       <div onclick="selectOption(this, 'right')">ชำระเงินเอง</div>
-                      <div onclick="selectOption(this, 'right')">ประกันสังคม</div>
-                      <div onclick="selectOption(this, 'right')">บัตรทอง</div>
-                      <div onclick="selectOption(this, 'right')">ข้าราชการ</div>
+                      <div onclick="selectOption(this, 'right')">สิทธิบัตรทอง</div>
+                      <div onclick="selectOption(this, 'right')">สิทธิประกันสังคม</div>
+                      <div onclick="selectOption(this, 'right')">สิทธิสวัสดิการข้าราชการ</div>
                     </div>
                   </div>
                   <input type="hidden" id="right">

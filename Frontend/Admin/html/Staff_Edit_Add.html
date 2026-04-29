@@ -3,11 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit Staff - Admin Dashboard</title>
+    <title>Edit Doctor - Admin Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/Staff_Edit_Add.css">
+    <link rel="stylesheet" href="../css/Doctor_Edit_Add.css">
     <script src="../js/dashboard.js" defer></script>
-    <script src="../js/Staff_Edit_Add.js" defer></script>
+    <script src="../js/Doctor_Edit_Add.js" defer></script>
 </head>
 
 <body>
@@ -45,7 +45,7 @@
                     <div class="profile-layout">
 
                         <div class="profile-image-container">
-                            <img src="../../img/staff_img1.png" class="profile-main-img">
+                            <img src="../../img/doctor_img1.png" class="profile-main-img">
                         </div>
 
                         <div class="profile-details-form">
@@ -55,7 +55,7 @@
                                     <span class="label">Username</span>
                                     <span class="value"></span>
                                 </div>
-                                <span class="role-badge staff"></span>
+                                <span class="role-badge doctor"></span>
                             </div>
 
                             <hr class="divider">
@@ -67,18 +67,15 @@
                                 <span class="value"></span>
                             </div>
 
-                            <!-- ตำแหน่ง — custom dropdown แทน <select> เดิม -->
                             <div class="input-row">
-                                <div class="field-label">ตำแหน่ง</div>
+                                <div class="field-label">แผนก</div>
                                 <div class="field-input">
                                     <div class="custom-select-wrapper">
-                                        <button type="button" class="custom-select-btn" onclick="togglePositionDropdown()">
-                                            <span id="deptDisplay" class="placeholder">-- กรุณาเลือกตำแหน่ง --</span>
+                                        <button type="button" class="custom-select-btn" onclick="toggleDeptDropdown()">
+                                            <span id="deptDisplay" class="placeholder">-- กรุณาเลือกแผนก --</span>
                                             <span class="select-arrow">▾</span>
                                         </button>
-                                        <div class="custom-select-menu" id="deptMenu">
-                                            <!-- options สร้างโดย buildPositionDropdown() ใน JS -->
-                                        </div>
+                                        <div class="custom-select-menu" id="deptMenu"></div>
                                     </div>
                                     <input type="hidden" id="deptSelect">
                                 </div>
@@ -107,7 +104,12 @@
     <!-- SUCCESS MODAL -->
     <div id="successModal" class="modal-overlay">
         <div class="modal-content">
-            <div id="modalIcon" class="modal-icon success">✓</div>
+            <div class="modal-icon-wrap">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <circle cx="18" cy="18" r="18" fill="#22c55e"/>
+                    <path d="M10 18.5l5.5 5.5 10.5-11" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <h2 id="modalTitle">สำเร็จ!</h2>
             <p id="modalMessage">บันทึกข้อมูลเรียบร้อยแล้ว</p>
             <button class="btn-confirm" onclick="closeModal()">ตกลง</button>

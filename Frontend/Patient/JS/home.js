@@ -3,22 +3,21 @@
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===== USERNAME =====
-  const username = localStorage.getItem("username");
-  const usernameEl = document.getElementById("username");
+ // ===== USERNAME =====
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+const usernameEl = document.getElementById("username");
 
-  if (usernameEl) {
-    usernameEl.textContent = username || "Guest";
-  }
+if (usernameEl) {
+  usernameEl.textContent = currentUser?.username || "Guest";
+}
 
-  // ===== PROFILE IMAGE =====
-  const profileImg = document.getElementById("profileImage");
-  const savedImage = localStorage.getItem("profileImage");
+// ===== PROFILE IMAGE =====
+const profileImg = document.getElementById("profileImage");
+const savedImage = currentUser?.profileImage || localStorage.getItem("profileImage");
 
-  if (profileImg && savedImage) {
-    profileImg.src = savedImage;
-  }
-
+if (profileImg && savedImage) {
+  profileImg.src = savedImage;
+}
   // =========================
   // BANNER SLIDER
   // =========================
