@@ -18,7 +18,9 @@ public class AppointmentMapper {
 	    );
 
 	    
-	    dto.setDoctorName(a.getDoctor().getName());
+	    dto.setDoctorName(
+	    	    a.getDoctor().getName() + " " + a.getDoctor().getSurname()
+	    	);
 	    dto.setReason(a.getReason());
 	    dto.setPreparation(a.getPreparation());
 

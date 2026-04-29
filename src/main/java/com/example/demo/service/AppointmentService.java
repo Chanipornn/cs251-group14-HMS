@@ -63,13 +63,24 @@ public class AppointmentService {
         Appointment a = appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
 
-        a.setAppointmentDate(dto.getAppointmentDate());
-        a.setReason(dto.getReason());
-        a.setPreparation(dto.getPreparation());
+        if (dto.getAppointmentDate() != null) {
+            a.setAppointmentDate(dto.getAppointmentDate());
+        }
+
+        if (dto.getReason() != null) {
+            a.setReason(dto.getReason());
+        }
+
+        if (dto.getPreparation() != null) {
+            a.setPreparation(dto.getPreparation());
+        }
+
         a.setStatus(Appointment.AppointmentStatus.POSTPONED);
 
         return AppointmentMapper.toDTO(appointmentRepository.save(a));
     }
+    
+    
 
     // getByPatient
     public List<AppointmentDTO> getByPatient(Integer patientId) {
