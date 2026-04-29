@@ -52,6 +52,78 @@ function togglePassword() {
 // =========================
 // LOGIN + VALIDATION
 // =========================
+
+async function login() {
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+
+  let valid = true;
+
+  if (!email.value.trim()) {
+    showError(email, "กรุณากรอกอีเมล");
+    valid = false;
+  } else if (!isValidEmail(email.value)) {
+    showError(email, "รูปแบบอีเมลไม่ถูกต้อง");
+    valid = false;
+  } else {
+    clearError(email);
+  }
+
+  if (!password.value.trim()) {
+    showError(password, "กรุณากรอกรหัสผ่าน");
+    valid = false;
+  } else if (password.value.length < 6) {
+    showError(password, "รหัสผ่านต้องอย่างน้อย 6 ตัว");
+    valid = false;
+  } else {
+    clearError(password);
+  }
+
+  if (!valid) return;
+
+  try {
+    const res = await fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        Email: email.value.trim(),
+        Password: password.value.trim()
+      })
+    });
+
+    const data = await res.json();
+
+    console.log("LOGIN RESPONSE:", data);
+
+    if (!data.status) {
+      alert(data.message);
+      return;
+    }
+
+    // ✅ เก็บ user
+    localStorage.setItem("currentUser", JSON.stringify(data));
+
+    const role = (data.role || "").toLowerCase();
+
+    if (role === "admin") {
+      window.location.href = "./Admin/html/User_Dashboard.html";
+    } 
+    else if (role === "doctor" || role === "staff") {
+      window.location.href = "./DoctorandStaff/html/history.html";
+    } 
+    else {
+      window.location.href = "./Patient/html/home.html";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("เชื่อมต่อ server ไม่ได้");
+  }
+}
+
+/*
 async function login() {
   const email = document.getElementById("email");
   const password = document.getElementById("password");
@@ -111,6 +183,8 @@ async function login() {
     const user = data.user;
     */
 
+
+/*
     // =========================
     // 🔧 (ปัจจุบัน) ใช้ localStorage ไปก่อน
     // =========================
@@ -124,7 +198,8 @@ async function login() {
       alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       return;
     }
-
+*/
+/*
     // =========================
     // SAVE SESSION
     // =========================
@@ -150,3 +225,4 @@ async function login() {
     alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
   }
 }
+*/
