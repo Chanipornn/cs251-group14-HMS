@@ -1,3 +1,13 @@
+function showModal(title, desc = "") {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalDesc").innerText = desc;
+    document.getElementById("customModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("customModal").style.display = "none";
+}
+
 async function searchInDB(id) {
     const response = await fetch(`https://api-hms.com/check/${id}`);
     const data = await response.json();
@@ -33,14 +43,14 @@ async function checkEligibility() {
     
     // ตรวจสอบความถูกต้องของเลขบัตร (เบื้องต้น)
      if (!/^\d{13}$/.test(idInput)) {
-        alert("กรุณากรอกเลขบัตรประชาชน 13 หลัก");
+        showModal("กรอกหมายเลขไม่ถูกต้อง", "กรุณากรอกเลขบัตรประชาชน 13 หลัก");
         return;
     }
 
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!user || !user.patientId) {
-        alert("ไม่พบผู้ใช้งาน");
+        showModal("ไม่พบผู้ใช้งาน", "กรุณาเข้าสู่ระบบใหม่");
         return;
     }
 

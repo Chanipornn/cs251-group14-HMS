@@ -154,3 +154,85 @@ body {
 .status-ok {
     color: #27ae60 !important;
 }
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+}
+
+.modal-box {
+    background: white;
+    width: 320px;
+    padding: 25px;
+    border-radius: 20px;
+    margin: 12% auto;
+    text-align: center;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+
+    width: 40px;
+    height: 40px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    cursor: pointer;
+
+    background: #f0f0f0;
+    color: #333;
+
+    transition: 0.2s;
+}
+
+.modal-icon {
+    width: 65px;
+    height: 65px;
+    background: #ff5c5c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.modal-icon i {
+    color: white;
+    font-size: 26px;
+}
+
+.btn-confirm {
+    width: 100%;
+    background: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.2s;
+}
+
+.btn-confirm:hover {
+    background: #ff5c5c;
+    color: white;
+    transform: scale(1.018);
+}
+
+.modal-close:hover {
+    background: #ff5c5c;
+    color: white;
+    transform: scale(1.1);
+}
