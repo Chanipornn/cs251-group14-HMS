@@ -102,16 +102,42 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
     const otherReason = document.querySelector(".input-line")?.value || "";
 
     // 1. เปลี่ยนจาก alert เป็นการเช็คเงื่อนไขเงียบๆ หรือเปลี่ยนสีช่องที่ยังไม่เลือก (ถ้าต้องการ)
-    if (!doctorData || !selectedDateEl || !selectedTimeEl) {
+    /*if (!doctorData || !selectedDateEl || !selectedTimeEl) {
         // แทนที่จะ alert("กรุณาเลือกข้อมูลให้ครบ"); 
         // อาจจะทำ Effect สั่นที่ปุ่ม หรือแสดง Text เล็กๆ สีแดงแทน
         return; 
+    }
+    */
+   if (!doctorData) {
+    console.log("❌ ไม่มี doctor");
+    return;
+    }
+
+    if (!selectedDateEl) {
+    console.log("❌ ไม่ได้เลือกวัน");
+    return;
+    }
+
+    if (!selectedTimeEl) {
+    console.log("❌ ไม่ได้เลือกเวลา");
+    return;
     }
 
     const dayNum = selectedDateEl.childNodes[0].textContent.trim();
     const monthYear = document.querySelector(".section-title span").innerText;
     const fullDate = `${dayNum} ${monthYear}`;
 
+    const patientId = localStorage.getItem("patientId");
+
+    const bookingData = {
+        appointmentDate: formatToISO(fullDate),
+        appointmentTime: selectedTimeEl.innerText.replace(" น.", ""),
+        reason: selectedReasonEl ? selectedReasonEl.parentElement.innerText.trim() : "",
+        preparation: "กรุณามาก่อน 15 นาที",
+        doctor: { doctorId: doctorData.id },
+        patient: { patientId: parseInt(patientId) }
+    };
+    /*
     const bookingData = {
         type: "upcoming",
         doctor: doctorData.name,
@@ -122,7 +148,22 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
         prepare: "กรุณาเตรียมบัตรประชาชนและมาถึงก่อนเวลานัด 15 นาที",
         status: "pending"
     };
+    */
 
+     try {
+        await fetch("http://localhost:8080/api/appointments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bookingData)
+        });
+
+        showModal();
+
+    } catch (err) {
+         console.error("❌ ERROR:", err);
+        alert("จองไม่สำเร็จ");
+    }
+    /*
     try {
         await fetch("/api/book", {
             method: "POST",
@@ -148,6 +189,7 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
         
         showModal(); 
     }
+        */
 });
 
 // ฟังก์ชันโชว์ Modal (ตรวจสอบว่าในไฟล์มีฟังก์ชันนี้แล้ว)
@@ -184,4 +226,31 @@ window.onclick = function (event) {
 
 function goHome() {
     window.location.href = "./Home.html"; // ❗ เปลี่ยน path ให้ตรงโปรเจคคุณ
+}
+
+
+function formatToISO(fullDate) {
+    // "1 เมษายน 2026"
+    const parts = fullDate.split(" ");
+    const day = parts[0].padStart(2, "0");
+
+    const months = {
+        "มกราคม": "01",
+        "กุมภาพันธ์": "02",
+        "มีนาคม": "03",
+        "เมษายน": "04",
+        "พฤษภาคม": "05",
+        "มิถุนายน": "06",
+        "กรกฎาคม": "07",
+        "สิงหาคม": "08",
+        "กันยายน": "09",
+        "ตุลาคม": "10",
+        "พฤศจิกายน": "11",
+        "ธันวาคม": "12"
+    };
+
+    const month = months[parts[1]];
+    const year = parts[2];
+
+    return `${year}-${month}-${day}`;
 }
