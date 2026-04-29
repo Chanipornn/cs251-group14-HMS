@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.UserEntity;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.PatientRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,9 @@ public class LoginApiController {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PatientRepository patientRepository;
 
 	@PostMapping("/login")
 	public ResponseEntity<Map> login(@RequestBody Map<String, String> credentials, HttpServletRequest request) {
@@ -64,6 +68,11 @@ public class LoginApiController {
 					 HttpSession session = request.getSession();
 				        session.setAttribute("loggedInUser", user.getEmail());
 				        session.setAttribute("userRole", user.getRole());
+				        
+				        Integer patientId = patientRepository
+		                        .findByUser_UserId(user.getUserId())
+		                        .map(p -> p.getPatientId())
+		                        .orElse(null);
 
 				        return ResponseEntity.ok(
 				            Map.of(
@@ -71,10 +80,8 @@ public class LoginApiController {
 				                "message", "Login successful",
 				                "name", user.getUsername(),
 				                "email", user.getEmail(),
-				                "role", user.getRole()
-				               /* "patientId", user.getPatient() != null
-				                        ? user.getPatient().getPatientId()
-				                        : null*/
+				                "role", user.getRole(),
+				                "patientId", patientId
 				            )
 				        );
 				}

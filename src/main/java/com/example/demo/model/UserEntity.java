@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "User")
 @Data
@@ -37,6 +39,10 @@ public class UserEntity {
 
     @Column(name = "Status", length = 10)
     private String status = "Active";
+    
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Patient patient;
 
     public enum UserRole {
         Admin, Doctor, Staff, Patient
