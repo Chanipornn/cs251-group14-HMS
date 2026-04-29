@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.demo.dto.AppointmentDTO;
 import com.example.demo.mapper.AppointmentMapper;
@@ -48,7 +49,7 @@ public class AppointmentService {
 
     // generate queue 
     private Integer generateQueue() {
-        return (int) (Math.random() * 100);
+        return (int) (ThreadLocalRandom.current().nextDouble() * 100);
     }
 
     // Cancel
