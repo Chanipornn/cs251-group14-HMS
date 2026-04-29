@@ -24,21 +24,18 @@ public class MedicalRecordService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    // แก้แดงข้อ 3: ดึงราย Record ด้วย ID
     public MedicalRecordDTO getRecordById(Integer id) {
         return medicalRecordRepository.findById(id)
                 .map(this::convertToDTO)
                 .orElse(null);
     }
 
-    // แก้แดงข้อ 5: ดึงประวัติที่หมอเป็นคนบันทึก
     public List<MedicalRecordDTO> getRecordsByDoctorId(Integer doctorId) {
         return medicalRecordRepository.findByDoctor_DoctorId(doctorId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    // สำหรับ Get All และ Patient Filter
     public List<MedicalRecordDTO> getAllRecords() {
         return medicalRecordRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -51,14 +48,12 @@ public class MedicalRecordService {
                 .collect(Collectors.toList());
     }
 
-    // สำหรับค้นหาตามช่วงวันที่
     public List<MedicalRecordDTO> getRecordsByDateRange(java.time.LocalDate from, java.time.LocalDate to) {
         return medicalRecordRepository.findByVisitDateBetween(from, to).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    // บันทึกข้อมูล
     public MedicalRecordDTO saveRecord(MedicalRecordDTO dto) {
         Patient patient = patientRepository.findById(dto.getPatientId())
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
