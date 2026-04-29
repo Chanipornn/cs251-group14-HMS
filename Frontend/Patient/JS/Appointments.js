@@ -59,9 +59,22 @@ let currentType = "today";
 // =======================
 // 📌 LOAD DATA
 // =======================
-function loadAppointments() {
+async function loadAppointments() {
+    const API = "http://localhost:8080/api";
+    const patientId = localStorage.getItem("patientId") || 1;
+
+    const res = await fetch(`${API}/appointments/patient/${patientId}`);
+    const data = await res.json();
+
+    console.log("API:", data);
+
+    return data.map(transform);
+}
+
+/*function loadAppointments() {
     return JSON.parse(localStorage.getItem("appointments")) || [];
 }
+*/
 
 // =======================
 // 📌 SWITCH TAB
@@ -77,14 +90,20 @@ function switchTab(btn, type) {
 // =======================
 // 📌 RENDER
 // =======================
-function renderAppointments(type = "today") {
+//function renderAppointments(type = "today") 
+async function renderAppointments(type = "today") {
     currentType = type;
 
-    const all = loadAppointments();
-    const filtered = all.filter(a => a.type === type);
+    //const all = loadAppointments();
+    const all = await loadAppointments();
+    //const filtered = all.filter(a => a.type === type);
+    const filtered = all.filter(a => 
+        a.type === type && a.status !== "CANCELLED"
+    );
 
     if (filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">ไม่พบรายการนัดหมาย</p>`;
+        container.innerHTML = `<p style="text-align:center; 
+        color:#999; margin-top:50px;">ไม่พบรายการนัดหมาย</p>`;
         return;
     }
 
@@ -98,7 +117,11 @@ function renderAppointments(type = "today") {
                 <div class="detail-row">
                     <span class="badge-label">สถานะ</span>
                     <span class="detail-text">
-                        ${a.status === "pending" ? "⏳ รอยืนยัน" : "✅ ยืนยันแล้ว"}
+                        ${a.status === "pending" 
+                            ? "⏳ รอยืนยัน" 
+                            : a.status === "CANCELLED"
+                            ? "❌ ยกเลิกแล้ว"
+                            : "✅ ยืนยันแล้ว"}
                     </span>
                 </div>
 
@@ -139,6 +162,17 @@ function openCancelModal(id) {
     document.getElementById("cancelModal").style.display = "flex";
 }
 
+async function confirmCancel() {
+    const API = "http://localhost:8080/api";
+
+    await fetch(`${API}/appointments/${deleteId}/cancel`, {
+        method: "PUT"
+    });
+
+    closeCancelModal();
+    renderAppointments(currentType);
+}
+/*
 function confirmCancel() {
     let data = loadAppointments();
 
@@ -149,6 +183,7 @@ function confirmCancel() {
     closeCancelModal();
     renderAppointments(currentType);
 }
+*/
 
 function closeCancelModal() {
     document.getElementById("cancelModal").style.display = "none";
@@ -157,6 +192,22 @@ function closeCancelModal() {
 // =======================
 // 🔵 RESCHEDULE
 // =======================
+async function openReschedule(id) {
+    editId = id;
+
+    const data = await loadAppointments(); // 🔥 ต้อง await
+    const item = data.find(a => a.id == id);
+
+    document.getElementById("editDate").value = item.date;
+    document.getElementById("editDept").value = item.dept;
+    document.getElementById("editDoctor").value = item.doctor;
+    document.getElementById("editReason").value = item.reason;
+    document.getElementById("editPrepare").value = item.prepare;
+
+    document.getElementById("rescheduleModal").style.display = "flex";
+}
+
+/*
 function openReschedule(id) {
     editId = id;
 
@@ -171,10 +222,43 @@ function openReschedule(id) {
 
     document.getElementById("rescheduleModal").style.display = "flex";
 }
+*/
 
 // =======================
 // 💾 SAVE RESCHEDULE
 // =======================
+function convertToISO(dateStr) {
+    const [d, m, y] = dateStr.split("-");
+    return `${y}-${m}-${d}`;
+}
+
+async function saveReschedule() {
+    const API = "http://localhost:8080/api";
+
+    let newDate = document.getElementById("editDate").value;
+    newDate = convertToISO(newDate);
+    const reason = document.getElementById("editReason").value;
+    const prepare = document.getElementById("editPrepare").value;
+
+    await fetch(`${API}/appointments/${editId}/reschedule`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            appointmentDate: newDate,
+            reason: reason,
+            preparation: prepare
+        })
+    });
+
+    closeRescheduleModal();
+    renderAppointments(currentType);
+
+    document.getElementById("successEditModal").style.display = "flex";
+}
+
+/*
 function saveReschedule() {
     let data = loadAppointments();
 
@@ -208,6 +292,7 @@ function saveReschedule() {
         closeSuccessModal();
     }, 2000);
 }
+*/
 
 function openModal(id) {
     document.getElementById(id).style.display = "flex";
@@ -235,9 +320,54 @@ function closeRescheduleModal() {
 // 🚀 INIT SYSTEM
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
+    localStorage.setItem("patientId", 1);
+
     initAppointments(); // 🔥 สำคัญที่สุด
     renderAppointments("today");
 
     document.getElementById("confirmCancelBtn")
         .addEventListener("click", confirmCancel);
 });
+
+
+// =======================
+//     Transform
+// =======================
+function transform(a) {
+    return {
+        id: a.appointmentId,
+        date: a.appointmentDate,
+        status: mapStatus(a.status),
+        dept: "ทั่วไป",
+        doctor: a.doctorName || "-",      
+        reason: a.reason || "-",          
+        prepare: a.preparation || "-",    
+        type: getType(a.appointmentDate)
+    };
+}
+
+function mapStatus(status) {
+    if (status === "WAITING") return "pending";
+    if (status === "POSTPONED") return "pending";
+    if (status === "CANCELLED") return "CANCELLED";
+    return "confirmed";
+}
+
+function getType(dateStr) {
+    const today = new Date().toISOString().split("T")[0];
+
+    // แปลง dd-MM-yyyy → yyyy-MM-dd
+    const parts = dateStr.split("-");
+    const formatted = `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+    return formatted === today ? "today" : "upcoming";
+}
+
+
+// =======================
+//     Queue
+// =======================
+function goToQueue() {
+    closeSuccessModal();
+    renderAppointments(currentType);
+}
