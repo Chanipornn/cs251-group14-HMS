@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/certificates")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class MedicalCertificateController {
 	
 		private final MedicalCertificateService service;
@@ -20,6 +21,18 @@ public class MedicalCertificateController {
 	    @PostMapping
 	    public MedicalCertificateDTO create(@RequestBody MedicalCertificate c) {
 	        return service.create(c);
+	    }
+	    
+	    // Get by ID
+	    @GetMapping("/{id}")
+	    public MedicalCertificateDTO getById(@PathVariable Integer id) {
+	        return service.getById(id);
+	    }
+	    
+	    // UPDATE
+	    @PutMapping("/{id}")
+	    public MedicalCertificateDTO update(@PathVariable Integer id, @RequestBody MedicalCertificateDTO dto) {
+	        return service.update(id, dto);
 	    }
 
 	    // GET by patient
