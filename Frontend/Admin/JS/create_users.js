@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const fileInput = document.getElementById("profileFileInput");
   const preview   = document.getElementById("profilePreview");
 
-  // ตั้ง default avatar
   if (preview) preview.src = DEFAULT_AVATAR;
 
   if (fileInput) {
@@ -212,9 +211,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (currentRole === "Patient") {
         idcard  = document.getElementById("idcard")?.value.trim();
         gender  = document.querySelector('input[name="gender"]:checked')?.value;
-        day     = document.getElementById("day")?.value;
-        month   = document.getElementById("month")?.value;
-        year    = document.getElementById("year")?.value;
+
+        // ✅ อ่านวันเกิดจาก data-value ก่อน แล้วค่อย fallback ไป .value
+        const dayEl   = document.getElementById("day");
+        const monthEl = document.getElementById("month");
+        const yearEl  = document.getElementById("year");
+        day   = dayEl?.getAttribute("data-value")   || dayEl?.value   || "";
+        month = monthEl?.getAttribute("data-value") || monthEl?.value || "";
+        year  = yearEl?.getAttribute("data-value")  || yearEl?.value  || "";
+
         blood   = document.getElementById("blood")?.value;
         right   = document.getElementById("right")?.value;
         address = document.getElementById("address")?.value.trim();
@@ -274,7 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // =========================
       // SYNC ไป allUsers
-      // สำหรับหน้า dashboard จัดการบุคลากร
       // =========================
       if (currentRole === "Doctor" || currentRole === "Staff") {
         let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
@@ -377,13 +381,20 @@ function generateDOB() {
   }
 }
 
+// ✅ แก้: เซ็ตทั้ง .value และ data-value บน hidden input
 function addOption(container, inputId, value) {
   const div     = document.createElement("div");
   div.innerText = value;
   div.onclick   = function () {
     const dropdown = container.previousElementSibling;
     dropdown.querySelector("span").innerText = value;
-    document.getElementById(inputId).value  = value;
+
+    const inputEl = document.getElementById(inputId);
+    if (inputEl) {
+      inputEl.value = String(value);
+      inputEl.setAttribute("data-value", String(value));
+    }
+
     container.classList.remove("show");
     dropdown.querySelector(".arrow").classList.remove("rotate");
   };
