@@ -1,4 +1,4 @@
-// ============================================================
+/*// ============================================================
 // User_Dashboard.js
 // ============================================================
 let selectedRole   = "all";
@@ -221,5 +221,205 @@ function selectRole(role) {
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
   renderTable();
+}); */
+
+// ============================================================
+// User_Dashboard.js — ใช้ API แทน localStorage
+// ============================================================
+const API_BASE = '/api/admin';
+
+let selectedRole   = "all";
+let selectedStatus = "all";
+let deleteId       = null;
+let allUsers       = [];
+
+// =========================
+// LOAD USERS FROM API
+// =========================
+async function loadUsers() {
+  try {
+    const res = await fetch(`${API_BASE}/users`);
+    if (!res.ok) throw new Error('Failed to fetch');
+    allUsers = await res.json();
+    renderTable();
+  } catch (err) {
+    console.error('โหลดข้อมูลล้มเหลว:', err);
+    document.getElementById('userTable').innerHTML =
+      '<tr><td colspan="7" style="color:red;text-align:center;">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+  }
+}
+
+// =========================
+// RENDER TABLE
+// =========================
+function renderTable() {
+  const table = document.getElementById("userTable");
+  table.innerHTML = "";
+
+  const filtered = allUsers.filter(user => {
+    const roleMatch   = selectedRole   === "all" || user.role.toLowerCase()   === selectedRole;
+    const statusMatch = selectedStatus === "all" || user.status.toLowerCase() === selectedStatus;
+    return roleMatch && statusMatch;
+  });
+
+  if (filtered.length === 0) {
+    table.innerHTML = '<tr><td colspan="7" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+
+  filtered.forEach((user) => {
+    table.innerHTML += `
+      <tr>
+        <td>
+          <img src="../../img/profile.jpg" class="table-avatar">
+        </td>
+        <td>${user.username || "-"}</td>
+        <td>${user.username || "-"}</td>
+        <td>${user.email    || "-"}</td>
+        <td>
+          <span class="status ${user.status?.toLowerCase()}" onclick="toggleStatus(${user.userId})" style="cursor:pointer;">
+            ${user.status}
+          </span>
+        </td>
+        <td>${user.role}</td>
+        <td class="actions">
+          <img src="../../img/Edit2.png"
+               class="action-icon"
+               onclick="editUser(${user.userId})">
+          <img src="../../img/delete.png"
+               class="action-icon"
+               onclick="openDeleteModal(${user.userId})">
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// =========================
+// TOGGLE STATUS — เรียก PATCH /api/admin/users/{id}/status
+// =========================
+async function toggleStatus(id) {
+  try {
+    const res = await fetch(`${API_BASE}/users/${id}/status`, { method: 'PATCH' });
+    if (!res.ok) throw new Error('Failed to toggle status');
+    const data = await res.json();
+
+    // อัปเดต local array แทนการโหลดใหม่ทั้งหมด
+    const user = allUsers.find(u => u.userId === id);
+    if (user) user.status = data.status;
+    renderTable();
+  } catch (err) {
+    alert('เปลี่ยนสถานะไม่สำเร็จ: ' + err.message);
+  }
+}
+
+// =========================
+// EDIT USER
+// =========================
+function editUser(id) {
+  const user = allUsers.find(u => u.userId === id);
+  if (user) sessionStorage.setItem('editUser', JSON.stringify(user));
+  window.location.href = "Edit_Information.html";
+}
+
+// =========================
+// DELETE — เรียก DELETE /api/admin/users/{id}
+// =========================
+function openDeleteModal(id) {
+  deleteId = id;
+  document.getElementById("deleteModal").classList.add("show");
+}
+
+function closeDeleteModal() {
+  deleteId = null;
+  document.getElementById("deleteModal").classList.remove("show");
+}
+
+async function confirmDelete() {
+  if (deleteId === null) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/users/${deleteId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete');
+
+    allUsers = allUsers.filter(u => u.userId !== deleteId);
+    renderTable();
+    closeDeleteModal();
+  } catch (err) {
+    alert('ลบไม่สำเร็จ: ' + err.message);
+    closeDeleteModal();
+  }
+}
+
+// =========================
+// SIDEBAR / LOGOUT
+// =========================
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
+
+function logout() {
+  window.location.href = "../../login.html";
+}
+
+// =========================
+// DROPDOWN
+// =========================
+function toggleDropdown(menuId, btn) {
+  const menu  = document.getElementById(menuId);
+  const arrow = btn.querySelector(".arrowdropdown");
+  menu.classList.toggle("show");
+  if (arrow) arrow.classList.toggle("rotate");
+}
+
+document.addEventListener("click", function (e) {
+  if (!e.target.closest(".role-dropdown")) {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+      menu.classList.remove("show");
+    });
+  }
 });
 
+// =========================
+// FILTER
+// =========================
+function filterRole(role) {
+  selectedRole = role;
+  document.getElementById("selectedRole").innerText =
+    role === "all" ? "All" : role.charAt(0).toUpperCase() + role.slice(1);
+  document.getElementById("roleMenu")?.classList.remove("show");
+  renderTable();
+}
+
+function filterStatus(status) {
+  selectedStatus = status;
+  document.getElementById("selectedStatus").innerText =
+    status === "all" ? "All" : status;
+  document.getElementById("statusMenu")?.classList.remove("show");
+  renderTable();
+}
+
+// =========================
+// ADD USER
+// =========================
+function openRoleModal() {
+  document.getElementById("roleModal").classList.add("show");
+}
+
+function closeRoleModal() {
+  document.getElementById("roleModal").classList.remove("show");
+}
+
+function selectRole(role) {
+  if (role === "patient") {
+    window.location.href = "create_patient.html";
+  } else {
+    sessionStorage.setItem("createRole", role.charAt(0).toUpperCase() + role.slice(1));
+    window.location.href = "create_account.html";
+  }
+}
+
+// =========================
+// INIT
+// =========================
+document.addEventListener("DOMContentLoaded", loadUsers);

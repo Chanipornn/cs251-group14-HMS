@@ -1,4 +1,4 @@
-// ================= DATA =================
+/*// ================= DATA =================
 const departmentList = [
     "อายุรกรรม",
     "ศัลยกรรม",
@@ -96,4 +96,105 @@ function saveData() {
 // ================= CANCEL =================
 function cancelEdit() {
     window.location.href = "dashboard.html";
+} */
+
+// ============================================================
+// Doctor_Edit_Add.js — ใช้ API แทน localStorage
+// ============================================================
+const API_BASE = '/api/admin';
+
+const departmentList = [
+  "อายุรกรรม", "ศัลยกรรม", "หู คอ จมูก", "จิตเวช",
+  "รังสีวิทยา", "กุมารเวชกรรม", "จักษุ", "กระดูกและข้อ",
+  "สูตินรีเวช", "ฉุกเฉินและอุบัติเหตุ", "ผู้ป่วยหนัก",
+  "วิสัญญี", "เวชศาสตร์ฟื้นฟู"
+];
+
+// ================= HELPER =================
+function populateDepartment(selectEl, currentDept) {
+  let options = '<option value="">-- กรุณาเลือกแผนก --</option>';
+  departmentList.forEach(dept => {
+    const selected = dept === currentDept ? "selected" : "";
+    options += `<option value="${dept}" ${selected}>${dept}</option>`;
+  });
+  selectEl.innerHTML = options;
+}
+
+// ================= INIT PAGE =================
+document.addEventListener('DOMContentLoaded', () => {
+  const userData = JSON.parse(sessionStorage.getItem('editUser'));
+  if (!userData) {
+    alert("ไม่พบข้อมูล");
+    window.location.href = "Dashboard.html";
+    return;
+  }
+
+  // --- NAME ---
+  const nameEl = document.querySelector('.display-name');
+  if (nameEl) nameEl.innerText = userData.username;
+
+  // --- IMAGE ---
+  const imgEl = document.querySelector('.profile-main-img');
+  if (imgEl) imgEl.src = "../../img/profile.jpg";
+
+  // --- DEPARTMENT DROPDOWN ---
+  const deptSelect = document.getElementById('deptSelect');
+  if (deptSelect) {
+    populateDepartment(deptSelect, userData.dept || "");
+  }
+
+  const expertiseInput = document.getElementById('expertiseInput');
+  if (expertiseInput && userData.specialization) {
+    expertiseInput.value = userData.specialization;
+  }
+});
+
+// ================= SAVE — เรียก PUT /api/admin/users/{id} =================
+async function saveData() {
+  const userData = JSON.parse(sessionStorage.getItem('editUser'));
+  if (!userData) return;
+
+  const updatedDept      = document.getElementById('deptSelect')?.value;
+  const updatedExpertise = document.getElementById('expertiseInput')?.value || "";
+
+  const payload = {
+    specialization: updatedExpertise,
+  };
+
+  // ถ้า departmentId มีใน userData ให้ส่งด้วย (ต้องรู้ id จริง)
+  // ถ้าโปรเจคมี endpoint แก้ doctor โดยตรงให้ใช้แทน
+  try {
+    const res = await fetch(`${API_BASE}/users/${userData.userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert("บันทึกไม่สำเร็จ: " + (data.message || res.statusText));
+      return;
+    }
+
+    alert("บันทึกข้อมูลสำเร็จ!");
+    window.location.href = "Dashboard.html";
+
+  } catch (err) {
+    alert("เชื่อมต่อ server ไม่ได้: " + err.message);
+  }
+}
+
+// ================= CANCEL =================
+function cancelEdit() {
+  window.location.href = "Dashboard.html";
+}
+
+// ================= SIDEBAR / LOGOUT =================
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
+
+function logout() {
+  window.location.href = "../../login.html";
 }

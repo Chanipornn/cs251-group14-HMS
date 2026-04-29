@@ -1,4 +1,4 @@
-// ============================================================
+/*// ============================================================
 // create_patient.js
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
@@ -231,4 +231,223 @@ function addOption(container, inputId, value) {
 function toggleSidebar() {
   const sidebar = document.querySelector(".sidebar");
   sidebar.classList.toggle("hide");
+} 
+*/
+
+
+// ============================================================
+// create_patient.js — ใช้ API แทน localStorage
+// ============================================================
+const API_BASE = '/api/admin';
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const form        = document.getElementById("createForm");
+  const roleButtons = document.querySelectorAll(".role-btn");
+  const roleInput   = document.getElementById("role");
+  const patientFields = document.getElementById("patientFields");
+
+  // =========================
+  // BACK
+  // =========================
+  window.goBack = function () {
+    window.location.href = "User_Dashboard.html";
+  };
+
+  // =========================
+  // ROLE SWITCH
+  // =========================
+  function updateFormByRole(role) {
+    if (patientFields) {
+      patientFields.style.display = role === "Patient" ? "block" : "none";
+    }
+  }
+
+  roleButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const role = btn.dataset.role;
+
+      if (role !== "Patient") {
+        window.location.href = "create_account.html";
+        return;
+      }
+
+      roleButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      roleInput.value = role;
+      updateFormByRole(role);
+    });
+  });
+
+  updateFormByRole(roleInput.value || "Patient");
+
+  // =========================
+  // SUBMIT — เรียก POST /api/admin/users/patient
+  // =========================
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name            = document.getElementById("name")?.value.trim();
+      const email           = document.getElementById("email")?.value.trim();
+      const password        = document.getElementById("password")?.value.trim();
+      const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
+      const phone           = document.getElementById("phone")?.value.trim();
+      const idcard          = document.getElementById("idcard")?.value.trim();
+      const blood           = document.getElementById("blood")?.value;
+      const right           = document.getElementById("right")?.value;
+      const gender          = document.querySelector('input[name="gender"]:checked')?.value;
+
+      const day   = document.getElementById("day")?.value;
+      const month = document.getElementById("month")?.value;
+      const year  = document.getElementById("year")?.value;
+
+      // --- Validate ---
+      if (!name || !email || !password || !confirmPassword) {
+        alert("กรุณากรอกข้อมูลพื้นฐานให้ครบ");
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("รูปแบบอีเมลไม่ถูกต้อง");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("รหัสผ่านต้องอย่างน้อย 6 ตัว");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("รหัสผ่านไม่ตรงกัน");
+        return;
+      }
+
+      if (!phone || !idcard || !gender || !day || !month || !year) {
+        alert("กรุณากรอกข้อมูลผู้ป่วยให้ครบ");
+        return;
+      }
+
+      // --- Build dateOfBirth (yyyy-MM-dd) ---
+      const paddedMonth = String(month).padStart(2, '0');
+      const paddedDay   = String(day).padStart(2, '0');
+      const dateOfBirth = `${year}-${paddedMonth}-${paddedDay}`;
+
+      // --- Build payload ---
+      const nameParts = name.split(" ");
+      const payload = {
+        username:         name.toLowerCase().replace(/\s+/g, "_"),
+        password,
+        email,
+        telephone:        phone,
+        name:             nameParts[0] || name,
+        surname:          nameParts.slice(1).join(" ") || "-",
+        gender:           gender === "male" ? "M" : "F",
+        dateOfBirth,
+        thaiNationalId:   idcard,
+        bloodType:        blood   || null,
+        rightToHealthcare: right  || null,
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/users/patient`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert("เกิดข้อผิดพลาด: " + (data.message || res.statusText));
+          return;
+        }
+
+        document.getElementById("successModal")?.classList.add("show");
+        setTimeout(() => {
+          window.location.href = "User_Dashboard.html";
+        }, 1500);
+
+      } catch (err) {
+        alert("เชื่อมต่อ server ไม่ได้: " + err.message);
+      }
+    });
+  }
+
+  // =========================
+  // CLOSE MODAL
+  // =========================
+  window.closeModal = function () {
+    document.getElementById("successModal")?.classList.remove("show");
+    window.location.href = "User_Dashboard.html";
+  };
+
+  // =========================
+  // DOB GENERATOR
+  // =========================
+  generateDOB();
+});
+
+// =========================
+// DROPDOWN
+// =========================
+function toggleDropdown(el) {
+  const options = el.nextElementSibling;
+  const arrow   = el.querySelector(".arrow");
+  options.classList.toggle("show");
+  if (arrow) arrow.classList.toggle("rotate");
+}
+
+function selectOption(option, selectId) {
+  const dropdown = option.closest(".custom-dropdown");
+  dropdown.querySelector("span").innerText       = option.innerText;
+  document.getElementById(selectId).value        = option.innerText;
+  dropdown.querySelector(".dropdown-options").classList.remove("show");
+  dropdown.querySelector(".arrow")?.classList.remove("rotate");
+}
+
+// =========================
+// SIDEBAR / LOGOUT
+// =========================
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
+
+function logout() {
+  window.location.href = "../../login.html";
+}
+
+// =========================
+// DOB GENERATOR
+// =========================
+function generateDOB() {
+  const dayOptions   = document.getElementById("dayOptions");
+  const monthOptions = document.getElementById("monthOptions");
+  const yearOptions  = document.getElementById("yearOptions");
+
+  if (!dayOptions || !monthOptions || !yearOptions) return;
+
+  for (let i = 1; i <= 31; i++) addOption(dayOptions,   "day",   i);
+  for (let i = 1; i <= 12; i++) addOption(monthOptions, "month", i);
+
+  const currentYear = new Date().getFullYear();
+  for (let i = currentYear; i >= currentYear - 100; i--) {
+    addOption(yearOptions, "year", i);
+  }
+}
+
+function addOption(container, inputId, value) {
+  const div     = document.createElement("div");
+  div.innerText = value;
+
+  div.onclick = function () {
+    const dropdown = container.previousElementSibling;
+    dropdown.querySelector("span").innerText = value;
+    document.getElementById(inputId).value  = value;
+    container.classList.remove("show");
+    dropdown.querySelector(".arrow")?.classList.remove("rotate");
+  };
+
+  container.appendChild(div);
 }

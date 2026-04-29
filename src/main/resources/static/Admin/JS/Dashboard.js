@@ -1,4 +1,4 @@
-// ================= BASIC =================
+/*// ================= BASIC =================
 function toggleSidebar() {
   document.querySelector('.sidebar').classList.toggle('hide');
 }
@@ -146,4 +146,111 @@ function goProfile() {
 function logout() {
   localStorage.clear();
   window.location.href = "../../login.html";
+}*/
+
+// ================= CONFIG =================
+const API_BASE = '/api/admin';
+
+// ================= SIDEBAR =================
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('hide');
 }
+
+// ================= DROPDOWN =================
+function toggleDropdown() {
+  const menu = document.getElementById("dropdownMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function filterRole(role) {
+  const cards = document.querySelectorAll(".user-card");
+  document.getElementById("selectedRole").innerText = role === "all" ? "All" : role;
+
+  cards.forEach(card => {
+    const cardRole = card.dataset.role.toLowerCase();
+    card.style.display =
+      role === "all" || cardRole === role.toLowerCase() ? "flex" : "none";
+  });
+
+  document.getElementById("dropdownMenu").style.display = "none";
+}
+
+document.addEventListener("click", e => {
+  if (!e.target.closest('.role-dropdown')) {
+    const menu = document.getElementById("dropdownMenu");
+    if (menu) menu.style.display = "none";
+  }
+});
+
+// ================= PROFILE =================
+function goProfile() {
+  window.location.href = "profile.html";
+}
+
+// ================= LOGOUT =================
+function logout() {
+  window.location.href = "../../login.html";
+}
+
+// ================= DATA =================
+let users = [];
+
+async function loadUsers() {
+  try {
+    const res = await fetch(`${API_BASE}/users`);
+    if (!res.ok) throw new Error('Failed to fetch users');
+    users = await res.json();
+    renderUsers();
+  } catch (err) {
+    console.error('Error loading users:', err);
+    document.getElementById('userGrid').innerHTML =
+      '<p style="color:red;">โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่</p>';
+  }
+}
+
+// ================= RENDER =================
+function renderUsers() {
+  const userGrid = document.getElementById('userGrid');
+
+  const displayUsers = users.filter(u => u.role === 'Doctor' || u.role === 'Staff');
+
+  // ===== อัปเดตจำนวน Doctor / Staff จริง =====
+  const doctorCount = users.filter(u => u.role === 'Doctor').length;
+  const staffCount  = users.filter(u => u.role === 'Staff').length;
+
+  const summaryCards = document.querySelectorAll('.summary .card');
+  if (summaryCards[0]) summaryCards[0].querySelector('p').innerText = `${doctorCount} Users`;
+  if (summaryCards[1]) summaryCards[1].querySelector('p').innerText = `${staffCount} Users`;
+
+  // ===== Render cards =====
+  userGrid.innerHTML = displayUsers.map((user) => `
+    <div class="user-card" data-role="${user.role}">
+        <img src="/img/profile.jpg" class="user-img">
+        <div class="user-info">
+            <span class="badge ${user.role.toLowerCase()}">${user.role}</span>
+            <div class="text-content">
+                <h4>${user.username}</h4>
+                <p>${user.email}</p>
+            </div>
+        </div>
+        <div class="edit-btn" onclick="goToEditPage(${user.userId})">✎</div>
+    </div>
+  `).join('');
+}
+
+// ================= EDIT =================
+function goToEditPage(userId) {
+  const selectedUser = users.find(u => u.userId === userId);
+  if (!selectedUser) return;
+
+  sessionStorage.setItem('editUser', JSON.stringify(selectedUser));
+
+  if (selectedUser.role === 'Doctor') {
+    window.location.href = "Doctor_Edit_Add.html";
+  } else {
+    window.location.href = "Staff_Edit_Add.html";
+  }
+}
+
+// ================= INIT =================
+document.addEventListener('DOMContentLoaded', loadUsers);
