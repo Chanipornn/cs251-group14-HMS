@@ -423,3 +423,8 @@ function selectRole(role) {
 // INIT
 // =========================
 document.addEventListener("DOMContentLoaded", loadUsers);
+
+// ================= PROFILE =================
+function goProfile() {
+  window.location.href = "profile.html";
+}
