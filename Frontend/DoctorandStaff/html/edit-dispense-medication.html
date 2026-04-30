@@ -57,7 +57,6 @@
       <!-- Form -->
       <div class="form-body">
 
-        <!-- Row 1: รหัสประจำตัวผู้ป่วย + รหัสประจำตัวแพทย์ -->
         <div class="form-row-two">
           <div class="form-group inline">
             <label>รหัสประจำตัวผู้ป่วย :</label>
@@ -69,25 +68,21 @@
           </div>
         </div>
 
-        <!-- Row 2: ชื่อยา -->
         <div class="form-group inline">
           <label>ชื่อยา :</label>
           <input class="input input-med" type="text" value="Enalapril, Metformin" />
         </div>
 
-        <!-- Row 3: ปริมาณการใช้ยา -->
         <div class="form-group block">
           <label>ปริมาณการใช้ยา :</label>
           <textarea class="textarea">รับประทานวันละ 2 ครั้งหลังอาหาร</textarea>
         </div>
 
-        <!-- Row 4: ระยะเวลาการใช้ยา -->
         <div class="form-group block">
           <label>ระยะเวลาการใช้ยา :</label>
           <input class="input input-full" type="text" value="1 เดือน" />
         </div>
 
-        <!-- Row 5: ข้อแนะนำการใช้ยา -->
         <div class="form-group block">
           <label>ข้อแนะนำการใช้ยา :</label>
           <textarea class="textarea">ถ้ารับประทานแล้วอาเจียนควรรีบพบแพทย์</textarea>
@@ -98,10 +93,25 @@
       <!-- Actions -->
       <div class="form-actions">
         <button class="btn btn-secondary" onclick="window.location.href='history.html'">ยกเลิก</button>
-        <button class="btn btn-primary" onclick="submitForm()">ยืนยัน</button>
+        <button class="btn btn-primary" onclick="showModal()">ยืนยัน</button>
       </div>
 
     </main>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-icon-wrap">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="18" fill="#22c55e"/>
+          <path d="M10 18.5l5.5 5.5 10.5-11" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>สำเร็จ!</h2>
+      <p>บันทึกการแก้ไขเรียบร้อยแล้ว</p>
+      <button class="btn-confirm" onclick="closeModal()">ตกลง</button>
+    </div>
   </div>
 
   <script>
@@ -113,8 +123,12 @@
         window.location.href = 'login.html';
       }
     }
-    function submitForm() {
-      alert('บันทึกการแก้ไขเรียบร้อย');
+    function showModal() {
+      document.getElementById('successModal').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('successModal').classList.remove('show');
+      window.location.href = 'history.html';
     }
   </script>
 </body>
