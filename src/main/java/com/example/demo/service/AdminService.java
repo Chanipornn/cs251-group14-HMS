@@ -53,7 +53,7 @@ public class AdminService {
                 .role(UserRole.Doctor)
                 .email(dto.getEmail())
                 .telephone(dto.getTelephone())
-                .status("Active")
+                .status("active")
                 .build();
         user = userRepository.save(user);
 
@@ -196,7 +196,9 @@ public class AdminService {
     public UserEntity toggleStatus(Integer userId) {
 
         UserEntity user = getUserById(userId);
-        String newStatus = "Active".equals(user.getStatus()) ? "Inactive" : "Active";
+        String newStatus = "active".equalsIgnoreCase(user.getStatus())
+                ? "inactive"
+                : "active";
         user.setStatus(newStatus);
         UserEntity saved = userRepository.save(user);
 

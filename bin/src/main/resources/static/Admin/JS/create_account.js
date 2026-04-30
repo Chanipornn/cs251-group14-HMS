@@ -1,5 +1,5 @@
 /*// ============================================================
-// create_account.js
+// create_users.js
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -140,7 +140,7 @@ function toggleSidebar() {
 
 
 // ============================================================
-// create_account.js — ใช้ API แทน localStorage
+// create_users.js — ใช้ API แทน localStorage
 // ============================================================
 const API_BASE = '/api/admin';
 

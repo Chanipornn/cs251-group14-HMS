@@ -1,5 +1,5 @@
 /*// ============================================================
-// create_account.js
+// create_users.js
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -140,12 +140,12 @@ function toggleSidebar() {
 
 
 // ============================================================
-// create_account.js — ใช้ API แทน localStorage
+// create_users.js — ใช้ API แทน localStorage
 // ============================================================
 // ============================================================
-// create_account.js — ใช้ API แทน localStorage
+// create_users.js — ใช้ API แทน localStorage
 // ============================================================
-const API_BASE = '/api/admin';
+/*const API_BASE = '/api/admin';
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -291,4 +291,220 @@ function toggleSidebar() {
 
 function logout() {
   window.location.href = "../../login.html";
+}*/
+// ============================================================
+// create_users.js (BACKEND VERSION)
+// ============================================================
+
+const API_BASE = "/api/admin";
+
+const DEFAULT_AVATAR =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
+
+let selectedProfileImage = null;
+
+// ================= ERROR =================
+function showFieldError(fieldId, message) {
+  clearFieldError(fieldId);
+  const field = document.getElementById(fieldId);
+  if (!field) return;
+
+  const err = document.createElement("p");
+  err.className = "field-error";
+  err.id = `err_${fieldId}`;
+  err.textContent = message;
+
+  field.parentNode.insertBefore(err, field.nextSibling);
+  field.classList.add("input-error");
+}
+
+function clearFieldError(fieldId) {
+  const old = document.getElementById(`err_${fieldId}`);
+  if (old) old.remove();
+  const field = document.getElementById(fieldId);
+  if (field) field.classList.remove("input-error");
+}
+
+function clearAllErrors() {
+  document.querySelectorAll(".field-error").forEach(e => e.remove());
+  document.querySelectorAll(".input-error").forEach(e => e.classList.remove("input-error"));
+}
+
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", function () {
+
+  const form = document.getElementById("createForm");
+  const roleButtons = document.querySelectorAll(".role-btn");
+  const roleInput = document.getElementById("role");
+
+  const patientFields = document.getElementById("patientFields");
+  const extraFields = document.getElementById("extraFields");
+
+  // ================= IMAGE =================
+  const fileInput = document.getElementById("profileFileInput");
+  const preview = document.getElementById("profilePreview");
+
+  if (preview) preview.src = DEFAULT_AVATAR;
+
+  if (fileInput) {
+    fileInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        alert("กรุณาเลือกไฟล์รูปภาพ");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        selectedProfileImage = e.target.result;
+        preview.src = selectedProfileImage;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ================= ROLE SWITCH =================
+  function updateFormByRole(role) {
+    if (role === "Patient") {
+      extraFields.style.display = "block";
+      patientFields.style.display = "block";
+    } else {
+      extraFields.style.display = "none";
+      patientFields.style.display = "none";
+    }
+  }
+
+  roleButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const role = btn.dataset.role;
+
+      // 👉 ถ้าเลือก patient → ไปอีกหน้า (เหมือน frontend)
+      if (role === "Patient") {
+        window.location.href = "create_patient.html";
+        return;
+      }
+
+      roleButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      roleInput.value = role;
+      updateFormByRole(role);
+    });
+  });
+
+  const savedRole = sessionStorage.getItem("createRole") || "Doctor";
+
+  roleInput.value = savedRole;
+
+  roleButtons.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.role === savedRole);
+  });
+
+  updateFormByRole(savedRole);
+
+  // ================= SUBMIT =================
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      clearAllErrors();
+
+      const name = document.getElementById("name")?.value.trim();
+      const email = document.getElementById("email")?.value.trim();
+      const password = document.getElementById("password")?.value.trim();
+      const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
+      const firstName = document.getElementById("firstName")?.value.trim();
+      const lastName = document.getElementById("lastName")?.value.trim();
+      const phone = document.getElementById("phone")?.value.trim();
+
+      const currentRole = roleInput.value || "Doctor";
+
+      let hasError = false;
+
+      if (!name) { showFieldError("name", "กรุณากรอกชื่อผู้ใช้"); hasError = true; }
+      if (!email) { showFieldError("email", "กรุณากรอกอีเมล"); hasError = true; }
+      if (!password) { showFieldError("password", "กรุณากรอกรหัสผ่าน"); hasError = true; }
+      if (!confirmPassword) { showFieldError("confirmPassword", "กรุณายืนยันรหัสผ่าน"); hasError = true; }
+      if (!firstName) { showFieldError("firstName", "กรุณากรอกชื่อ"); hasError = true; }
+      if (!lastName) { showFieldError("lastName", "กรุณากรอกนามสกุล"); hasError = true; }
+      if (!phone) { showFieldError("phone", "กรุณากรอกเบอร์โทร"); hasError = true; }
+
+      if (hasError) return;
+
+      if (password.length < 6) {
+        showFieldError("password", "รหัสผ่านอย่างน้อย 6 ตัว");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showFieldError("confirmPassword", "รหัสผ่านไม่ตรงกัน");
+        return;
+      }
+
+      // ================= PAYLOAD =================
+      const payload = {
+        username: name,
+        password: password,
+        role: currentRole,
+        email: email,
+        telephone: phone,
+        status: "Active",
+
+        name: firstName,
+        surname: lastName
+      };
+
+      // ================= ENDPOINT =================
+      let endpoint = `${API_BASE}/users`;
+
+      if (currentRole === "Doctor") {
+        endpoint = `${API_BASE}/users/doctor`;
+      } else if (currentRole === "Patient") {
+        endpoint = `${API_BASE}/users/patient`;
+      }
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(err);
+        }
+
+        document.getElementById("successModal").classList.add("show");
+
+        setTimeout(() => {
+          window.location.href = "User_Dashboard.html";
+        }, 1500);
+
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+  }
+
+  // ================= MODAL =================
+  window.closeModal = function () {
+    document.getElementById("successModal").classList.remove("show");
+    window.location.href = "User_Dashboard.html";
+  };
+
+});
+
+// ================= UI =================
+function toggleSidebar() {
+  document.querySelector(".sidebar").classList.toggle("hide");
+}
+
+function logout() {
+  window.location.href = "../../login.html";
+}
+
+function goBack() {
+  window.location.href = "/Admin/html/User_Dashboard.html";
 }

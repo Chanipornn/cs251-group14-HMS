@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // ถ้าไม่ใช่ Patient → ไป Create_Account.html (ตรง case)
       if (role !== "Patient") {
-        window.location.href = "create_account.html";
+        window.location.href = "create_users.html";
         return;
       }
 
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const role = btn.dataset.role;
 
       if (role !== "Patient") {
-        window.location.href = "create_account.html";
+        window.location.href = "create_users.html";
         return;
       }
 
