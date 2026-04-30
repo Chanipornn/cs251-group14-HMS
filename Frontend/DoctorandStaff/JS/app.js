@@ -652,3 +652,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (page === 'invoice-create') initInvoiceCreate();
   if (page === 'invoice-add-item') initInvoiceAddItem();
 });
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("collapsed");
+}

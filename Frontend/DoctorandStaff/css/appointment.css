@@ -110,6 +110,7 @@ a {
   width: 0;
   padding: 0;
   overflow: hidden;
+  transform: translateX(-100%);
 }
 
 .sidebar h3 {
