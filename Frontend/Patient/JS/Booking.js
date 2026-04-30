@@ -108,6 +108,10 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
     }
     */
 
+     console.log("BOOKING DATA:", bookingData);
+    console.log("DOCTOR:", doctorData);
+    console.log("USER:", user);
+
    if (!doctorData) {
     console.log("❌ ไม่มี doctor");
     return;
@@ -137,15 +141,23 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
 
     const patientId = user.patientId;
 
+
+    const reason = selectedReasonEl
+  ? selectedReasonEl.value
+  : otherReason;
+
     const bookingData = {
         appointmentDate: formatToISO(fullDate),
         appointmentTime: selectedTimeEl.innerText.replace(" น.", ""),
-        reason: selectedReasonEl ? selectedReasonEl.parentElement.innerText.trim() : "",
+        reason: reason,
         preparation: "กรุณามาก่อน 15 นาที",
-        doctor: { doctorId: doctorData.id },
+        doctor: { doctorId: doctorData.doctorId },
         patient: { patientId: Number(patientId) }
     };
-    console.log("BOOKING DATA:", bookingData);
+   
+     console.log("BOOKING DATA:", bookingData);
+    console.log("DOCTOR:", doctorData);
+    console.log("USER:", user);
     /*
     const bookingData = {
         type: "upcoming",

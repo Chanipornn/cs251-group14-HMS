@@ -41,7 +41,13 @@ function goToBooking(id) {
     const doc = doctors.find(d => d.id === id);
     if (!doc) return;
 
-    localStorage.setItem("selectedDoctor", JSON.stringify(doc));
+    localStorage.setItem("selectedDoctor", JSON.stringify({
+        doctorId: doc.id,   // ✅ ใช้ doc
+        name: doc.name,
+        dept: doc.dept,
+        img: doc.img
+    }));
+
     window.location.href = "Booking.html";
 }
 

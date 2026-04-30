@@ -209,11 +209,99 @@ function clearDraft() {
   localStorage.removeItem(DRAFT_KEY);
 }
 
+function pad(n) {
+  return n.toString().padStart(2, "0");
+}
+
+const dayVal   = document.getElementById("day")?.getAttribute("data-value") || "";
+const monthVal = document.getElementById("month")?.getAttribute("data-value") || "";
+const yearVal  = document.getElementById("year")?.getAttribute("data-value") || "";
+
+const formattedDate = `${yearVal}-${pad(monthVal)}-${pad(dayVal)}`;
+
 // =========================
 // SUBMIT
 // =========================
 function submitForm() {
+  console.log("SUBMIT FORM CALLED");
+
+  // ✅ 1. validate ก่อน
   if (!validateForm()) return;
+
+  // ✅ 2. ดึงค่า "ตอน submit" เท่านั้น
+  const dayVal   = document.getElementById("day")?.getAttribute("data-value") || "";
+  const monthVal = document.getElementById("month")?.getAttribute("data-value") || "";
+  const yearVal  = document.getElementById("year")?.getAttribute("data-value") || "";
+
+  // ✅ 3. กันพลาดอีกชั้น
+  if (!dayVal || !monthVal || !yearVal) {
+    showInlineAlert("กรุณาเลือกวันเกิด");
+    return;
+  }
+
+  // ✅ 4. format วันที่
+  function pad(n) {
+    return n.toString().padStart(2, "0");
+  }
+
+  const formattedDate = `${yearVal}-${pad(monthVal)}-${pad(dayVal)}`;
+
+  console.log("DATE DEBUG:", formattedDate);
+
+  // ✅ 5. ยิง API
+  fetch("http://localhost:8080/api/auth/patient/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username: document.getElementById("username").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      password: document.getElementById("password").value.trim(),
+
+      name: document.getElementById("firstname").value.trim(),
+      surname: document.getElementById("lastname").value.trim(),
+      gender: document.querySelector('input[name="gender"]:checked')?.value,
+
+      dateOfBirth: formattedDate,
+
+      telephone: document.getElementById("phone").value.trim(),
+      thaiNationalId: document.getElementById("idcard").value.trim(),
+
+      address: document.getElementById("address").value.trim(),
+      bloodType: document.getElementById("blood").value,
+      chronicIllness: document.getElementById("disease").value.trim(),
+      drugAllergy: document.getElementById("allergy").value.trim(),
+
+      weight: document.getElementById("weight").value,
+      height: document.getElementById("height").value,
+      rightToHealthcare: document.getElementById("right").value
+    })
+  })
+
+  .then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Register failed");
+    return data;
+  })
+
+  .then(data => {
+    console.log("REGISTER SUCCESS:", data);
+
+    showSuccessPopup();
+
+    setTimeout(() => {
+      window.location.href = "../../login.html";
+    }, 1500);
+  })
+
+  .catch(err => {
+    console.error("REGISTER ERROR:", err);
+    showInlineAlert(err.message);
+  });
+}
+
+ /* if (!validateForm()) return;
 
   const dayVal   = document.getElementById("day")?.getAttribute("data-value")   || document.getElementById("day")?.value   || "";
   const monthVal = document.getElementById("month")?.getAttribute("data-value") || document.getElementById("month")?.value || "";
@@ -244,6 +332,8 @@ function submitForm() {
     profileImage: "",
   };
 
+
+
   let users = JSON.parse(localStorage.getItem("users")) || [];
   const exists = users.find(u => u.email === user.email);
   if (exists) { showInlineAlert("อีเมลนี้ถูกใช้งานแล้ว"); return; }
@@ -254,7 +344,8 @@ function submitForm() {
 
   clearDraft();
   showSuccessPopup();
-}
+  */
+
 
 // =========================
 // SUCCESS POPUP
@@ -289,14 +380,15 @@ function showSuccessPopup() {
       </div>
       <h3>สร้างบัญชีสำเร็จ!</h3>
       <p>ยินดีต้อนรับสู่ระบบ<br>บัญชีของคุณพร้อมใช้งานแล้ว</p>
-      <button class="btn-go" onclick="goToHome()">เข้าสู่หน้าหลัก</button>
+      <button onclick="goToLogin()">ไปหน้า Login</button>
     </div>
   `;
   document.body.appendChild(overlay);
 }
 
-function goToHome() {
-  window.location.href = "../../Patient/html/home.html";
+
+function goToLogin() {
+  window.location.href = "../../login.html";
 }
 
 // =========================

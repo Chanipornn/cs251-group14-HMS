@@ -79,26 +79,39 @@ document.addEventListener("DOMContentLoaded", function () {
 // =========================
 // HELPER
 // =========================
+
 function setText(id, value) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.innerText =
-    value !== undefined && value !== null && value !== ""
-      ? value
-      : "-";
+
+  if (value === undefined || value === null || value === "") {
+    el.innerText = "-";
+  } else {
+    el.innerText = value;
+  }
 }
 
 function formatGender(gender) {
-  if (gender === "M") return "ผู้ชาย";
-  if (gender === "F") return "ผู้หญิง";
+    if (!gender) return "-";
+
+  const g = gender.toUpperCase();
+
+  if (g === "M") return "ผู้ชาย";
+  if (g === "F") return "ผู้หญิง";
+
   return "-";
 }
 
 function formatDate(date) {
   if (!date) return "-";
-  const [d, m, y] = date.split("-");
+
+  const parts = date.split("-");
+  if (parts.length !== 3) return date;
+
+  const [d, m, y] = parts;
   return `${d}/${m}/${y}`;
 }
+
 
 // =========================
 // LOAD PROFILE FROM API
@@ -130,7 +143,7 @@ async function loadProfileFromAPI() {
 
     setText("blood", data.bloodType);
     setText("disease", data.chronicIllness);
-    setText("allergy", data.drugAllergy || "ไม่มี");
+    setText("allergy", data.drugAllergy ? data.drugAllergy : "ไม่มี");
     setText("weight", data.weight ? data.weight + " กก." : "-");
     setText("height", data.height ? data.height + " ซม." : "-");
     setText("right", data.rightToHealthcare);

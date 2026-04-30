@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== USERNAME (มุมขวา) =====
   const usernameEl = document.querySelector(".user-name");
   if (usernameEl) {
-    usernameEl.innerText = user.name || "Guest";
+    usernameEl.innerText = user.username || "Guest";
   }
 
  
@@ -90,7 +90,7 @@ if (profileImg && savedImage) {
     updateSlider();
   });
 
-  
+
   // =========================
   // CLICK DOT
   // =========================
