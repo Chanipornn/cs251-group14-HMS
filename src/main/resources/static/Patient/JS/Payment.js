@@ -49,13 +49,9 @@ function updateCardToPaid(card) {
     statusBadge.classList.add('paid');
     statusBadge.querySelector('.status-text').innerText = 'สถานะ: ชำระแล้ว';
 
+    // ✅ ลบปุ่มออกเลย ไม่แสดงปุ่มใดๆ
     const actionArea = card.querySelector('.action-area');
-
-    actionArea.innerHTML = '<button class="btn btn-detail">ดูรายละเอียด</button>';
-
-    actionArea.querySelector('.btn-detail').addEventListener('click', () => {
-        window.location.href = 'PaymentDetail.html';
-    });
+    actionArea.innerHTML = '';
 }
 
 // ==========================

@@ -15,115 +15,115 @@
 
 <body>
 
-    <div class="main-container">
-        <header class="header">
-            <div class="header-content">
+<div class="main-container">
+    <header class="header">
+        <div class="header-content">
 
-                <!-- ✅ ปุ่ม Back แบบกันพลาด -->
-                <a href="#" class="back-btn" onclick="handleBack(event)">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+            <!-- ✅ ปุ่ม Back แบบกันพลาด -->
+            <a href="#" class="back-btn" onclick="handleBack(event)">
+                <i class="fas fa-arrow-left"></i>
+            </a>
 
-                <h1>ชำระเงิน</h1>
-            </div>
-        </header>
+            <h1>ชำระเงิน</h1>
+        </div>
+    </header>
 
-        <main class="content-wrapper">
-            <div class="payment-grid">
+    <main class="content-wrapper">
+        <div class="payment-grid">
 
-                <!-- การ์ดที่ 1 -->
-                <div class="payment-card">
-                    <div class="card-body">
-                        <div class="date-title">11/04/2026 09:46:15</div>
+            <!-- การ์ดที่ 1 -->
+            <div class="payment-card">
+                <div class="card-body">
+                    <div class="date-title">11/04/2026 09:46:15</div>
 
-                        <div class="info-row">
-                            <span class="label">แผนก</span>
-                            <span class="value">หู คอ จมูก</span>
-                        </div>
+                    <div class="info-row">
+                        <span class="label">แผนก</span>
+                        <span class="value">หู คอ จมูก</span>
+                    </div>
 
-                        <div class="info-row">
-                            <span class="label">แพทย์</span>
-                            <span class="value">นพ.สมชาย ศรีสุข</span>
-                        </div>
+                    <div class="info-row">
+                        <span class="label">แพทย์</span>
+                        <span class="value">นพ.สมชาย ศรีสุข</span>
+                    </div>
 
-                        <div class="info-row">
-                            <span class="label">รายการ</span>
-                            <span class="value">ตรวจทั่วไป</span>
-                        </div>
+                    <div class="info-row">
+                        <span class="label">รายการ</span>
+                        <span class="value">ตรวจทั่วไป</span>
+                    </div>
 
-                        <div class="info-row" style="margin-top:5px;">
-                            <span class="label">ยอดชำระ</span>
-                            <span class="value" style="color:var(--primary-color); font-size: 1.1rem;">
+                    <div class="info-row" style="margin-top:5px;">
+                        <span class="label">ยอดชำระ</span>
+                        <span class="value" style="color:var(--primary-color); font-size: 1.1rem;">
                                 500 บาท
                             </span>
-                        </div>
-
-                        <div class="status-badge unpaid">
-                            <div class="dot"></div>
-                            <span class="status-text">สถานะ: ค้างชำระ</span>
-                        </div>
                     </div>
 
-                    <div class="action-area">
-                        <button id="btn-pay-now" class="btn btn-pay">ชำระเงิน</button>
+                    <div class="status-badge unpaid">
+                        <div class="dot"></div>
+                        <span class="status-text">สถานะ: ค้างชำระ</span>
                     </div>
                 </div>
 
-                <!-- การ์ดที่ 2 -->
-                <div class="payment-card">
-                    <div class="card-body">
-                        <div class="date-title">11/04/2026 10:30:00</div>
+                <div class="action-area">
+                    <button id="btn-pay-now" class="btn btn-pay">ชำระเงิน</button>
+                </div>
+            </div>
 
-                        <div class="info-row">
-                            <span class="label">แผนก</span>
-                            <span class="value">จักษุ</span>
-                        </div>
+            <!-- การ์ดที่ 2 (ชำระแล้ว → ไม่มีปุ่ม) -->
+            <div class="payment-card">
+                <div class="card-body">
+                    <div class="date-title">11/04/2026 10:30:00</div>
 
-                        <div class="info-row">
-                            <span class="label">แพทย์</span>
-                            <span class="value">นพ.นนทพัทธ์ ใจดี</span>
-                        </div>
-
-                        <div class="info-row">
-                            <span class="label">รายการ</span>
-                            <span class="value">ตรวจทั่วไป</span>
-                        </div>
-
-                        <div class="info-row" style="margin-top:5px;">
-                            <span class="label">ยอดชำระ</span>
-                            <span class="value">500 บาท</span>
-                        </div>
-
-                        <div class="status-badge paid">
-                            <div class="dot"></div>
-                            <span class="status-text">สถานะ: ชำระแล้ว</span>
-                        </div>
+                    <div class="info-row">
+                        <span class="label">แผนก</span>
+                        <span class="value">จักษุ</span>
                     </div>
 
-                    <div class="action-area">
-                        <button class="btn btn-detail">ดูรายละเอียด</button>
+                    <div class="info-row">
+                        <span class="label">แพทย์</span>
+                        <span class="value">นพ.นนทพัทธ์ ใจดี</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="label">รายการ</span>
+                        <span class="value">ตรวจทั่วไป</span>
+                    </div>
+
+                    <div class="info-row" style="margin-top:5px;">
+                        <span class="label">ยอดชำระ</span>
+                        <span class="value">500 บาท</span>
+                    </div>
+
+                    <div class="status-badge paid">
+                        <div class="dot"></div>
+                        <span class="status-text">สถานะ: ชำระแล้ว</span>
                     </div>
                 </div>
 
-            </div>
-        </main>
-    </div>
-    <!-- ================= PAYMENT SUCCESS MODAL ================= -->
-    <div id="paymentModal" class="modal-overlay">
-        <div class="modal-content">
-
-            <div class="modal-icon-green">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-
-            <h2>สำเร็จ</h2>
-            <p>ดำเนินการชำระเงินสำเร็จเรียบร้อยแล้ว</p>
-
-            <div class="modal-buttons">
-                <button class="btn-yes" onclick="closePaymentModal()">ตกลง</button>
+                <!-- ✅ ลบปุ่มออก ไม่มีปุ่มใดๆ -->
+                <div class="action-area"></div>
             </div>
 
         </div>
+    </main>
+</div>
+
+<!-- ================= PAYMENT SUCCESS MODAL ================= -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="modal-content">
+
+        <div class="modal-icon-green">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <h2>สำเร็จ</h2>
+        <p>ดำเนินการชำระเงินสำเร็จเรียบร้อยแล้ว</p>
+
+        <div class="modal-buttons">
+            <button class="btn-yes" onclick="closePaymentModal()">ตกลง</button>
+        </div>
+
     </div>
+</div>
 </body>
 </html>
