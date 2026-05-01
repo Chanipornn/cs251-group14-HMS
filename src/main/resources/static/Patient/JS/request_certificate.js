@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const patientId = currentUser?.patientId;
 
+    // ❌ ไม่ login
     if (!patientId) {
-        alert('กรุณาเข้าสู่ระบบก่อน');
-        window.location.href = '../../login.html';
+        showPopup("error", "กรุณาเข้าสู่ระบบก่อน", () => {
+            window.location.href = '../../login.html';
+        });
         return;
     }
 
@@ -15,36 +17,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     let records = [];
     try {
         const res = await fetch('http://localhost:8080/api/medical-records?patientId=' + patientId);
+        if (!res.ok) throw new Error('โหลดข้อมูลไม่สำเร็จ');
+
         records = await res.json();
 
         visitDateSelect.innerHTML = '<option value="">เลือกวันที่เคยเข้ารับการตรวจ</option>';
+
         records.forEach(record => {
             const option = document.createElement('option');
             option.value = record.recordId;
             option.textContent = record.visitDate + ' — ' + (record.diagnosis || 'ตรวจทั่วไป');
             visitDateSelect.appendChild(option);
         });
+
     } catch (err) {
         console.error(err);
         visitDateSelect.innerHTML = '<option value="">โหลดประวัติไม่ได้</option>';
+        showPopup("error", "โหลดประวัติการรักษาไม่สำเร็จ");
     }
 
+    // submit form
     if (certForm) {
         certForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const selectedRecordId = visitDateSelect.value;
+
             if (!selectedRecordId) {
-                alert('กรุณาเลือกวันที่เคยเข้ารับการตรวจ');
+                showPopup("error", "กรุณาเลือกวันที่เคยเข้ารับการตรวจ");
                 return;
             }
 
-            // ดึง doctorId จาก record ที่เลือก
+            // หา record
             const selectedRecord = records.find(r => r.recordId == selectedRecordId);
             const doctorId = selectedRecord?.doctorId;
 
             if (!doctorId) {
-                alert('ไม่พบข้อมูลแพทย์จากประวัตินี้');
+                showPopup("error", "ไม่พบข้อมูลแพทย์จากประวัตินี้");
                 return;
             }
 
@@ -65,13 +74,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (!res.ok) throw new Error('Request failed');
 
-                alert('ระบบได้ส่งคำขอใบรับรองแพทย์เรียบร้อยแล้ว');
-                window.location.href = 'home.html';
+                // ✅ success
+                showPopup("success", "ระบบได้ส่งคำขอใบรับรองแพทย์เรียบร้อยแล้ว", () => {
+                    window.location.href = 'home.html';
+                });
 
             } catch (err) {
                 console.error(err);
-                alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+                showPopup("error", "เกิดข้อผิดพลาด กรุณาลองใหม่");
             }
         });
     }
 });
+
+
+/* =========================
+   POPUP UI
+========================= */
+
+function showPopup(type, message, callback = null) {
+    const popup = document.getElementById("popup");
+    const icon = popup.querySelector(".popup-icon");
+    const text = document.getElementById("popupMessage");
+
+    popup.style.display = "flex";
+    text.innerText = message;
+
+    icon.className = "popup-icon " + (type === "success" ? "success" : "error");
+    icon.innerHTML = type === "success"
+        ? '<i class="fa-solid fa-check"></i>'
+        : '<i class="fa-solid fa-xmark"></i>';
+
+    // เก็บ callback ไว้ใช้ตอนกดปิด
+    popup.dataset.callback = callback ? "true" : "false";
+    popup._callback = callback;
+}
+
+function closePopup() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "none";
+
+    if (popup.dataset.callback === "true" && typeof popup._callback === "function") {
+        popup._callback();
+    }
+}
