@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================
     // BACK BUTTON
@@ -138,4 +138,141 @@ function closePaymentModal() {
     document.getElementById("paymentModal").classList.remove("active");
     // จ่ายเสร็จ โหลดหน้าใหม่เพื่อให้บิลเป็น "ชำระแล้ว"
     // window.location.reload(); 
+}*/
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ==========================
+    // BACK BUTTON
+    // ==========================
+    window.handleBack = function(e) {
+        e.preventDefault();
+        window.location.href = "home.html";
+    };
+
+    // ==========================
+    // INIT โหลดข้อมูลเมื่อเปิดหน้า
+    // ==========================
+    loadInvoices();
+
+});
+
+// ==========================
+// 📌 ดึงข้อมูล Invoice ตาม PatientId
+// ==========================
+async function loadInvoices() {
+    const grid = document.getElementById("paymentGrid");
+
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user || !user.patientId) {
+        grid.innerHTML = "<p style='text-align:center;'>กรุณาล็อคอินก่อนใช้งานระบบชำระเงิน</p>";
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/invoices/patient/${user.patientId}`);
+        if (!res.ok) throw new Error("โหลดบิลไม่สำเร็จ");
+
+        const invoices = await res.json();
+
+        renderInvoices(invoices);
+
+    } catch (error) {
+        console.error(error);
+        grid.innerHTML = "<p style='text-align:center; color:red;'>เกิดข้อผิดพลาด</p>";
+    }
+}
+
+// ==========================
+// 📌 สร้าง UI การ์ด
+// ==========================
+async function renderInvoices(invoices) {
+    const grid = document.getElementById("paymentGrid");
+    grid.innerHTML = "";
+
+    if (invoices.length === 0) {
+        grid.innerHTML = "<p style='text-align:center; color:#999;'>ไม่มีรายการ</p>";
+        return;
+    }
+
+    for (const inv of invoices) {
+
+        let itemsHtml = "";
+
+        try {
+            const itemRes = await fetch(`/api/invoices/${inv.invoiceId}/items`);
+            if (itemRes.ok) {
+                const items = await itemRes.json();
+
+                itemsHtml = items.map(i =>
+                    `<div style="color:#555; font-size:0.85rem;">- ${i.description}</div>`
+                ).join("");
+            }
+        } catch (e) {
+            console.error("โหลดรายการย่อยไม่สำเร็จ");
+        }
+
+        const isPaid = inv.status === 'PAID';
+        const statusClass = isPaid ? 'paid' : 'unpaid';
+        const statusText = isPaid ? 'สถานะ: ชำระแล้ว' : 'สถานะ: ค้างชำระ';
+
+        const actionHtml = isPaid ? '' : `
+            <div class="action-area">
+                <button class="btn btn-pay" onclick="payInvoice(${inv.invoiceId})">ชำระเงิน</button>
+            </div>
+        `;
+
+        grid.innerHTML += `
+            <div class="payment-card">
+                <div class="card-body">
+
+                    <div class="date-title">
+                        วันที่ ${inv.invoiceDate || '-'}
+                    </div>
+
+                    <div class="info-row">
+                        <span class="label">แผนก</span>
+                        <span class="value">${inv.department || 'ทั่วไป'}</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="label">แพทย์</span>
+                        <span class="value">นพ. ${inv.doctorName || '-'}</span>
+                    </div>
+
+                    <div class="info-row" style="align-items: flex-start;">
+                        <span class="label">รายการ</span>
+                        <span class="value">
+                            ${itemsHtml || inv.diagnosis || '-'}
+                        </span>
+                    </div>
+
+                    <!-- ❌ ลบยอดชำระออกแล้ว -->
+
+                    <div class="status-badge ${statusClass}">
+                        <div class="dot"></div>
+                        <span class="status-text">${statusText}</span>
+                    </div>
+
+                </div>
+
+                ${actionHtml}
+
+            </div>
+        `;
+    }
+}
+
+// ==========================
+// 💳 ปุ่มชำระเงิน
+// ==========================
+function payInvoice(invoiceId) {
+    console.log("Pay invoice:", invoiceId);
+
+    document.getElementById("paymentModal").classList.add("active");
+}
+
+function closePaymentModal() {
+    document.getElementById("paymentModal").classList.remove("active");
 }
