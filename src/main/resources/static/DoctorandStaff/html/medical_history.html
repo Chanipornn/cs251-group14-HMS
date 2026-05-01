@@ -12,7 +12,6 @@
 
 <body>
 
-	<!-- HEADER -->
 	<header class="header">
 		<div class="left-section">
 			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
@@ -20,14 +19,13 @@
 		</div>
 
 		<div class="profile">
-			<span id="displayName"></span>
+			<span id="displayName">กำลังโหลด...</span>
 			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
 		</div>
 	</header>
 
 	<div class="container">
 
-		<!-- SIDEBAR -->
 		<aside class="sidebar">
 			<h3>เมนู</h3><br>
 
@@ -73,11 +71,11 @@
 						<h3 class="table-title">เคสที่รักษาทั้งหมด</h3>
 
 						<div class="search-container">
-							<input type="text" id="patientSearch" placeholder="กรุณากรอกรหัสผู้ป่วย">
+							<input type="text" id="patientSearch" placeholder="กรุณากรอกรหัสผู้ป่วย หรือ ชื่อ">
 							<i class="fa-solid fa-magnifying-glass search-icon"></i>
 						</div>
 
-						<button class="btn-add-record" onclick="location.href='create_medical_history.html'">
+						<button class="btn-add-record" onclick="location.href='/doctorandstaff/medical_history/add'">
 							<i class="fa-solid fa-plus"></i> เพิ่มประวัติการรักษา
 						</button>
 					</div>
@@ -111,12 +109,14 @@
 </body>
 <script src="../js/medical_history.js"></script>
 <script>
-		
+	// ตัวแปรสำหรับเก็บข้อมูลประวัติทั้งหมดไว้ทำระบบค้นหา
+	let allMedicalRecords = [];
+	let DoctorID = null;
+	let userRole = null;
 
 	window.onload = async function () {
 		try {
-			const response = await fetch('/api/me');
-			console.log(response);
+			const response = await fetch('/api/doctorandstaff/me');
 			if (response.status === 401) {
 				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
 				window.location.href = "/doctorandstaff";
@@ -126,11 +126,108 @@
 			const data = await response.json();
 			document.getElementById('displayName').textContent = data.name;
 
+			// รับค่า DoctorID (ลองเช็คทั้งตัวเล็กตัวใหญ่ เผื่อ Backend ส่งมาไม่เหมือนกัน)
+			DoctorID = data.doctorId || data.DoctorID;
+			userRole = data.role || data.Role;
+
+			const today = new Date();
+			document.getElementById('currentDateText').textContent = today.toLocaleDateString('th-TH', {
+				year: 'numeric', month: 'long', day: 'numeric'
+			});
+
+			await fetchMedicalRecords();
+
+			setupSearch();
+
 		} catch (error) {
 			console.error("เกิดข้อผิดพลาด:", error);
 		}
 	};
 
+
+	async function fetchMedicalRecords() {
+		try {
+			let url = '';
+
+			// เช็ค Role ด้วยว่าใช่ Doctor ไหม ถ้าไม่ใช่ให้ดึงทั้งหมด
+			if (userRole === 'Doctor' || userRole === 'DOCTOR') {
+				if (!DoctorID) {
+					console.error("ไม่มี DoctorID");
+					return;
+				}
+				url = '/api/medical-records/doctor/' + DoctorID;
+			} else {
+				// สำหรับ Staff ให้ดึงทั้งหมด
+				url = '/api/medical-records';
+			}
+
+			const res = await fetch(url);
+			if (!res.ok) throw new Error('Failed to fetch data');
+
+			allMedicalRecords = await res.json();
+
+			renderTable(allMedicalRecords);
+			updateStats(allMedicalRecords);
+
+		} catch (error) {
+			console.error("Error fetching medical records:", error);
+			document.getElementById('historyTableBody').innerHTML =
+				`<tr><td colspan="4" style="text-align:center; padding: 50px; color: red;">
+	                ไม่สามารถดึงข้อมูลประวัติการรักษาได้
+	            </td></tr>`;
+		}
+	}
+
+	function renderTable(records) {
+		const tbody = document.getElementById('historyTableBody');
+		tbody.innerHTML = '';
+
+		if (records.length === 0) {
+			tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 50px; color: #999;">ยังไม่มีประวัติการรักษาในระบบ</td></tr>`;
+			return;
+		}
+
+		records.forEach(record => {
+			const tr = document.createElement('tr');
+
+			// ใช้ record.patientName ที่ดึงมาจาก DTO หลังบ้านโดยตรงเลย
+			const patientNameDisplay = record.patientName || 'ไม่พบข้อมูลชื่อ';
+
+			tr.innerHTML = `
+				<td>${record.patientId || '-'}</td>
+				<td>${patientNameDisplay}</td>
+				<td>${record.visitDate || '-'}</td>
+				<td>${record.diagnosis || '-'}</td>
+			`;
+			tbody.appendChild(tr);
+		});
+	}
+
+	function updateStats(records) {
+		document.getElementById('statTotal').textContent = records.length;
+
+		const todayStr = new Date().toISOString().split('T')[0]; // ได้ค่า 'YYYY-MM-DD'
+		const todayRecords = records.filter(r => r.visitDate && r.visitDate.startsWith(todayStr));
+		document.getElementById('statToday').textContent = todayRecords.length;
+
+		const completedRecords = records.filter(r => r.diagnosis && r.diagnosis.trim() !== '');
+		document.getElementById('statCompleted').textContent = completedRecords.length;
+	}
+
+	function setupSearch() {
+		const searchInput = document.getElementById('patientSearch');
+		searchInput.addEventListener('input', function (e) {
+			const keyword = e.target.value.toLowerCase();
+
+			const filteredRecords = allMedicalRecords.filter(record => {
+				const pId = String(record.patientId || '').toLowerCase();
+				const pName = String(record.patientName || '').toLowerCase();
+				return pId.includes(keyword) || pName.includes(keyword);
+			});
+
+			renderTable(filteredRecords);
+		});
+	}
 
 	async function logout() {
 		await fetch('/api/logout', {method: 'POST'});

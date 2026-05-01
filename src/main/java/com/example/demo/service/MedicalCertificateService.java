@@ -55,12 +55,16 @@ public class MedicalCertificateService {
 	        return MedicalCertificateMapper.toDTO(repo.save(existing));
 	    }
 
-	    // GET by patient
 	    public List<MedicalCertificateDTO> getByPatient(Integer patientId) {
 	        return repo.findByPatient_PatientId(patientId)
 	                .stream()
 	                .map(MedicalCertificateMapper::toDTO)
 	                .toList();
 	    }
-
+	    public List<MedicalCertificateDTO> getByDoctor(Integer doctorId) {
+	        return repo.findByDoctor_DoctorId(doctorId)
+	                .stream()
+	                .map(MedicalCertificateMapper::toDTO)
+	                .toList();
+	    }
 }

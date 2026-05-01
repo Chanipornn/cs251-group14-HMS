@@ -14,7 +14,11 @@ public class AppointmentMapper {
 	            a.getQueueNumber(),
 	            a.getStatus().name(),
 	            a.getDoctor().getDoctorId(),
-	            a.getPatient().getPatientId()
+	            a.getPatient().getPatientId(), 
+	            null, 
+	            null, 
+	            null, 
+	            null
 	    );
 
 	    

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.PrescriptionDTO;
+import com.example.demo.dto.PrescriptionHistoryProjection;
 import com.example.demo.service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,10 @@ public class PrescriptionController {
             @PathVariable Integer id, 
             @RequestBody PrescriptionDTO dto) {
         return ResponseEntity.ok(prescriptionService.updatePrescription(id, dto));
+    }
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<PrescriptionHistoryProjection>> getPrescriptionHistoryForDoctor(@PathVariable Integer doctorId) {
+        List<PrescriptionHistoryProjection> history = prescriptionService.getPrescriptionHistoryByDoctorId(doctorId);
+        return ResponseEntity.ok(history);
     }
 }

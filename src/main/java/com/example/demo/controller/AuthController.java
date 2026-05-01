@@ -10,10 +10,6 @@ public class AuthController {
     public String MainPage() {
         return "forward:/login.html";  
     }
-    @GetMapping("/login.html")
-    public String loginPage() {
-        return "forward:/login.html";  
-    }
     @GetMapping("/doctorandstaff")
     public String DoctorloginPage() {
         return "forward:/DoctorandStaff/html/login.html";  

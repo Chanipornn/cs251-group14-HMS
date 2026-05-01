@@ -1,103 +1,189 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เพิ่มประวัติการรักษา</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/create_medical_history.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/medical_history.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>เพิ่มประวัติการรักษา</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="../css/create_medical_history.css">
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../css/medical_history.css">
 </head>
+
 <body>
 
-    <!-- HEADER -->
-<header class="header">
-  <div class="left-section">
-    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <img src="../../img/hospital.png" class="circle-img">
-  </div>
+	<!-- HEADER -->
+	<header class="header">
+		<div class="left-section">
+			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+			<img src="../../img/hospital.png" class="circle-img">
+		</div>
 
-  <div class="profile">
-    <span>นพ.วิรุต</span>
-    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
-  </div>
-</header>
+		<div class="profile">
+			<span id="displayName"></span>
+			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+		</div>
+	</header>
 
-    <div class="container">
-        
-        <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h3>เมนู</h3><br>
+	<div class="container">
 
-    <a href="medical_history.html" class="menu active">ประวัติการรักษา</a>
-    <a href="history.html" class="menu">การจ่ายยา</a>
-    <a href="appointment.html" class="menu">การนัดหมาย</a>
-    <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-    <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+		<!-- SIDEBAR -->
+		<aside class="sidebar">
+			<h3>เมนู</h3><br>
 
-    <div class="logout" onclick="logout()">
-      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
-    </div>
-  </aside>
+			<a href="medical_history.html" class="menu active">ประวัติการรักษา</a>
+			<a href="history.html" class="menu">การจ่ายยา</a>
+			<a href="appointment.html" class="menu">การนัดหมาย</a>
+			<a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+			<a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
 
-        <main class="main-content">
-            <section class="form-container">
-                <div class="form-header">
-                    <a href="medical_history.html" class="back-btn-circle">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </a>
-                    <h1 class="form-title">เพิ่มประวัติการรักษา</h1>
-                </div>
+			<div class="logout" onclick="logout()">
+				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+			</div>
+		</aside>
 
-                <form id="historyForm" class="medical-form">
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>รหัสประจำตัวผู้ป่วย :</label>
-                            <input type="text" id="patientId" placeholder="เช่น 256893">
-                        </div>
-                        <div class="input-group">
-                            <label>รหัสประจำตัวแพทย์ :</label>
-                            <input type="text" id="doctorId" placeholder="เช่น 77990088">
-                        </div>
-                    </div>
+		<main class="main-content">
+			<section class="form-container">
+				<div class="form-header">
+					<a href="medical_history.html" class="back-btn-circle">
+						<i class="fa-solid fa-arrow-left"></i>
+					</a>
+					<h1 class="form-title">เพิ่มประวัติการรักษา</h1>
+				</div>
 
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>วันที่เข้าพบแพทย์ :</label>
-                            <input type="date" id="visitDate">
-                        </div>
-                    </div>
+				<form id="historyForm" class="medical-form">
+					<div class="form-row">
+						<div class="input-group">
+							<label>รหัสประจำตัวผู้ป่วย :</label>
+							<input type="text" id="patientId" placeholder="เช่น 256893">
+						</div>
+						<div class="input-group">
+							<label>รหัสประจำตัวแพทย์ :</label>
+							<input type="text" id="doctorId" placeholder="เช่น 77990088">
+						</div>
+					</div>
 
-                    <div class="input-group full-width">
-                        <label>อาการ :</label>
-                        <textarea id="symptoms" rows="3" placeholder="เช่น มีไข้ ตัวร้อน"></textarea>
-                    </div>
+					<div class="form-row">
+						<div class="input-group">
+							<label>วันที่เข้าพบแพทย์ :</label>
+							<input type="date" id="visitDate">
+						</div>
+					</div>
 
-                    <div class="input-group full-width">
-                        <label>การวินิจฉัย :</label>
-                        <input type="text" id="diagnosis" placeholder="เช่น เป็นไข้หวัดใหญ่">
-                    </div>
+					<div class="input-group full-width">
+						<label>อาการ :</label>
+						<textarea id="symptoms" rows="3" placeholder="เช่น มีไข้ ตัวร้อน"></textarea>
+					</div>
 
-                    <div class="input-group full-width">
-                        <label>ผลการรักษา :</label>
-                        <textarea id="treatmentResult" rows="3" placeholder="เช่น ติดตามอาการ"></textarea>
-                    </div>
+					<div class="input-group full-width">
+						<label>การวินิจฉัย :</label>
+						<input type="text" id="diagnosis" placeholder="เช่น เป็นไข้หวัดใหญ่">
+					</div>
 
-                    <div class="input-group full-width">
-                        <label>รายละเอียดการรักษา :</label>
-                        <textarea id="treatmentDetail" rows="3" placeholder="เช่น มีการซักถามประวัติ"></textarea>
-                    </div>
+					<div class="input-group full-width">
+						<label>ผลการรักษา :</label>
+						<textarea id="treatmentResult" rows="3" placeholder="เช่น ติดตามอาการ"></textarea>
+					</div>
 
-                    <div class="form-actions">
-                        <button type="button" class="btn-cancel" onclick="history.back()">ยกเลิกการแก้ไข</button>
-                        <button type="submit" class="btn-confirm">ยืนยันแก้ไข</button>
-                    </div>
-                </form>
-            </section>
-        </main>
-    </div>
+					<div class="input-group full-width">
+						<label>รายละเอียดการรักษา :</label>
+						<textarea id="treatmentDetail" rows="3" placeholder="เช่น มีการซักถามประวัติ"></textarea>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-cancel" onclick="history.back()">ยกเลิกการแก้ไข</button>
+						<button type="submit" class="btn-confirm">ยืนยันแก้ไข</button>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
 
 </body>
-    <script src="../js/medical_history.js"></script>
+<script>
+	let loggedInDoctorId = null;
+
+	window.onload = async function () {
+		try {
+			// 1. เช็คสถานะล็อคอิน
+			const response = await fetch('/api/doctorandstaff/me');
+			if (response.status === 401) {
+				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
+				window.location.href = "/doctorandstaff";
+				return;
+			}
+			const data = await response.json();
+			document.getElementById('displayName').textContent = data.name;
+
+			// 2. ดึงรหัสแพทย์ของคนที่ล็อคอินอยู่มาใส่ในช่อง "รหัสประจำตัวแพทย์" อัตโนมัติ
+			loggedInDoctorId = data.doctorId || data.DoctorID;
+			if (loggedInDoctorId) {
+				document.getElementById('doctorId').value = loggedInDoctorId;
+				// (ทางเลือก) ป้องกันไม่ให้แก้รหัสแพทย์ของตัวเอง
+				// document.getElementById('doctorId').readOnly = true; 
+			}
+
+			// 3. ตั้งค่าวันที่เข้าพบแพทย์เป็น "วันนี้" อัตโนมัติ
+			const today = new Date().toISOString().split('T')[0];
+			document.getElementById('visitDate').value = today;
+
+		} catch (error) {
+			console.error("เกิดข้อผิดพลาด:", error);
+		}
+	};
+
+	// 📌 4. จัดการตอนกดปุ่ม Submit ฟอร์ม
+	document.getElementById('historyForm').addEventListener('submit', async function (e) {
+		e.preventDefault(); // ป้องกันไม่ให้หน้าเว็บรีเฟรช
+
+		// ดึงข้อมูลจากช่อง Input ต่างๆ มาสร้างเป็น Object
+		const payload = {
+			patientId: parseInt(document.getElementById('patientId').value),
+			doctorId: parseInt(document.getElementById('doctorId').value),
+			visitDate: document.getElementById('visitDate').value,
+			symptoms: document.getElementById('symptoms').value,
+			diagnosis: document.getElementById('diagnosis').value,
+			treatmentResult: document.getElementById('treatmentResult').value,
+			treatmentDetail: document.getElementById('treatmentDetail').value,
+			note: "" // ถ้ามีฟิลด์หมายเหตุเพิ่มเติม ก็ใส่ตรงนี้ได้ครับ
+		};
+
+		// เช็คข้อมูลเบื้องต้นว่ากรอกครบไหม
+		if (!payload.patientId || !payload.doctorId || !payload.visitDate) {
+			alert("กรุณากรอกข้อมูลที่จำเป็น (รหัสผู้ป่วย, รหัสแพทย์, วันที่) ให้ครบถ้วน");
+			return;
+		}
+
+		try {
+			// 🚀 ยิง API POST เพื่อบันทึกข้อมูล
+			const res = await fetch('/api/medical-records', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			if (res.ok) {
+				alert("บันทึกประวัติการรักษาสำเร็จ!");
+				window.location.href = "/doctorandstaff/medical_certificate/add"; // เด้งกลับไปหน้าตารางประวัติ
+			} else {
+				// กรณีที่ Backend แจ้ง Error กลับมา (เช่น หา PatientID ไม่เจอ)
+				const errorMsg = await res.text();
+				alert("ไม่สามารถบันทึกได้: " + errorMsg);
+			}
+
+		} catch (error) {
+			console.error("Error submitting form:", error);
+			alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+		}
+	});
+
+	async function logout() {
+		await fetch('/api/logout', {method: 'POST'});
+		window.location.href = "/";
+	}
+</script>
+
 </html>

@@ -1,223 +1,405 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Prompt', sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Prompt', sans-serif;
 }
 
 
 body {
-  background: #faf8fe;
+	background: #faf8fe;
 }
 
 .left-section {
-    display: flex;
-    align-items: center;
-    gap: 15px; 
+	display: flex;
+	align-items: center;
+	gap: 15px;
 }
 
 .circle-img {
-    width: 3rem;
-    height: 3rem;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid white;
+	width: 3rem;
+	height: 3rem;
+	object-fit: cover;
+	border-radius: 50%;
+	border: 2px solid white;
 }
 
 .menu-icon {
-  font-size: 24px;
-  cursor: pointer;
+	font-size: 24px;
+	cursor: pointer;
 }
 
 .profile {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
-    cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
 }
 
 /* ปรับแต่งวงกลมสีขาวและรูปภาพด้านใน */
 .avatar {
-    width: 35px;              
-    height: 35px;
-    background-color: white;   
-    border-radius: 50%;        
-    border: 2px solid white;   
-    
-    
-    background-size: cover;    
-    background-position: center; 
-    background-repeat: no-repeat; 
-    
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+	width: 35px;
+	height: 35px;
+	background-color: white;
+	border-radius: 50%;
+	border: 2px solid white;
+
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 
 /* HEADER - ปรับให้ Fixed อยู่กับที่บนสุด */
 .header {
-  height: 80px;
-  background: #6E65BE;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  
-  /* เพิ่มส่วนนี้ */
-  position: fixed;   /* ล็อคให้อยู่บนสุด */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;    /* ให้อยู่เหนือเลเยอร์อื่นๆ */
+	height: 80px;
+	background: #6E65BE;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+
+	/* เพิ่มส่วนนี้ */
+	position: fixed;
+	/* ล็อคให้อยู่บนสุด */
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	/* ให้อยู่เหนือเลเยอร์อื่นๆ */
 }
 
 /* CONTAINER - ปรับให้เลื่อนลงมาเท่ากับความสูง Header */
 .container {
-  display: flex;
-  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
-  align-items: flex-start;
+	display: flex;
+	margin-top: 80px;
+	/* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+	align-items: flex-start;
 }
 
 /* SIDEBAR - ปรับให้ล็อคอยู่กับที่และเลื่อนเฉพาะในตัวเอง */
 .sidebar {
-  width: 250px;
-  background: white;
-  padding: 20px;
-  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
-  height: calc(100vh - 80px); 
-  display: flex;
-  flex-direction: column;
-  transition: 0.3s;
+	width: 250px;
+	background: white;
+	padding: 20px;
+	/* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
+	height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	transition: 0.3s;
 
-  /* ล็อค Sidebar ให้อยู่กับที่ */
-  position: sticky;
-  top: 80px; 
-  flex-shrink: 0;
-  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
+	/* ล็อค Sidebar ให้อยู่กับที่ */
+	position: sticky;
+	top: 80px;
+	flex-shrink: 0;
+	overflow-y: auto;
+	/* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
 }
 
 .container {
-  display: flex;
-  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
-  align-items: flex-start;
+	display: flex;
+	margin-top: 80px;
+	/* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+	align-items: flex-start;
 }
 
 /* Main Content */
 
 .main-content {
-    flex: 1;
-    padding: 20px;
-    min-height: calc(100vh - 80px);
+	flex: 1;
+	padding: 20px;
+	min-height: calc(100vh - 80px);
 }
 
 .menu {
-  padding: 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  margin-bottom: 10px;
-  font-weight: 600;
+	padding: 12px;
+	border-radius: 8px;
+	text-decoration: none;
+	color: black;
+	margin-bottom: 10px;
+	font-weight: 600;
 }
 
 .menu:hover {
-  background: #f0f0ff;
+	background: #f0f0ff;
 }
 
 .menu.active {
-  background: linear-gradient(90deg, #746BC3, #B4ADEE);
-  color: white;
+	background: linear-gradient(90deg, #746BC3, #B4ADEE);
+	color: white;
 }
 
 .logout {
-  margin-top: auto;
-  color: red;
-  cursor: pointer;
-  margin-bottom: 10px;
+	margin-top: auto;
+	color: red;
+	cursor: pointer;
+	margin-bottom: 10px;
 }
 
 .logoutlogo {
-    width: 20px;
-    margin-right: 5px;
-    margin-bottom: -2px; 
-    margin-left: 5px;
-    vertical-align: middle;
-    margin-top: -5px;
+	width: 20px;
+	margin-right: 5px;
+	margin-bottom: -2px;
+	margin-left: 5px;
+	vertical-align: middle;
+	margin-top: -5px;
 }
 
 .content {
-  padding: 30px;
+	padding: 30px;
 }
 
 h2 {
-  color: #6f6acb;
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 10px;
+	color: #6f6acb;
+	font-size: 22px;
+	font-weight: 600;
+	margin-bottom: 10px;
 }
 
 .search-box {
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  background: white;
-  border-radius: 50px;
-  padding: 8px 15px;
-  border: 1px solid #ddd;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	background: white;
+	border-radius: 50px;
+	padding: 8px 15px;
+	border: 1px solid #ddd;
 }
 
 .search-box input {
-  border: none;
-  outline: none;
-  flex: 1;
-  font-size: 14px;
+	border: none;
+	outline: none;
+	flex: 1;
+	font-size: 14px;
 }
 
 .sort {
-  text-align: right;
-  margin: 10px 0;
-  font-size: 13px;
-  color: #666;
+	text-align: right;
+	margin: 10px 0;
+	font-size: 13px;
+	color: #666;
 }
 
 .card {
-  background: white;
-  border-radius: 15px;
-  padding: 18px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  font-size: 14px;
+	background: white;
+	border-radius: 15px;
+	padding: 18px;
+	margin-bottom: 15px;
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #e0e0e0;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	font-size: 14px;
 }
 
 .card p {
-  margin: 4px 0;
+	margin: 4px 0;
 }
 
 .card-right {
-  text-align: right;
-  font-size: 14px;
-  font-weight: 500;
+	text-align: right;
+	font-size: 14px;
+	font-weight: 500;
 }
 
 .edit {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
 }
 
 .add-appointment {
-  margin-top: 10px;
-  background: #e6e4ff;
-  border: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  color: #6f6acb;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+	margin-top: 10px;
+	background: #e6e4ff;
+	border: none;
+	padding: 12px 16px;
+	border-radius: 12px;
+	color: #6f6acb;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.content {
+	width: 100%;
+	max-width: 1200px;
+	/* ขยายพื้นที่ให้กว้างขึ้น */
+	margin: 0 auto;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+#appointmentList {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	/* ระยะห่างระหว่างการ์ด */
+	width: 100%;
+	margin-top: 20px;
+}
+
+.card {
+	display: flex;
+	justify-content: space-between;
+	/* ดันซ้าย-ขวาให้ห่างกันสุด */
+	align-items: flex-start;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 20px;
+	width: 100%;
+	/* 👈 พระเอกของเราที่ทำให้เต็มจอ */
+	box-sizing: border-box;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card-left p,
+.card-right p {
+	margin: 5px 0;
+	color: #333;
+}
+
+.card-right {
+	text-align: right;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.edit-btn {
+	background: none;
+	border: none;
+	color: red;
+	font-size: 1.2rem;
+	cursor: pointer;
+	margin-top: auto;
+	/* ดันปุ่มลงล่างสุด */
+}
+
+.form-container {
+	background: #fff;
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	max-width: 800px;
+	margin: 20px auto;
+}
+
+.form-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 30px;
+	border-bottom: 2px solid #f0f2f5;
+	padding-bottom: 15px;
+}
+
+.form-header h1 {
+	margin: 0;
+	color: #333;
+	font-size: 1.5rem;
+	margin-left: 15px;
+}
+
+.back-btn-circle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	background-color: #f0f2f5;
+	color: #555;
+	border-radius: 50%;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.back-btn-circle:hover {
+	background-color: #837dd1;
+	color: #fff;
+}
+
+.form-row {
+	display: flex;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.input-group {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.input-group label {
+	font-weight: 500;
+	margin-bottom: 8px;
+	color: #555;
+}
+
+.input-group input,
+.input-group textarea {
+	padding: 12px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	font-family: 'Prompt', sans-serif;
+	font-size: 1rem;
+	outline: none;
+	transition: border-color 0.3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+	border-color: #837dd1;
+}
+
+.input-group.full-width {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 15px;
+	margin-top: 30px;
+}
+
+.btn-cancel {
+	padding: 10px 20px;
+	background-color: #fff;
+	color: #dc3545;
+	border: 1px solid #dc3545;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: 0.3s;
+}
+
+.btn-cancel:hover {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.btn-confirm {
+	padding: 10px 20px;
+	background-color: #837dd1;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: 0.3s;
+}
+
+.btn-confirm:hover {
+	background-color: #6c66bd;
 }

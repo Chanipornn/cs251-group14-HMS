@@ -3,15 +3,33 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>ประวัติจ่ายยา</title>
+	<title>รายการใบแจ้งหนี้ และ การจ่ายยา</title>
 
 	<link rel="stylesheet" href="/DoctorandStaff/css/history.css">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+	<style>
+		/* สไตล์เพิ่มเติมสำหรับตาราง Invoice Items ให้ดูสวยงาม */
+		.invoice-items-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 15px;
+		}
+
+		.invoice-items-table th,
+		.invoice-items-table td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+		}
+
+		.invoice-items-table th {
+			background-color: #f2f2f2;
+		}
+	</style>
 </head>
 
 <body>
 
-	<!-- HEADER -->
 	<header class="header">
 		<div class="left-section">
 			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
@@ -19,19 +37,18 @@
 		</div>
 
 		<div class="profile">
-			<span id = "displayName"></span>
+			<span id="displayName">กำลังโหลด...</span>
 			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
 		</div>
 	</header>
 
 	<div class="container">
 
-		<!-- SIDEBAR -->
 		<aside class="sidebar">
 			<h3>เมนู</h3><br>
 
 			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
-			<a href="/doctorandstaff/history" class="menu active">การจ่ายยา</a>
+			<a href="/doctorandstaff/history" class="menu active">การจ่ายยา/ใบแจ้งหนี้</a>
 			<a href="/doctorandstaff/appointment" class="menu">การนัดหมาย</a>
 			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
 			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
@@ -44,63 +61,21 @@
 		<div class="main">
 
 			<div class="search">
-				<input type="text" placeholder="รหัสผู้ป่วย / รหัสใบสั่งยา">
+				<input type="text" id="searchInput" placeholder="ค้นหารหัสใบแจ้งหนี้ หรือ รหัสผู้ป่วย...">
 				<i class="fa fa-search"></i>
 			</div>
 
-			<h2>ประวัติการจ่ายยา</h2>
+			<h2>ประวัติใบแจ้งหนี้และการจ่ายยา</h2>
 
 			<div class="content">
 
-				<div class="list">
-
-					<div class="card active">
-						<p>วันที่ 20/03/2569</p>
-						<p>รหัสใบสั่งยา : AE2345-1</p>
-						<p>รหัสผู้ป่วย : 6780987</p>
-						<p>ชื่อยา : Enalapril, Metformin</p>
-					</div>
-
-					<div class="card">
-						<p>วันที่ 20/03/2569</p>
-						<p>รหัสใบสั่งยา : AE2377-2</p>
-						<p>รหัสผู้ป่วย : 6780988</p>
-						<p>ชื่อยา : Salbutamol, Omeprazole</p>
-					</div>
-
-					<div class="card">
-						<p>วันที่ 19/03/2569</p>
-						<p>รหัสใบสั่งยา : AE2967-4</p>
-						<p>รหัสผู้ป่วย : 6780988</p>
-						<p>ชื่อยา : ORS, Ondansetron, Paracetamol</p>
-					</div>
-
-					<button class="add-btn">+ สร้างรายการจ่ายยา</button>
-
+				<div class="list" id="invoiceList">
+					<p style="text-align:center; margin-top:20px;">กำลังโหลดข้อมูล...</p>
 				</div>
 
-				<div class="detail">
-					<h3>ใบรายการจ่ายยา</h3>
-					<p>รหัสใบสั่งยา : AE2345-1</p>
-
-					<hr>
-
-					<p>ชื่อผู้ป่วย : นาย สอง เสื้อแดง</p>
-					<p>รหัสผู้ป่วย : 6780987</p>
-					<p>ประวัติการแพ้ : -</p>
-
-					<p>ชื่อแพทย์ผู้จ่ายยา : นพ. วิศรุจ อินทร์เพ็ญ</p>
-					<p>รหัสประจำตัวแพทย์ : 111222333</p>
-
-					<p>ชื่อยา : Enalapril, Metformin</p>
-					<p>ปริมาณการใช้ยา : รับประทานครั้งละ 2 ครั้งหลังอาหาร</p>
-					<p>ระยะเวลาใช้ยา : 1 เดือน</p>
-
-					<p>คำแนะนำ : ถ้ามีอาการผิดปกติให้มาพบแพทย์</p>
-
-					<div class="edit">
-						แก้ไข <i class="fa fa-pen"></i>
-					</div>
+				<div class="detail" id="prescriptionDetail">
+					<h3 style="color:#999; text-align:center; margin-top:50px;">กรุณาเลือกใบแจ้งหนี้เพื่อดูรายละเอียด
+					</h3>
 				</div>
 
 			</div>
@@ -111,26 +86,210 @@
 </body>
 
 <script>
+	let allHistoryRecords = []; // เปลี่ยนชื่อตัวแปรให้ตรงกับความหมายมากขึ้น
+	let DoctorID;
+
 	window.onload = async function () {
 		try {
-			const response = await fetch('/api/me');
-			console.log(response);
+			const response = await fetch('/api/doctorandstaff/me');
 			if (response.status === 401) {
 				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
-				window.location.href = "/doctorandstaff"; 
+				window.location.href = "/doctorandstaff";
+				return;
+			}
+			const data = await response.json();
+			document.getElementById('displayName').textContent = data.name;
+
+			// รองรับทั้ง camelCase และ PascalCase
+			DoctorID = data.doctorId || data.DoctorID;
+
+			if (!DoctorID) {
+				console.error("ไม่พบรหัสแพทย์ใน Session");
 				return;
 			}
 
-			const data = await response.json();
-			document.getElementById('displayName').textContent = data.name;
+			// ดึงข้อมูล Prescription + Invoice History ของหมอคนนี้
+			await fetchHistoryRecords();
+			setupSearch();
+
 		} catch (error) {
 			console.error("เกิดข้อผิดพลาด:", error);
 		}
 	};
 
+	// 📌 ดึงข้อมูลจาก API ตัวใหม่ที่คืนค่า Projection
+	async function fetchHistoryRecords() {
+		try {
+			const res = await fetch('/api/prescriptions/doctor/' + DoctorID);
+			if (!res.ok) throw new Error('Failed to fetch history records');
+
+			allHistoryRecords = await res.json();
+			renderCards(allHistoryRecords);
+			console.log(allHistoryRecords)
+			// ถ้ามีข้อมูล ให้โชว์รายละเอียดของใบแรกสุด (ฝั่งขวา)
+			if (allHistoryRecords.length > 0) {
+				fetchAndShowDetails(allHistoryRecords[0]);
+			}
+		} catch (error) {
+			console.error(error);
+			document.getElementById('invoiceList').innerHTML = '<p style="color:red; text-align:center;">ไม่สามารถดึงข้อมูลประวัติได้</p>';
+		}
+	}
+
+	// 📌 วาดการ์ดประวัติ (ฝั่งซ้าย)
+	function renderCards(records) {
+		const listContainer = document.getElementById('invoiceList');
+		listContainer.innerHTML = '';
+
+		if (records.length === 0) {
+			listContainer.innerHTML = '<p style="text-align:center; color:#999;">ไม่พบข้อมูล</p>';
+			return;
+		}
+
+		records.forEach((record, index) => {
+			const card = document.createElement('div');
+			card.className = `card ${index === 0 ? 'active' : ''}`;
+
+			// เมื่อคลิกการ์ด ให้ดึงรายละเอียดมาแสดงฝั่งขวา
+			card.onclick = () => {
+				document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+				card.classList.add('active');
+				fetchAndShowDetails(record);
+			};
+
+			const statusColor = record.invoiceStatus === 'Paid' ? 'green' : (record.invoiceStatus === 'Unpaid' ? 'red' : 'orange');
+			const fullName = `${record.patientName || ''} ${record.patientSurname || ''}`.trim();
+
+			card.innerHTML = `
+				<p>วันที่ : <b>${record.visitDate || '-'}</b></p>
+				<p>ชื่อคนไข้ : ${fullName || 'ไม่ระบุ'}</p>
+				<p>ใบสั่งยา : ${record.prescriptionId || '-'} | บิล : ${record.invoiceId || '-'}</p>
+				<p>ชื่อยา : ${record.medicineName || '-'}</p>
+				<p>ยอดรวม : ${record.totalAmount != null ? record.totalAmount : '-'} บาท</p>
+				<p style="color:${statusColor}; font-weight:bold;">สถานะบิล : ${record.invoiceStatus || 'ไม่มีบิล'}</p>
+			`;
+			listContainer.appendChild(card);
+		});
+	}
+
+	// 📌 แสดงรายละเอียดฝั่งขวา (ยา + Invoice Items)
+	async function fetchAndShowDetails(record) {
+		const detailContainer = document.getElementById('prescriptionDetail');
+		const fullName = `${record.patientName || ''} ${record.patientSurname || ''}`.trim();
+
+		// ส่วนที่ 1: เตรียม HTML สำหรับข้อมูลคนไข้และยา
+		let htmlContent = `
+			<h3>รายละเอียดการจ่ายยาและใบแจ้งหนี้</h3>
+			<p>อ้างอิงใบแจ้งหนี้ : <b>${record.invoiceId || '-'}</b></p>
+			<p>รหัสใบสั่งยา : ${record.prescriptionId || '-'}</p>
+			<hr>
+			<p>รหัสผู้ป่วย : ${record.patientId || '-'}</p>
+			<p>ชื่อ-นามสกุล : ${fullName || 'ไม่ระบุ'}</p>
+			<br>
+			
+			<div style="background:#f4f6f9; padding:15px; border-radius:8px;">
+				<h4 style="margin-top:0;">ข้อมูลการจ่ายยา</h4>
+				<p><b>ชื่อยา :</b> ${record.medicineName || '-'}</p>
+				<p><b>ปริมาณการใช้ยา :</b> ${record.dosage || '-'}</p>
+				<p><b>ระยะเวลาใช้ยา :</b> ${record.duration || '-'}</p>
+				<p><b>คำแนะนำ :</b> ${record.instruction || '-'}</p>
+			</div>
+			
+			<br>
+			<h4>รายการค่าใช้จ่าย (Invoice Items)</h4>
+			<div id="invoiceItemsSection">กำลังโหลดรายการค่าใช้จ่าย...</div>
+
+			<div class="edit" onclick="window.location.href='#'" style="margin-top:20px;">
+				แก้ไข <i class="fa fa-pen"></i>
+			</div>
+		`;
+
+		detailContainer.innerHTML = htmlContent;
+
+		// ส่วนที่ 2: ไปดึงข้อมูล InvoiceItems ย่อยมาแสดง
+		const itemsSection = document.getElementById('invoiceItemsSection');
+
+		if (!record.invoiceId) {
+			itemsSection.innerHTML = '<p style="color:#999; font-style:italic;">ยังไม่มีการออกใบแจ้งหนี้ (Invoice) สำหรับการรักษานี้</p>';
+			return;
+		}
+
+		try {
+			// ยิง API ดึงรายการย่อยของบิลใบนี้
+			const res = await fetch(`/api/invoices/${record.invoiceId}/items`);
+			if (!res.ok) throw new Error('Failed to fetch invoice items');
+
+			const items = await res.json();
+
+			if (items.length === 0) {
+				itemsSection.innerHTML = '<p style="color:#999;">ไม่มีรายการค่าใช้จ่ายย่อย</p>';
+				return;
+			}
+
+			// วาดตารางแสดงรายการค่าใช้จ่าย
+			let itemsTable = `
+				<table class="invoice-items-table">
+					<thead>
+						<tr>
+							<th>ลำดับ</th>
+							<th>รายละเอียด (Description)</th>
+							<th>จำนวนเงิน (บาท)</th>
+						</tr>
+					</thead>
+					<tbody>
+			`;
+
+			items.forEach((item, idx) => {
+				itemsTable += `
+					<tr>
+						<td>${idx + 1}</td>
+						<td>${item.description || '-'}</td>
+						<td>${item.amount != null ? item.amount.toLocaleString() : '0'}</td>
+					</tr>
+				`;
+			});
+
+			itemsTable += `
+					</tbody>
+				</table>
+				<h4 style="text-align:right; margin-top:15px;">ยอดรวมทั้งหมด: ${record.totalAmount != null ? record.totalAmount.toLocaleString() : '0'} บาท</h4>
+			`;
+
+			itemsSection.innerHTML = itemsTable;
+
+		} catch (error) {
+			console.error(error);
+			itemsSection.innerHTML = '<p style="color:red;">ไม่สามารถโหลดรายการค่าใช้จ่ายได้</p>';
+		}
+	}
+
+	// 📌 ระบบค้นหา
+	function setupSearch() {
+		const searchInput = document.getElementById('searchInput');
+		searchInput.addEventListener('input', function (e) {
+			const keyword = e.target.value.toLowerCase();
+
+			// ค้นหาได้จากรหัสบิล, รหัสคนไข้, ชื่อคนไข้
+			const filteredRecords = allHistoryRecords.filter(record => {
+				const invId = String(record.invoiceId || '').toLowerCase();
+				const pId = String(record.patientId || '').toLowerCase();
+				const pName = String(record.patientName || '').toLowerCase();
+				return invId.includes(keyword) || pId.includes(keyword) || pName.includes(keyword);
+			});
+
+			renderCards(filteredRecords);
+
+			if (filteredRecords.length > 0) {
+				fetchAndShowDetails(filteredRecords[0]);
+			} else {
+				document.getElementById('prescriptionDetail').innerHTML = '<h3 style="color:#999; text-align:center; margin-top:50px;">ไม่พบข้อมูล</h3>';
+			}
+		});
+	}
+
 	async function logout() {
 		await fetch('/api/logout', {method: 'POST'});
-		window.location.href = "/"; 
+		window.location.href = "/";
 	}
 </script>
 

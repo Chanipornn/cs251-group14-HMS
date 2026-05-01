@@ -31,7 +31,7 @@ public class MedicalRecordService {
     }
 
     public List<MedicalRecordDTO> getRecordsByDoctorId(Integer doctorId) {
-        return medicalRecordRepository.findByDoctor_DoctorId(doctorId).stream()
+        return medicalRecordRepository.findRecordsWithPatientByDoctorId(doctorId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -76,6 +76,12 @@ public class MedicalRecordService {
 
     // Helper: แปลง Entity เป็น DTO
     private MedicalRecordDTO convertToDTO(MedicalRecord entity) {
+        // ประกอบร่างชื่อและนามสกุล (เช็ค null กันเหนียวไว้หน่อยก็ดีครับ)
+        String patientFullName = "";
+        if (entity.getPatient() != null) {
+            patientFullName = entity.getPatient().getName() + " " + entity.getPatient().getSurname();
+        }
+
         return new MedicalRecordDTO(
                 entity.getRecordId(),
                 entity.getVisitDate(),
@@ -85,6 +91,7 @@ public class MedicalRecordService {
                 entity.getTreatmentResult(),
                 entity.getNote(),
                 entity.getPatient().getPatientId(),
+                patientFullName, 
                 entity.getDoctor().getDoctorId()
         );
     }

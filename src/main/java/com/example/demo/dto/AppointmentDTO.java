@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.example.demo.model.Appointment.AppointmentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class AppointmentDTO {
@@ -15,18 +16,26 @@ public class AppointmentDTO {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime appointmentTime;
     private Integer queueNumber;
-    private String status;
+    private AppointmentStatus status;
     private Integer doctorId;
     private Integer patientId;
     
     private String doctorName;
     private String reason;
     private String preparation;
+ 
+    private String patientName;
+    private Integer age;
+    private Float weight;
+    private Float height;
 
-    public AppointmentDTO() {}
+
+    
+
+	public AppointmentDTO(Integer integer, LocalDate localDate, LocalTime localTime, Integer integer2, String string, Integer integer3, Integer integer4, Object object, Object object2, Object object3, Object object4) {}
 
     public AppointmentDTO(Integer appointmentId, LocalDate appointmentDate, LocalTime appointmentTime,
-                          Integer queueNumber, String status, Integer doctorId, Integer patientId) {
+                          Integer queueNumber, AppointmentStatus status, Integer doctorId, Integer patientId,String patientName,Integer age,Float weight,Float height) {
         this.appointmentId = appointmentId;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
@@ -34,9 +43,17 @@ public class AppointmentDTO {
         this.status = status;
         this.doctorId = doctorId;
         this.patientId = patientId;
+        this.patientName = patientName;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
     }
 
-    public Integer getAppointmentId() { return appointmentId; }
+    public AppointmentDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getAppointmentId() { return appointmentId; }
     public void setAppointmentId(Integer appointmentId) { this.appointmentId = appointmentId; }
     public LocalDate getAppointmentDate() { return appointmentDate; }
     public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
@@ -44,8 +61,8 @@ public class AppointmentDTO {
     public void setAppointmentTime(LocalTime appointmentTime) { this.appointmentTime = appointmentTime; }
     public Integer getQueueNumber() { return queueNumber; }
     public void setQueueNumber(Integer queueNumber) { this.queueNumber = queueNumber; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public AppointmentStatus getStatus() { return status; }
+    public void setStatus(AppointmentStatus appointmentStatus) { this.status = appointmentStatus; }
     public Integer getDoctorId() { return doctorId; }
     public void setDoctorId(Integer doctorId) { this.doctorId = doctorId; }
     public Integer getPatientId() { return patientId; }
@@ -59,4 +76,35 @@ public class AppointmentDTO {
 
     public String getPreparation() { return preparation; }
     public void setPreparation(String preparation) { this.preparation = preparation; }
+    public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Float getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Float weight) {
+		this.weight = weight;
+	}
+
+	public Float getHeight() {
+		return height;
+	}
+
+	public void setHeight(Float height) {
+		this.height = height;
+	}
 }

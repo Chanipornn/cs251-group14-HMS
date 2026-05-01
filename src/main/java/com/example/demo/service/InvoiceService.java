@@ -4,6 +4,9 @@ import com.example.demo.dto.*;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
+
+import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InvoiceService {
 
+	@Autowired
+	private InvoiceRepository invoiceRepository;
+	
     private final InvoiceRepository invoiceRepo;
     private final InvoiceItemRepository itemRepo;
     private final PatientRepository patientRepo;
@@ -78,6 +84,14 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    // ✅ GET by DoctorID (ใหม่)
+    public List<InvoiceDTO> getByDoctor(Integer doctorId) {
+        return invoiceRepo.findByMedicalRecord_Doctor_DoctorId(doctorId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
+
     private InvoiceDTO convertToDTO(Invoice entity) {
         return new InvoiceDTO(
             entity.getInvoiceId(), entity.getInvoiceDate(), entity.getTotalAmount(),
@@ -85,4 +99,16 @@ public class InvoiceService {
             entity.getPatient().getPatientId(), entity.getMedicalRecord().getRecordId()
         );
     }
+
+	public List<InvoiceDTO> getAllInvoices() {
+    // ดึงข้อมูลทั้งหมดจาก Database (สมมติว่าคุณมี invoiceRepository)
+    // ตรงนี้คุณต้องนำข้อมูลมาแปลงเป็น InvoiceDTO ตามรูปแบบที่คุณทำในโปรเจกต์ครับ
+    return invoiceRepository.findAll().stream()
+            .map(invoice -> {
+                InvoiceDTO dto = new InvoiceDTO();
+                // ... map ข้อมูล ...
+                return dto;
+            })
+            .collect(Collectors.toList());
+}
 }

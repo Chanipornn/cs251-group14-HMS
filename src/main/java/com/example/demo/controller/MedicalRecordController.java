@@ -61,6 +61,7 @@ public class MedicalRecordController {
     }
 
  // 5. ดูประวัติที่หมอคนนี้เป็นคนบันทึก
+ // GET medical records by DoctorID
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<MedicalRecordDTO>> getRecordsByDoctor(@PathVariable Integer doctorId) {
         // ต้องเรียก Method ที่ไปหาจาก DoctorId ใน Repository

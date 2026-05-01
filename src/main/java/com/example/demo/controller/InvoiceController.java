@@ -41,4 +41,13 @@ public class InvoiceController {
     public ResponseEntity<List<InvoiceItemDTO>> getItemsByInvoice(@PathVariable Integer id) {
         return ResponseEntity.ok(invoiceService.getInvoiceItems(id));
     }
+    @GetMapping
+    public ResponseEntity<List<InvoiceDTO>> getAllInvoices() {
+        // อย่าลืมไปสร้าง getAllInvoices() ใน InvoiceService ด้วยนะครับ
+        return ResponseEntity.ok(invoiceService.getAllInvoices()); 
+    }
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<InvoiceDTO>> getDoctorInvoices(@PathVariable Integer doctorId) {
+        return ResponseEntity.ok(invoiceService.getHistoryByPatient(doctorId));
+    }
 }

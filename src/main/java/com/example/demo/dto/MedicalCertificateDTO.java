@@ -13,16 +13,21 @@ public class MedicalCertificateDTO {
     private String description;
     private Integer patientId;
     private Integer doctorId;
+    private String patientName;
+    private String doctorName;
 
-    public MedicalCertificateDTO() {}
+
+	public MedicalCertificateDTO() {}
 
     public MedicalCertificateDTO(Integer certificateId, LocalDate issueDate, String description,
-                                  Integer patientId, Integer doctorId) {
+                                  Integer patientId, Integer doctorId,String patientName,String doctorName) {
         this.certificateId = certificateId;
         this.issueDate = issueDate;
         this.description = description;
         this.patientId = patientId;
         this.doctorId = doctorId;
+        this.patientName = patientName;
+        this.doctorName = doctorName;
     }
 
     public Integer getCertificateId() { return certificateId; }
@@ -35,4 +40,19 @@ public class MedicalCertificateDTO {
     public void setPatientId(Integer patientId) { this.patientId = patientId; }
     public Integer getDoctorId() { return doctorId; }
     public void setDoctorId(Integer doctorId) { this.doctorId = doctorId; }
+    public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
 }
