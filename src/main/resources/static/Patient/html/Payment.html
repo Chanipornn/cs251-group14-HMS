@@ -28,84 +28,12 @@
         </div>
     </header>
 
-    <main class="content-wrapper">
-        <div class="payment-grid">
-
-            <!-- การ์ดที่ 1 -->
-            <div class="payment-card">
-                <div class="card-body">
-                    <div class="date-title">11/04/2026 09:46:15</div>
-
-                    <div class="info-row">
-                        <span class="label">แผนก</span>
-                        <span class="value">หู คอ จมูก</span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="label">แพทย์</span>
-                        <span class="value">นพ.สมชาย ศรีสุข</span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="label">รายการ</span>
-                        <span class="value">ตรวจทั่วไป</span>
-                    </div>
-
-                    <div class="info-row" style="margin-top:5px;">
-                        <span class="label">ยอดชำระ</span>
-                        <span class="value" style="color:var(--primary-color); font-size: 1.1rem;">
-                                500 บาท
-                            </span>
-                    </div>
-
-                    <div class="status-badge unpaid">
-                        <div class="dot"></div>
-                        <span class="status-text">สถานะ: ค้างชำระ</span>
-                    </div>
-                </div>
-
-                <div class="action-area">
-                    <button id="btn-pay-now" class="btn btn-pay">ชำระเงิน</button>
-                </div>
-            </div>
-
-            <!-- การ์ดที่ 2 (ชำระแล้ว → ไม่มีปุ่ม) -->
-            <div class="payment-card">
-                <div class="card-body">
-                    <div class="date-title">11/04/2026 10:30:00</div>
-
-                    <div class="info-row">
-                        <span class="label">แผนก</span>
-                        <span class="value">จักษุ</span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="label">แพทย์</span>
-                        <span class="value">นพ.นนทพัทธ์ ใจดี</span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="label">รายการ</span>
-                        <span class="value">ตรวจทั่วไป</span>
-                    </div>
-
-                    <div class="info-row" style="margin-top:5px;">
-                        <span class="label">ยอดชำระ</span>
-                        <span class="value">500 บาท</span>
-                    </div>
-
-                    <div class="status-badge paid">
-                        <div class="dot"></div>
-                        <span class="status-text">สถานะ: ชำระแล้ว</span>
-                    </div>
-                </div>
-
-                <!-- ✅ ลบปุ่มออก ไม่มีปุ่มใดๆ -->
-                <div class="action-area"></div>
-            </div>
-
-        </div>
-    </main>
+	<main class="content-wrapper">
+	        <!-- 🌟 เพิ่ม id="paymentGrid" และเอาการ์ดเดิมออก เพื่อรอรับข้อมูลจาก JS -->
+	        <div class="payment-grid" id="paymentGrid">
+	            <p style="text-align: center; margin-top: 50px; color: #999;">กำลังโหลดใบแจ้งหนี้...</p>
+	        </div>
+	    </main>
 </div>
 
 <!-- ================= PAYMENT SUCCESS MODAL ================= -->
