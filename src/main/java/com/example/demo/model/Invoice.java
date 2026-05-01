@@ -28,7 +28,7 @@ public class Invoice {
     @Column(name = "TotalAmount", precision = 10, scale = 2)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PaymentStatusConverter.class)  
     @Column(name = "Status", length = 10)
     private PaymentStatus status = PaymentStatus.UNPAID;
 
