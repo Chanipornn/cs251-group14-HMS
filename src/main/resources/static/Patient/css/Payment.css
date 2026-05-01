@@ -231,3 +231,18 @@ body {
 .back-btn:active {
     transform: scale(0.95);
 }
+
+.modal-icon-green {
+    font-size: 60px;
+    color: #2ecc71;
+    margin-bottom: 20px;
+}
+
+/* ให้ modal ซ่อนก่อน */
+.modal-overlay {
+    display: none;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
