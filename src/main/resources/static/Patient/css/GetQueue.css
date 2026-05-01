@@ -37,7 +37,7 @@ body {
     align-items: center;
     gap: 15px;
     margin-bottom: 30px;
-    max-width: 600px;
+    max-width: 100%;
 }
 
 .search-bar {
@@ -173,20 +173,43 @@ body {
     }
 }
 
+/* ให้ back-btn เหมือน back-link */
 .back-btn {
     width: 40px;
     height: 40px;
-    border: 2px solid rgba(255,255,255,0.6);;
+    border: 2px solid #746BC3;
     background: transparent;
     border-radius: 50%;
-    color: white;
+    color: #746BC3;
     cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* กัน icon สีเพี้ยน */
+.back-btn i {
+    color: #746BC3;
+}
 
+.back-btn:hover,
+.back-link:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+
+/* ลบเส้นใต้ของปุ่มย้อนกลับ */
+.back-btn {
+    text-decoration: none !important;
+}
+
+/* กันทุก state */
+.back-btn:visited,
+.back-btn:hover,
+.back-btn:active {
+    text-decoration: none !important;
+}
 
 .filter-btn-container {
     width: 40px; height: 40px;
