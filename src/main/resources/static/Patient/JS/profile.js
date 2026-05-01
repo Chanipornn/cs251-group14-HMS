@@ -130,15 +130,16 @@ async function loadProfileFromAPI() {
 
     console.log("PATIENT:", data);
 
-    // ใช้ fullName จาก backend
-    setText("profileName", data.fullName);
+    // ✅ ใช้ username เป็นชื่อใหญ่
+    setText("profileName", user.username || data.fullName);
+
+    // ✅ เก็บ fullName ไว้ในรายละเอียด
     setText("fullname", data.fullName);
 
     setText("idcard", data.thaiNationalId);
     setText("gender", formatGender(data.gender));
     setText("phone", data.telephone);
     setText("address", data.address);
-
     setText("birth", formatDate(data.dateOfBirth));
 
     setText("blood", data.bloodType);
