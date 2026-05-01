@@ -1,138 +1,84 @@
 // ================= DATA =================
-//const 
+let doctorsData = []; // เปลี่ยนชื่อตัวแปรให้ชัดเจนขึ้น
+
+// 1. โหลดข้อมูลหมอเมื่อเปิดหน้า
 window.onload = async function() {
     try {
-        const response = await fetch('/api/doctor/');
-    
-        const data = await response.json();
-        console.log(data)
-
+        const response = await fetch('/api/doctors');
+        if (response.ok) {
+            doctorsData = await response.json();
+            console.log("Doctors loaded:", doctorsData);
+            renderDoctors(doctorsData);
+        } else {
+            console.error("ไม่สามารถโหลดข้อมูลแพทย์ได้");
+        }
     } catch (error) {
-        console.error("เกิดข้อผิดพลาด:", error);
+        console.error("เกิดข้อผิดพลาดในการโหลดข้อมูลแพทย์:", error);
     }
 };
 
 // ================= RENDER =================
-function renderDoctors(list) {
-    doctorGrid.innerHTML = list.map(doc => `
-        <div class="doctor-card" onclick="goToBooking(${doc.id})">
-            
-            <div class="heart-icon ${doc.favorite ? 'active' : ''}" 
-                 onclick="event.stopPropagation(); toggleFavorite(${doc.id})">
-                ❤
-            </div>
+// 2. วาดการ์ดหมอ
+function renderDoctors(doctors) {
+    const grid = document.getElementById('doctorGrid');
+    grid.innerHTML = ''; 
 
-            <div class="doc-img-container">
-                <img src="${doc.img}" class="doc-avatar">
-            </div>
+    if (doctors.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; padding:20px;">ไม่พบข้อมูลแพทย์</p>';
+        return;
+    }
 
-            <div class="doc-info">
-                <h3>${doc.name}</h3>
-                <p>แผนก ${doc.dept}</p>
-            </div>
+    doctors.forEach(doc => {
+        const card = document.createElement('div');
+        card.className = 'doctor-card';
+        
+        // เตรียมข้อมูลส่งไปที่ LocalStorage (ระวังเรื่องเครื่องหมายคำพูด)
+        const docName = `นพ. ${doc.name} ${doc.surname}`;
+        const docDept = doc.specialization || 'ทั่วไป';
+        const docImg = "../../img/doctor_img1.png"; // ใช้รูป default ไปก่อน หรือดึงจาก db ถ้ามี
 
-        </div>
-    `).join('');
+        // 🌟 เปลี่ยนจากการยัด URL ตรงๆ เป็นการเรียกฟังก์ชัน selectDoctor()
+        card.innerHTML = `
+            <div class="heart-icon" onclick="event.stopPropagation(); toggleHeart(this)">❤️</div>
+            <div class="doc-img-container" onclick="selectDoctor('${doc.doctorId}', '${docName}', '${docDept}', '${docImg}')">
+                <img src="${docImg}" class="doc-avatar">
+            </div>
+            <div class="doc-info" onclick="selectDoctor('${doc.doctorId}', '${docName}', '${docDept}', '${docImg}')">
+                <h3>${docName}</h3>
+                <p>แผนก ${docDept}</p>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
 // ================= GO BOOKING =================
-function goToBooking(id) {
-    const doc = doctors.find(d => d.id === id);
-
-    localStorage.setItem("selectedDoctor", JSON.stringify(doc));
-
+// 3. ฟังก์ชันที่จะทำงานตอนกดการ์ดหมอ
+function selectDoctor(docId, docName, docDept, docImg) {
+    // สร้าง Object ข้อมูลหมอที่เลือก
+    const doctorObj = {
+        doctorId: docId, 
+        name: docName,
+        dept: docDept,
+        img: docImg
+    };
+    
+    // บันทึกลง LocalStorage
+    localStorage.setItem("selectedDoctor", JSON.stringify(doctorObj));
+    
+    // ย้ายไปหน้า Booking.html
     window.location.href = "Booking.html";
 }
-/*
-function goToBooking(id) {
-    const doc = doctors.find(d => d.id === id);
-    if (!doc) return;
 
-    localStorage.setItem("selectedDoctor", JSON.stringify({
-        doctorId: doc.id,   // ✅ ใช้ doc
-        name: doc.name,
-        dept: doc.dept,
-        img: doc.img
-    }));
-
-    window.location.href = "Booking.html";
-}
-*/
-// ================= FAVORITE =================
-function toggleFavorite(id) {
-    const doc = doctors.find(d => d.id === id);
-    if (doc) doc.favorite = !doc.favorite;
-    applyFilter();
-}
-
-// ================= FILTER =================
-function applyFilter() {
-    const keyword = document.getElementById("searchInput").value.toLowerCase();
-
-    let filtered = [...doctors];
-
-    if (selectedDept !== "all") {
-        filtered = filtered.filter(doc => doc.dept === selectedDept);
+// ================= FAVORITE (ตัวอย่าง) =================
+function toggleHeart(element) {
+    // สลับคลาสหรือเปลี่ยนอิโมจิ (ตัวอย่างแบบง่ายๆ)
+    if (element.innerText === '❤️') {
+        element.innerText = '🤍';
+    } else {
+        element.innerText = '❤️';
     }
-
-    if (keyword) {
-        filtered = filtered.filter(doc =>
-            doc.name.toLowerCase().includes(keyword)
-        );
-    }
-
-    renderDoctors(filtered);
 }
 
-// ================= EVENTS =================
-/*
-document.querySelector(".filter-icon").addEventListener("click", openPopup);
-document.getElementById("searchInput").addEventListener("input", applyFilter);
-*/
-
-// ================= POPUP =================
-/*
-const popupHTML = `
-<div class="filter-popup" id="filterPopup">
-    <div class="popup-content">
-        <h3>เลือกแผนก</h3>
-
-        <div class="filter-options">
-            <button onclick="selectDept('all')">ทั้งหมด</button>
-            <button onclick="selectDept('หู คอ จมูก')">หู คอ จมูก</button>
-            <button onclick="selectDept('ศัลยกรรม')">ศัลยกรรม</button>
-            <button onclick="selectDept('อายุรกรรม')">อายุรกรรม</button>
-            <button onclick="selectDept('กุมารเวชกรรม')">กุมารเวชกรรม</button>
-            <button onclick="selectDept('จักษุ')">จักษุ</button>
-        </div>
-
-        <button class="close-btn" onclick="closePopup()">ปิด</button>
-    </div>
-</div>
-`;
-
-document.body.insertAdjacentHTML("beforeend", popupHTML);
-*/
-
-function openPopup() {
-    document.getElementById("filterPopup").classList.add("active");
-}
-
-function closePopup() {
-    document.getElementById("filterPopup").classList.remove("active");
-}
-
-function selectDept(dept) {
-    selectedDept = dept;
-    closePopup();
-    applyFilter();
-}
-
-// ================= INIT =================
-//applyFilter();
-document.addEventListener("DOMContentLoaded", () => {
-    renderDoctors(doctors);
-
-    document.querySelector(".filter-icon").addEventListener("click", openPopup);
-    document.getElementById("searchInput").addEventListener("input", applyFilter);
-});
+// ================= FILTER & SEARCH (ยังเก็บไว้) =================
+// (ถ้าจะใช้ค่อยเขียน logic เพิ่มเติม)

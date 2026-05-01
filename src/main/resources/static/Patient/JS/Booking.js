@@ -24,10 +24,17 @@ function showModal() {
 }
 
 function closeModal() {
-    // 🔥 redirect ไปหน้าคิว
-    //window.location.href = "./Appointments.html"; 
+    // 🔥 redirect ไปหน้าคิวของคุณ
     window.location.href = "./CheckQueue.html";
 }
+
+// ปิด modal เมื่อคลิกพื้นหลัง
+window.onclick = function (event) {
+    const modal = document.getElementById("successModal");
+    if (event.target === modal) {
+        closeModal();
+    }
+};
 
 // ==========================
 // 🎯 วันที่ (เลื่อนเดือน)
@@ -71,19 +78,42 @@ function renderDates() {
 }
 
 // ==========================
-// 🎯 INIT
+// 🎯 Helper Functions สำหรับแปลงวันที่และเวลา
+// ==========================
+function formatTime(timeStr) {
+    let [h, m] = timeStr.replace(" น.", "").split(":");
+    h = h.padStart(2, "0");
+    return `${h}:${m}:00`; // 🌟 เติม :00 ให้ Spring Boot อ่านง่าย
+}
+
+function formatToISO(fullDate) {
+    const parts = fullDate.split(" ");
+    const day = parts[0].padStart(2, "0");
+    const months = {
+        "มกราคม": "01", "กุมภาพันธ์": "02", "มีนาคม": "03", "เมษายน": "04",
+        "พฤษภาคม": "05", "มิถุนายน": "06", "กรกฎาคม": "07", "สิงหาคม": "08",
+        "กันยายน": "09", "ตุลาคม": "10", "พฤศจิกายน": "11", "ธันวาคม": "12"
+    };
+    const month = months[parts[1]];
+    const year = parts[2];
+    return `${year}-${month}-${day}`;
+}
+
+// ==========================
+// 🎯 INIT เมื่อหน้าโหลด
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
 
-    // โหลดข้อมูลหมอ
+    // 1. โหลดข้อมูลหมอจาก LocalStorage
     const data = JSON.parse(localStorage.getItem("selectedDoctor"));
     if (data) {
-        document.getElementById("doctorName").textContent = data.name;
-        document.getElementById("doctorDept").textContent = data.dept;
-        document.getElementById("doctorImg").src = data.img;
+        // เช็คเผื่อชื่อ key ตอนคุณเก็บมาไม่ตรงกัน
+        document.getElementById("doctorName").textContent = data.name || data.doctorName;
+        document.getElementById("doctorDept").textContent = data.dept || data.departmentName;
+        if(data.img) document.getElementById("doctorImg").src = data.img;
     }
 
-    // เลือกเวลา
+    // 2. เลือกเวลา
     document.querySelectorAll(".time-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
@@ -91,189 +121,65 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    
-// กดจอง
-document.querySelector(".btn-submit").addEventListener("click", async () => {
+    // 3. จัดการตอนกดจอง
+    document.querySelector(".btn-submit").addEventListener("click", async () => {
 
-    const doctorData = JSON.parse(localStorage.getItem("selectedDoctor"));
-    const selectedDateEl = document.querySelector(".date-item.active");
-    const selectedTimeEl = document.querySelector(".time-btn.active");
-    const selectedReasonEl = document.querySelector("input[name='reason']:checked");
-    const otherReason = document.querySelector(".input-line")?.value || "";
+        const doctorData = JSON.parse(localStorage.getItem("selectedDoctor"));
+        const selectedDateEl = document.querySelector(".date-item.active");
+        const selectedTimeEl = document.querySelector(".time-btn.active");
+        const selectedReasonEl = document.querySelector("input[name='reason']:checked");
+        const otherReason = document.querySelector(".input-line")?.value || "";
 
-    // 1. เปลี่ยนจาก alert เป็นการเช็คเงื่อนไขเงียบๆ หรือเปลี่ยนสีช่องที่ยังไม่เลือก (ถ้าต้องการ)
-    /*if (!doctorData || !selectedDateEl || !selectedTimeEl) {
-        // แทนที่จะ alert("กรุณาเลือกข้อมูลให้ครบ"); 
-        // อาจจะทำ Effect สั่นที่ปุ่ม หรือแสดง Text เล็กๆ สีแดงแทน
-        return; 
-    }
-    */
+        // เช็คการกรอกข้อมูล
+        if (!doctorData) { alert("ไม่พบข้อมูลแพทย์"); return; }
+        if (!selectedDateEl) { alert("กรุณาเลือกวันที่"); return; }
+        if (!selectedTimeEl) { alert("กรุณาเลือกเวลา"); return; }
 
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        if (!user || !user.patientId) {
+            alert("กรุณาล็อคอินเข้าสู่ระบบก่อนจองคิว");
+            return;
+        }
 
-   if (!doctorData) {
-    console.log("❌ ไม่มี doctor");
-    return;
-    }
-
-    if (!selectedDateEl) {
-    console.log("❌ ไม่ได้เลือกวัน");
-    return;
-    }
-
-    if (!selectedTimeEl) {
-    console.log("❌ ไม่ได้เลือกเวลา");
-    return;
-    }
-
-    const dayNum = selectedDateEl.childNodes[0].textContent.trim();
-    const monthYear = document.querySelector(".section-title span").innerText;
-    const fullDate = `${dayNum} ${monthYear}`;
-
-    //const patientId = localStorage.getItem("patientId");
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
-    if (!user || !user.patientId) {
-        console.error("❌ ไม่มี patientId");
-    return;
-    }
-
-    const patientId = user.patientId;
-
-
-    const reason = selectedReasonEl
-  ? selectedReasonEl.value
-  : otherReason;
-
-  const bookingData = {
-    patientId: Number(patientId),
-    doctorId: doctorData.id,
-    date: formatToISO(fullDate),
-    time: formatTime(selectedTimeEl.innerText),
-    reason: reason,
-    preparation: "กรุณามาก่อน 15 นาที"
-};
-
-    console.log("BOOKING DATA:", bookingData);
-    console.log("DOCTOR:", doctorData);
-    console.log("USER:", user);
-
-    await fetch("http://localhost:8080/api/appointments/patients/${user.patientId}", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bookingData)
-
-})
-
-.then(async res => {
-    const data = await res.json();
-
-    if (!res.ok) {
-        throw new Error(data.message || "จองคิวไม่สำเร็จ");
-    }
-
-    return data;
-})
-
-.then(data => {
-    console.log("SUCCESS:", data);
-     showModal();
-    //alert(`จองคิวสำเร็จ! คิวที่ ${data.queueNumber}`);
-})
-
-.catch(err => {
-    console.error(err);
-    alert(err.message);
-});
-
- if (!data || data.length === 0) {
-    container.innerHTML = "ไม่มีคิว";
-    return;
-}
-
-/*
-    const bookingData = {
-        appointmentDate: formatToISO(fullDate),
-        appointmentTime: selectedTimeEl.innerText.replace(" น.", ""),
-        reason: reason,
-        preparation: "กรุณามาก่อน 15 นาที",
-        doctor: { doctorId: doctorData.doctorId },
-        patient: { patientId: Number(patientId) }
-    };
-   */
-   
-    /*
-    const bookingData = {
-        type: "upcoming",
-        doctor: doctorData.name,
-        dept: doctorData.dept,
-        date: fullDate,
-        time: selectedTimeEl.innerText,
-        reason: selectedReasonEl ? selectedReasonEl.parentElement.innerText.trim() : otherReason,
-        prepare: "กรุณาเตรียมบัตรประชาชนและมาถึงก่อนเวลานัด 15 นาที",
-        status: "pending"
-    };
-    */
-/*
-     try {
-        await fetch("http://localhost:8080/api/appointments", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bookingData)
-        });
-
-        showModal();
-
-    } catch (err) {
-         console.error("❌ ERROR:", err);
-        alert("จองไม่สำเร็จ");
-    }
-        */
-    /*
-    try {
-        await fetch("/api/book", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bookingData)
-        });
-
-        // บันทึกลง LocalStorage
-        const localList = JSON.parse(localStorage.getItem("appointments")) || [];
-        localList.push(bookingData);
-        localStorage.setItem("appointments", JSON.stringify(localList));
-
-        // 2. 🔥 แทนที่จะ redirect ทันที ให้เรียกใช้ฟังก์ชันโชว์ Modal ที่คุณเขียนไว้
-        showModal(); 
-
-    } catch (err) {
-        console.error("Backend Error:", err);
+        const dayNum = selectedDateEl.childNodes[0].textContent.trim();
+        const monthYear = document.querySelector(".section-title span").innerText;
+        const fullDate = `${dayNum} ${monthYear}`;
         
-        // แม้แบคเอนด์จะ Error (ในเคสทดสอบ) เราก็บันทึก Local และโชว์ Modal ได้เลย
-        const localList = JSON.parse(localStorage.getItem("appointments")) || [];
-        localList.push(bookingData);
-        localStorage.setItem("appointments", JSON.stringify(localList));
-        
-        showModal(); 
-    }
-        */
-});
+        const reason = selectedReasonEl ? selectedReasonEl.value : otherReason;
 
+        // 🌟 จัด Payload ให้ตรงกับ AppointmentRequestDTO แบบเป๊ะๆ
+        const bookingData = {
+            patientId: Number(user.patientId),
+            doctorId: Number(doctorData.id || doctorData.doctorId), // ดักไว้ให้ เผื่อตอนคุณ Set Item ใช้ชื่อต่างกัน
+            date: formatToISO(fullDate),
+            time: formatTime(selectedTimeEl.innerText),
+            reason: reason || "ไม่มีเหตุผลระบุ",
+            preparation: "กรุณามาก่อน 15 นาที"
+        };
 
-function formatTime(timeStr) {
-    let [h, m] = timeStr.replace(" น.", "").split(":");
-    h = h.padStart(2, "0");
-    return `${h}:${m}`;
-}
+        console.log("กำลังส่งข้อมูล:", bookingData);
 
-// ฟังก์ชันโชว์ Modal (ตรวจสอบว่าในไฟล์มีฟังก์ชันนี้แล้ว)
-function showModal() {
-    document.getElementById("successModal").style.display = "flex";
-}
+        try {
+            // 🌟 แก้ URL ให้ถูกต้อง ไม่ต้องมี ID ต่อท้าย และส่งเป็น POST
+            const res = await fetch("/api/appointments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bookingData)
+            });
 
-// ฟังก์ชันปิด Modal และ Redirect (เมื่อกดยืนยันใน Modal)
-function closeModal() {
-    //window.location.href = "./Appointments.html"; 
-    window.location.href = "./CheckQueue.html";
-}
+            if (res.ok) {
+                // จองสำเร็จ โชว์ Modal 
+                showModal();
+            } else {
+                const err = await res.text();
+                alert("ไม่สามารถจองคิวได้: " + err);
+            }
+
+        } catch (err) {
+            console.error("เกิดข้อผิดพลาด:", err);
+            alert("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+        }
+    });
 
     // ลูกศรเดือน
     document.querySelector(".fa-chevron-left").addEventListener("click", () => {
@@ -288,42 +194,3 @@ function closeModal() {
 
     renderDates();
 });
-
-// ปิด modal เมื่อคลิกพื้นหลัง
-window.onclick = function (event) {
-    const modal = document.getElementById("successModal");
-    if (event.target === modal) {
-        closeModal();
-    }
-};
-
-function goHome() {
-    window.location.href = "./Home.html"; // ❗ เปลี่ยน path ให้ตรงโปรเจคคุณ
-}
-
-
-function formatToISO(fullDate) {
-    // "1 เมษายน 2026"
-    const parts = fullDate.split(" ");
-    const day = parts[0].padStart(2, "0");
-
-    const months = {
-        "มกราคม": "01",
-        "กุมภาพันธ์": "02",
-        "มีนาคม": "03",
-        "เมษายน": "04",
-        "พฤษภาคม": "05",
-        "มิถุนายน": "06",
-        "กรกฎาคม": "07",
-        "สิงหาคม": "08",
-        "กันยายน": "09",
-        "ตุลาคม": "10",
-        "พฤศจิกายน": "11",
-        "ธันวาคม": "12"
-    };
-
-    const month = months[parts[1]];
-    const year = parts[2];
-
-    return `${year}-${month}-${day}`;
-}
