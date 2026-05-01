@@ -97,7 +97,21 @@ public class AppointmentService {
 	}
 
 	public List<AppointmentDTO> getByPatient(Integer patientId) {
-		return appointmentRepository.findByPatient_PatientId(patientId).stream().map(AppointmentMapper::toDTO).toList();
+		return appointmentRepository.findByPatient_PatientId(patientId).stream().map(a -> {
+			AppointmentDTO dto = AppointmentMapper.toDTO(a); // ดึงค่าพื้นฐานมาก่อน
+            dto.setStatus(a.getStatus() != null ? a.getStatus().name() : null); 
+			
+			if (a.getDoctor() != null) {
+				dto.setDoctorId(a.getDoctor().getDoctorId());
+				dto.setDoctorName(a.getDoctor().getName() + " " + a.getDoctor().getSurname());
+				
+
+				if (a.getDoctor().getDepartment() != null) {
+					dto.setDepartment(a.getDoctor().getDepartment().getDepName());
+				}
+			}
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
 	public Appointment getById(Integer id) {
