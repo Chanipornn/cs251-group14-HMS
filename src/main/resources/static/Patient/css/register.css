@@ -38,6 +38,7 @@ input, select {
   transform: translateY(-50%);
   width: 20px;
   cursor: pointer;
+  margin-bottom: -10px;
 }
 
 /* ROW 2 */
