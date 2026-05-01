@@ -9,7 +9,7 @@ public class AppointmentDTO {
 
     private Integer appointmentId;
     
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate appointmentDate;
     
     @JsonFormat(pattern = "HH:mm")
