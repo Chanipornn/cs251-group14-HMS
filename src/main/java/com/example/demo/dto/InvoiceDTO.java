@@ -13,11 +13,16 @@ public class InvoiceDTO {
     private LocalDate paidDate;
     private Integer patientId;
     private Integer recordId;
+    //
+    private String patientName;
+    private String doctorName;
+    private String department;
+    private String diagnosis;
 
     public InvoiceDTO() {}
 
-    public InvoiceDTO(Integer invoiceId, LocalDate invoiceDate, BigDecimal totalAmount, String status,
-                      String paymentMethod, LocalDate paidDate, Integer patientId, Integer recordId) {
+	public InvoiceDTO(Integer invoiceId, LocalDate invoiceDate, BigDecimal totalAmount, String status,
+                      String paymentMethod, LocalDate paidDate, Integer patientId, Integer recordId, String patientName,String doctorName,String department,String diagnosis) {
         this.invoiceId = invoiceId;
         this.invoiceDate = invoiceDate;
         this.totalAmount = totalAmount;
@@ -26,6 +31,11 @@ public class InvoiceDTO {
         this.paidDate = paidDate;
         this.patientId = patientId;
         this.recordId = recordId;
+        
+        this.patientName = patientName;
+        this.doctorName = doctorName;
+        this.department = department;
+        this.diagnosis = diagnosis;
     }
 
     public Integer getInvoiceId() { return invoiceId; }
@@ -44,4 +54,35 @@ public class InvoiceDTO {
     public void setPatientId(Integer patientId) { this.patientId = patientId; }
     public Integer getRecordId() { return recordId; }
     public void setRecordId(Integer recordId) { this.recordId = recordId; }
+    public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(String diagnosis) {
+		this.diagnosis = diagnosis;
+	}
 }

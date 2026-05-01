@@ -70,7 +70,7 @@ async function loadAppointments() {
         return [];
     }
 
-       try {
+    try {
         const res = await fetch(`${API}/appointments/patients/${user.patientId}`);
 
         if (!res.ok) {
@@ -88,16 +88,16 @@ async function loadAppointments() {
         console.error("โหลดไม่สำเร็จ", err);
         return [];
     }
-/*
-    const patientId = user.patientId;
-
-    const res = await fetch(`${API}/appointments/patient/${patientId}`);
-    const data = await res.json();
-
-    console.log("APPOINTMENTS:", data);
-
-    return data.map(transform);
-    */
+    /*
+        const patientId = user.patientId;
+    
+        const res = await fetch(`${API}/appointments/patient/${patientId}`);
+        const data = await res.json();
+    
+        console.log("APPOINTMENTS:", data);
+    
+        return data.map(transform);
+        */
 }
 
 
@@ -117,13 +117,13 @@ function switchTab(btn, type) {
 // =======================
 async function renderAppointments(type = "today") {
     currentType = type;
-/*
-    const all = await loadAppointments();
-    const filtered = all.filter(a => 
-        a.type === type && a.status !== "CANCELLED"
-    );
-    */
-   const data = await loadAppointments();
+    /*
+        const all = await loadAppointments();
+        const filtered = all.filter(a => 
+            a.type === type && a.status !== "CANCELLED"
+        );
+        */
+    const data = await loadAppointments();
 
     const filtered = data.filter(a =>
         a.type === type && a.status !== "CANCELLED"
@@ -145,11 +145,11 @@ async function renderAppointments(type = "today") {
                 <div class="detail-row">
                     <span class="badge-label">สถานะ</span>
                     <span class="detail-text">
-                        ${a.status === "pending" 
-                            ? "⏳ รอยืนยัน" 
-                            : a.status === "CANCELLED"
-                            ? "❌ ยกเลิกแล้ว"
-                            : "✅ ยืนยันแล้ว"}
+                        ${a.status === "pending"
+            ? "⏳ รอยืนยัน"
+            : a.status === "CANCELLED"
+                ? "❌ ยกเลิกแล้ว"
+                : "✅ ยืนยันแล้ว"}
                     </span>
                 </div>
 
@@ -191,11 +191,16 @@ function openCancelModal(id) {
 }
 
 async function confirmCancel() {
-    const API = "http://localhost:8080/api";
 
-    await fetch(`${API}/appointments/patients/${deleteId}/cancel`, {
-    method: "PUT"
-    });
+
+    try {
+        await fetch(`/api/appointments/patients/${deleteId}/cancel`, {
+            method: "PUT"
+        });
+		
+    } catch {
+		console.alert("ไม่สามารถยกเลิกการนัดได้");
+    }
 
     closeCancelModal();
     renderAppointments(currentType);
@@ -287,12 +292,12 @@ async function saveReschedule() {
             time: time,
             reason: reason,
             preparation: prepare*/
-     /*       //appointmentDate: date,
-            reason: reason,
-            preparation: prepare
-            
-        })
-    });*/
+/*       //appointmentDate: date,
+       reason: reason,
+       preparation: prepare
+       
+   })
+});*/
 /*
     closeRescheduleModal();
     //renderAppointments(currentType);
@@ -328,8 +333,8 @@ function closeRescheduleModal() {
 // 🚀 INIT SYSTEM
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
-    
-    initAppointments(); 
+
+    initAppointments();
     renderAppointments("today");
 
     document.getElementById("confirmCancelBtn")
@@ -346,10 +351,10 @@ function transform(a) {
         date: a.appointmentDate,
         status: mapStatus(a.status),
         //dept: "ทั่วไป",
-         dept: a.department || "-",
-        doctor: a.doctorName || "-",      
-        reason: a.reason || "-",          
-        prepare: a.preparation || "-",    
+        dept: a.department || "-",
+        doctor: a.doctorName || "-",
+        reason: a.reason || "-",
+        prepare: a.preparation || "-",
         type: getType(a.appointmentDate)
     };
 }
@@ -379,8 +384,8 @@ function getType(dateStr) {
     const d1 = new Date(dateStr);
     const d2 = new Date(today);
 
-    return d1.toDateString() === d2.toDateString() 
-        ? "today" 
+    return d1.toDateString() === d2.toDateString()
+        ? "today"
         : "upcoming";
 }
 

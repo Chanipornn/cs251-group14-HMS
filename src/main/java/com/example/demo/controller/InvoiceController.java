@@ -36,10 +36,9 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getHistoryByPatient(patientId));
     }
 
-    //GET Item by Item ID
-    @GetMapping("/{id}/items")
-    public ResponseEntity<List<InvoiceItemDTO>> getItemsByInvoice(@PathVariable Integer id) {
-        return ResponseEntity.ok(invoiceService.getInvoiceItems(id));
+    @GetMapping("/{invoiceId}/items")
+    public List<InvoiceItemDTO> getInvoiceItems(@PathVariable Integer invoiceId) {
+        return invoiceService.getInvoiceItems(invoiceId);
     }
     @GetMapping
     public ResponseEntity<List<InvoiceDTO>> getAllInvoices() {
@@ -47,7 +46,10 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getAllInvoices()); 
     }
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<InvoiceDTO>> getDoctorInvoices(@PathVariable Integer doctorId) {
-        return ResponseEntity.ok(invoiceService.getHistoryByPatient(doctorId));
+    public List<InvoiceDTO> getByDoctor(@PathVariable Integer doctorId) {
+        return invoiceService.getByDoctor(doctorId);
     }
+ 
+
+    
 }
