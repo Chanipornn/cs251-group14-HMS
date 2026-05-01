@@ -1,31 +1,78 @@
 //จำลองข้อมูล
-const medicineDatabase = [
+// จำลองข้อมูลยา อิงชื่อตัวแปรตาม Schema
+/*const medicineDatabase = [
     {
-        id: "MED-001",
-        date: "19/04/2026 09:46:15",
-        name: "Amoxicillin 500mg",
-        amount: "15 แคปซูล",
-        instruction: "รับประทานครั้งละ 1 เม็ด วันละ 3 ครั้ง หลังอาหารทันที (เช้า-กลางวัน-เย็น)",
-        note: "ต้องทานติดต่อกันจนหมด,",
-        dept: "หู คอ จมูก",
-        doctor: "นพ.สมชาย ศรีสุข"
+        RecordID: "REC69001",
+        PatientID: "P1001",
+        PatientName: "นายสมิง เสือเก่ง",
+        VisitDate: "11/04/2026 09:46:15",
+        Medicine_Name: "Paracetamol 500mg",
+        Dept_Name: "หู คอ จมูก",
+        DoctorName: "นพ.สมชาย ศรีสุข"
     },
     {
-        id: "MED-002",
-        date: "15/04/2026 11:23:08",
-        name: "Paracetamol 500mg",
-        amount: "10 เม็ด",
-        instruction: "รับประทานครั้งละ 1-2 เม็ด ทุก 4-6 ชั่วโมง เมื่อมีอาการปวดหรือไข้",
-        note: "ห้ามทานเกินวันละ 8 เม็ด",
-        dept: "ศัลยกรรม",
-        doctor: "พญ.วราภรณ์ ศิริชัย"
+        RecordID: "REC69002",
+        PatientID: "P1002",
+        PatientName: "นางสาวใยบัว แก้วหวาน",
+        VisitDate: "30/01/2026 11:23:08",
+        Medicine_Name: "Amoxicillin",
+        Dept_Name: "ศัลยกรรม",
+        DoctorName: "พญ.วราภรณ์ ศิริชัย"
     }
 ];
+*/
+const medicineDB = [
+    {
+        name: "Paracetamol 500mg",
+        date: "11/04/2026 09:46:15",
+        dept: "หู คอ จมูก",
+        usage: "รับประทานครั้งละ 1 เม็ด ทุก 6 ชม."
+    },
+    {
+        name: "Amoxicillin 250mg",
+        date: "30/01/2026 11:23:08",
+        dept: "ศัลยกรรม",
+        usage: "วันละ 3 ครั้ง หลังอาหาร"
+    }
+];
+
+function renderMedicine(list) {
+    const el = document.getElementById("medicineList");
+
+    if (!list.length) {
+        el.innerHTML = `<p>ไม่พบข้อมูล</p>`;
+        return;
+    }
+
+    el.innerHTML = list.map(m => `
+        <div class="medical-card">
+
+            <div class="card-top">
+                <span><i class="fa-regular fa-calendar"></i> ${m.date}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="badge">ชื่อยา</span> ${m.name}
+            </div>
+
+            <div class="info-row">
+                <span class="badge">แผนก</span> ${m.dept}
+            </div>
+
+            <div class="info-row">
+                <span class="badge">วิธีใช้</span> ${m.usage}
+            </div>
+
+        </div>
+    `).join("");
+}
+
+
 // ฟังก์ชันแสดงผลการ์ด
 function displayMedicine(dataList) {
-    const listElement = document.getElementById('medicineList'); // ต้องตรงกับ ID ใน HTML
+    const listElement = document.getElementById('medicineList');
     
-    if (!listElement) return; // กัน Error ถ้าหา Element ไม่เจอ
+    if (!listElement) return;
 
     if (dataList.length === 0) {
         listElement.innerHTML = '<p style="text-align:center; padding:20px;">ไม่พบข้อมูลยา</p>';
@@ -35,21 +82,20 @@ function displayMedicine(dataList) {
     const html = dataList.map(item => `
         <div class="medical-card">
             <div class="card-top">
-                <span>${item.date}</span>
+                <span>${item.VisitDate}</span>
                 <i class="fa-solid fa-chevron-right arrow btn-detail" 
-                onclick="handleCardClick('${item.id}')" 
+                onclick="handleCardClick('${item.RecordID}')" 
                 style="cursor: pointer; padding: 10px;"></i>
             </div>
             
+
             <div class="info-row">
                 <span class="badge badge-medicine">ชื่อยา</span>
-                <span class="info-text"">
-                    ${item.name}
-                </span>
+                <span class="info-text">${item.Medicine_Name}</span>
             </div>
 
-            <div class="info-row"><span class="badge">แผนก</span><span class="info-text">${item.dept}</span></div>
-            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.doctor}</span></div>
+            <div class="info-row"><span class="badge">แผนก</span><span class="info-text">${item.Dept_Name}</span></div>
+            <div class="info-row"><span class="badge">แพทย์</span><span class="info-text">${item.DoctorName}</span></div>
         </div>
     `).join('');
 
@@ -57,18 +103,26 @@ function displayMedicine(dataList) {
 }
 
 function handleCardClick(id) {
-    console.log("Medicine ID " + id + " was clicked!");
-    // เปลี่ยนชื่อไฟล์เป็นของหน้ายา (ถ้ามี)
+    console.log("Medicine Record ID " + id + " was clicked!");
+    // ส่ง RecordID ไปที่หน้ารายละเอียดประวัติยา
     window.location.href = `medicine_details.html?id=${id}`;
 }
 
-// ระบบค้นหา
+/*
+// 4. ระบบค้นหา (กรองตาม ชื่อยา, RecordID, ชื่อหมอ, PatientID, PatientName)
 document.getElementById('searchInput').addEventListener('input', (e) => {
-    const keyword = e.target.value.toLowerCase();
+    const keyword = e.target.value.toLowerCase().trim();
+    
     const filtered = medicineDatabase.filter(item => 
-        item.name.toLowerCase().includes(keyword) // ค้นหาตามชื่อยา
+        item.Medicine_Name.toLowerCase().includes(keyword) || 
+        item.RecordID.toLowerCase().includes(keyword) || 
+        item.DoctorName.toLowerCase().includes(keyword) || 
+        item.PatientName.toLowerCase().includes(keyword) || 
+        item.PatientID.toLowerCase().includes(keyword)
     );
-    displayRecords(filtered);
+    
+    // สำคัญ: ต้องเรียก displayMedicine ให้ถูกฟังก์ชัน
+    displayMedicine(filtered); 
 });
 
 // เริ่มการทำงานเมื่อโหลดหน้าเว็บเสร็จ
@@ -77,4 +131,21 @@ window.onload = () => {
     setTimeout(() => { 
         displayMedicine(medicineDatabase); 
     }, 500);
+};
+*/
+
+// search
+document.getElementById("searchMedicine").addEventListener("input", e => {
+    const key = e.target.value.toLowerCase();
+
+    const filtered = medicineDB.filter(m =>
+        m.name.toLowerCase().includes(key) ||
+        m.dept.toLowerCase().includes(key)
+    );
+
+    renderMedicine(filtered);
+});
+
+window.onload = () => {
+    renderMedicine(medicineDB);
 };
