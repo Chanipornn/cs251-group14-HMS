@@ -211,7 +211,7 @@ function selectRole(role) {
   if (role === "patient") {
     window.location.href = "create_patient.html";
   } else {
-    window.location.href = "create_account.html";
+    window.location.href = "create_users.html";
   }
 
 }
@@ -415,7 +415,7 @@ function selectRole(role) {
     window.location.href = "create_patient.html";
   } else {
     sessionStorage.setItem("createRole", role.charAt(0).toUpperCase() + role.slice(1));
-    window.location.href = "create_account.html";
+    window.location.href = "create_users.html";
   }
 }
 

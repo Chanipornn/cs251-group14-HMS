@@ -6,11 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import com.example.demo.dto.AppointmentDTO;
+import com.example.demo.dto.AppointmentRequestDTO;
 import com.example.demo.mapper.AppointmentMapper;
 
 @Service
@@ -20,38 +21,51 @@ public class AppointmentService {
 	private final PatientRepository patientRepository;
 	private final DoctorRepository doctorRepository;
 
-	// CREATE
-	public AppointmentDTO create(Appointment a) {
+    // CREATE (เวอร์ชันอัปเกรดแล้ว)
+    public AppointmentDTO create(AppointmentRequestDTO req) {
 
-		if (a.getPatient() == null || a.getPatient().getPatientId() == null) {
-			throw new RuntimeException("Patient is required");
-		}
+        Patient patient = patientRepository
+                .findById(req.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
 
-		if (a.getDoctor() == null || a.getDoctor().getDoctorId() == null) {
-			throw new RuntimeException("Doctor is required");
-		}
+        Doctor doctor = doctorRepository
+                .findById(req.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-		Patient patient = patientRepository.findById(a.getPatient().getPatientId())
-				.orElseThrow(() -> new RuntimeException("Patient not found"));
+        LocalDate date = LocalDate.parse(req.getDate());
+        LocalTime time = LocalTime.parse(req.getTime());
 
-		Doctor doctor = doctorRepository.findById(a.getDoctor().getDoctorId())
-				.orElseThrow(() -> new RuntimeException("Doctor not found"));
+        // ✅ กันเวลาซ้ำ
+        boolean exists = appointmentRepository
+                .existsByDoctor_DoctorIdAndAppointmentDateAndAppointmentTime(
+                        doctor.getDoctorId(), date, time);
 
-		a.setPatient(patient);
-		a.setDoctor(doctor);
-		// a.setStatus(Appointment.AppointmentStatus.COMPLETED);
-		a.setStatus(Appointment.AppointmentStatus.WAITING);
-		a.setQueueNumber(generateQueue());
+        if (exists) {
+            throw new RuntimeException("เวลานี้ถูกจองแล้ว");
+        }
 
-		Appointment saved = appointmentRepository.save(a);
+        // ✅ generate queue (รันตามคิวจริง ไม่สุ่มแล้ว)
+        Integer maxQueue = appointmentRepository
+                .findMaxQueue(doctor.getDoctorId(), date);
 
-		return AppointmentMapper.toDTO(saved);
-	}
+        // ดักกรณีที่เป็นคิวแรกของวัน (maxQueue อาจจะเป็น null)
+        int newQueue = (maxQueue != null ? maxQueue : 0) + 1;
 
-	// generate queue
-	private Integer generateQueue() {
-		return (int) (ThreadLocalRandom.current().nextDouble() * 100);
-	}
+        Appointment appt = new Appointment();
+        appt.setPatient(patient);
+        appt.setDoctor(doctor);
+        appt.setAppointmentDate(date);
+        appt.setAppointmentTime(time);
+        appt.setQueueNumber(newQueue);
+
+        appt.setReason(req.getReason());
+        appt.setPreparation(req.getPreparation());
+        appt.setStatus(Appointment.AppointmentStatus.WAITING);
+
+        appointmentRepository.save(appt);
+
+        return AppointmentMapper.toDTO(appt);
+    }
 
 	// Cancel
 	public AppointmentDTO cancel(Integer id) {
@@ -99,7 +113,10 @@ public class AppointmentService {
 			dto.setAppointmentDate(a.getAppointmentDate());
 			dto.setAppointmentTime(a.getAppointmentTime());
 			dto.setQueueNumber(a.getQueueNumber());
-			dto.setStatus(a.getStatus());
+            
+            // ป้องกัน Error กรณี Status เป็น Enum ต้องแปลงเป็น String
+			dto.setStatus(a.getStatus() != null ? a.getStatus().name() : null); 
+            
 			// Map ข้อมูลคนไข้
 			if (a.getPatient() != null) {
 				dto.setPatientId(a.getPatient().getPatientId());

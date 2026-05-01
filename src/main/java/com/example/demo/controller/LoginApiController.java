@@ -6,126 +6,181 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.UserEntity;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.PatientRepository;
+import com.example.demo.model.Patient;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/*
+ 	POST   /api/auth/patient/login
+	GET    /api/auth/patient/me
+	POST   /api/auth/patient/logout
+ */
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth/patient")
 public class LoginApiController {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@PostMapping("/login")
-	public ResponseEntity<Map> login(@RequestBody Map<String, String> credentials, HttpServletRequest request) {
-		String email = credentials.get("Email");
-		String password = credentials.get("Password");
+    @Autowired
+    private PatientRepository patientRepository;
+    
+ // ================= REGISTER =================
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Map<String, Object> req) {
 
-		try {
+        UserEntity user = new UserEntity();
+        user.setUsername((String) req.get("username"));
+        user.setEmail((String) req.get("email"));
+        user.setPassword((String) req.get("password"));
+        user.setRole(UserEntity.UserRole.Patient);
 
-			Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+        userRepository.save(user);
 
-			if (userOptional.isPresent()) {
-				UserEntity user = userOptional.get();
-				
-				boolean isMatch = false;
+        Patient patient = new Patient();
+        patient.setUser(user);
 
-				String dbPassword = user.getPassword();
-				
-				//check output
-				System.out.println("INPUT EMAIL: " + email);
-				System.out.println("INPUT PASSWORD: " + password);
-				System.out.println("DB PASSWORD: " + dbPassword);
-				
-					
-				// ถ้าเป็น bcrypt
-				if (dbPassword.startsWith("$2a$")) {
-				    isMatch = org.springframework.security.crypto.bcrypt.BCrypt
-				                .checkpw(password, dbPassword);
-				}
-				// ถ้าเป็น plain
-				else {
-				    isMatch = dbPassword.equals(password);
-				}
-				
-				//check output
-				System.out.println("IS MATCH: " + isMatch);
+        patient.setName((String) req.get("name"));
+        patient.setSurname((String) req.get("surname"));
 
-				if (isMatch) {
-					 HttpSession session = request.getSession();
-				        session.setAttribute("loggedInUser", user.getEmail());
-				        session.setAttribute("userRole", user.getRole());
+        if (req.get("gender") != null) {
+            patient.setGender(((String) req.get("gender")).charAt(0));
+        }
 
-				        return ResponseEntity.ok(
-				            Map.of(
-				                "status", true,
-				                "message", "Login successful",
-				                "name", user.getUsername(),
-				                "email", user.getEmail(),
-				                "role", user.getRole()
-				               /* "patientId", user.getPatient() != null
-				                        ? user.getPatient().getPatientId()
-				                        : null*/
-				            )
-				        );
-				}
+        if (req.get("dateOfBirth") != null) {
+            patient.setDateOfBirth(
+                java.time.LocalDate.parse((String) req.get("dateOfBirth"))
+            );
+        }
 
-				/*
-				if (user.getPassword().equals(password)) {
+        patient.setTelephone((String) req.get("telephone"));
+        patient.setAddress((String) req.get("address"));
+        patient.setBloodType((String) req.get("bloodType"));
+        patient.setThaiNationalId((String) req.get("thaiNationalId"));
+        patient.setChronicIllness((String) req.get("chronicIllness"));
+        patient.setRightToHealthcare((String) req.get("rightToHealthcare"));
+        patient.setDrugAllergy((String) req.get("drugAllergy"));
 
-					HttpSession session = request.getSession();
-					session.setAttribute("loggedInUser", user.getEmail());
-					session.setAttribute("userRole", user.getRole());
+        if (req.get("weight") != null) {
+            patient.setWeight(Float.valueOf(req.get("weight").toString()));
+        }
 
-					return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", true, "message",
-							"Login successful", "name", user.getUsername(), "role", user.getRole()));
-				}
-				*/
-			}
+        if (req.get("height") != null) {
+            patient.setHeight(Float.valueOf(req.get("height").toString()));
+        }
 
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("status", false, "message", "อีเมลหรือรหัสผ่านไม่ถูกต้อง"));
+        patientRepository.save(patient);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(Map.of("status", false, "message", "เกิดข้อผิดพลาดในระบบเซิร์ฟเวอร์"));
-		}
-	}
-	
-	@GetMapping("/me")
-	public ResponseEntity<?> getCurrentUser(HttpSession session) {
-		String loggedInEmail = (String) session.getAttribute("loggedInUser");
-		if (loggedInEmail == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("status", false, "message", "กรุณาล็อคอินก่อน"));
-		}
+        return ResponseEntity.ok(Map.of(
+            "status", true,
+            "patientId", patient.getPatientId()
+        ));
+        
+        
+    }
+    
+  
+    // ================= LOGIN =================
+    @PostMapping("/login")
+    public ResponseEntity<Map> login(@RequestBody Map<String, String> credentials, HttpServletRequest request) {
 
-		Optional<UserEntity> userOptional = userRepository.findByEmail(loggedInEmail);
+        String email = credentials.get("Email");
+        String password = credentials.get("Password");
 
-		if (userOptional.isPresent()) {
-			UserEntity user = userOptional.get();
-			return ResponseEntity.ok(
-					Map.of("status", true, "email", user.getEmail(), "name", user.getUsername(), "role", user.getRole()
-					));
-		}
+        try {
+            Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	}
+            if (userOptional.isPresent()) {
+                UserEntity user = userOptional.get();
 
+                boolean isMatch = false;
+                String dbPassword = user.getPassword();
 
-	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpSession session) {
-		session.invalidate();
-		return ResponseEntity.ok(Map.of("status", true, "message", "ออกจากระบบสำเร็จ"));
-	}
+                // bcrypt
+                if (dbPassword.startsWith("$2a$")) {
+                    isMatch = org.springframework.security.crypto.bcrypt.BCrypt
+                            .checkpw(password, dbPassword);
+                }
+                // plain
+                else {
+                    isMatch = dbPassword.equals(password);
+                }
+
+                if (isMatch) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("loggedInUser", user.getEmail());
+                    session.setAttribute("userRole", user.getRole());
+
+                    Integer patientId = patientRepository
+                            .findByUser_UserId(user.getUserId())
+                            .map(p -> p.getPatientId())
+                            .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+                    return ResponseEntity.ok(
+                            Map.of(
+                                    "status", true,
+                                    "message", "Login successful",
+                                    "username", user.getUsername(),
+                                    "email", user.getEmail(),
+                                    "role", user.getRole(),
+                                    "patientId", patientId != null ? patientId : 0
+                                    //"patientId", patientId
+                            )
+                    );
+                }
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("status", false, "message", "อีเมลหรือรหัสผ่านไม่ถูกต้อง"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", false, "message", "เกิดข้อผิดพลาดในระบบเซิร์ฟเวอร์"));
+        }
+    }
+
+    
+    // ================= CURRENT USER =================
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpSession session) {
+        String loggedInEmail = (String) session.getAttribute("loggedInUser");
+
+        if (loggedInEmail == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("status", false, "message", "กรุณาล็อคอินก่อน"));
+        }
+
+        Optional<UserEntity> userOptional = userRepository.findByEmail(loggedInEmail);
+
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "status", true,
+                            "email", user.getEmail(),
+                            "name", user.getUsername(),
+                            "role", user.getRole()
+                    )
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    
+    // ================= LOGOUT =================
+    @PostMapping("/logout")   
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(Map.of("message", "Logout success"));
+    }
 }

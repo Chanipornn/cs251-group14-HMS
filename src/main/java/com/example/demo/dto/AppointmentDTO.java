@@ -16,10 +16,11 @@ public class AppointmentDTO {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime appointmentTime;
     private Integer queueNumber;
-    private AppointmentStatus status;
+    private Object status;
     private Integer doctorId;
     private Integer patientId;
     
+    private String department;
     private String doctorName;
     private String reason;
     private String preparation;
@@ -61,8 +62,8 @@ public class AppointmentDTO {
     public void setAppointmentTime(LocalTime appointmentTime) { this.appointmentTime = appointmentTime; }
     public Integer getQueueNumber() { return queueNumber; }
     public void setQueueNumber(Integer queueNumber) { this.queueNumber = queueNumber; }
-    public AppointmentStatus getStatus() { return status; }
-    public void setStatus(AppointmentStatus appointmentStatus) { this.status = appointmentStatus; }
+    public Object getStatus() { return status; }
+    public void setStatus(Object object) { this.status = object; }
     public Integer getDoctorId() { return doctorId; }
     public void setDoctorId(Integer doctorId) { this.doctorId = doctorId; }
     public Integer getPatientId() { return patientId; }
@@ -76,6 +77,7 @@ public class AppointmentDTO {
 
     public String getPreparation() { return preparation; }
     public void setPreparation(String preparation) { this.preparation = preparation; }
+
     public String getPatientName() {
 		return patientName;
 	}
@@ -107,4 +109,15 @@ public class AppointmentDTO {
 	public void setHeight(Float height) {
 		this.height = height;
 	}
+    
+    public String getDepartment() { 
+        return department; 
+    }
+
+    public void setDepartment(String department) { 
+        this.department = department; 
+    }
+
+	
+
 }

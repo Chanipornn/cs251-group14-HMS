@@ -50,6 +50,7 @@ public class Appointment {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PatientID", nullable = false)
+    
     private Patient patient;
 
     public enum AppointmentStatus {

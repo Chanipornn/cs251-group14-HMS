@@ -1,77 +1,114 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Admin Profile</title>
+  <meta charset="UTF-8">
+  <title>Profile</title>
 
-<link rel="stylesheet" href="../css/profile.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/create_users.css">
+  <link rel="stylesheet" href="../css/profile.css">
 
+  <script src="../js/profile.js" defer></script>
 </head>
 
 <body>
 
-<!-- 🔥 HEADER เต็มจอ -->
-<div class="header">
-    <div class="left">
-        <i class="fa fa-bars"></i>
+<!-- HEADER -->
+<header class="header">
+  <div class="left-section">
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <img src="../../img/hospital.png" class="circle-img">
+  </div>
+  <div class="profile" onclick="goProfile()">
+    <span id="headerName">Admin</span>
+    <div class="avatar" id="headerAvatar"></div>
+  </div>
+</header>
 
-        <div class="logo">
-            <i class="fa fa-plus"></i>
-        </div>
-    </div>
-
-    <div class="right">
-        <span>Admin 1</span>
-        <i class="fa-regular fa-user"></i>
-    </div>
-</div>
-
-<!-- 🔥 content ด้านล่าง -->
 <div class="container">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="menu">
-            <p>จัดการผู้ใช้</p>
-            <p>จัดการข้อมูลบุคลากร</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>เมนู</h3>
+    <br>
+    <a href="User_Dashboard.html" class="menu">จัดการผู้ใช้</a>
+    <a href="dashboard.html" class="menu">จัดการบุคลากร</a>
+    <div class="logout" onclick="logout()">
+      <img src="../../img/log out.png" class="logoutlogo">
+      ออกจากระบบ
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <div class="profile-card">
+
+      <!-- Loading overlay -->
+      <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- รูป — ใช้ style เดียวกับ create_users -->
+      <div class="profile-img-wrapper" onclick="document.getElementById('imageUpload').click()">
+
+        <div class="profile-upload-wrap" style="width:110px; height:110px;">
+          <img id="profileImage" src="../../img/profile.jpg" class="profile-img"
+               style="width:110px; height:110px;">
+          <div class="upload-overlay">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zm7-11.2h-1.4l-1.7-2H8.1L6.4 4H5A3 3 0 0 0 2 7v11a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-7 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+            </svg>
+          </div>
         </div>
 
-        <div class="logout">
-            <i class="fa fa-sign-out-alt"></i> ออกจากระบบ
-        </div>
+        <input type="file" id="imageUpload" accept="image/*" hidden>
+      </div>
+
+      <!-- USER -->
+      <h3 id="username">-</h3>
+      <p id="email">-</p>
+
+      <!-- EDITABLE ROWS -->
+      <div class="info-row">
+        <span>ชื่อ</span>
+        <p id="firstName">-</p>
+        <div class="edit-icon small" onclick="editField('firstName', 'ชื่อ')">✎</div>
+      </div>
+
+      <div class="info-row">
+        <span>นามสกุล</span>
+        <p id="lastName">-</p>
+        <div class="edit-icon small" onclick="editField('lastName', 'นามสกุล')">✎</div>
+      </div>
+
+      <div class="info-row">
+        <span>หมายเลขโทรศัพท์</span>
+        <p id="phone">-</p>
+        <div class="edit-icon small" onclick="editField('phone', 'หมายเลขโทรศัพท์')">✎</div>
+      </div>
+
     </div>
 
-    <!-- Main -->
-    <div class="main">
-        <div class="profile">
+  </main>
+</div>
 
-            <div class="avatar">
-                <i class="fa-regular fa-user"></i>
-            </div>
-
-            <h3>Username</h3>
-            <p class="email">Username@gmail.com</p>
-
-            <hr>
-
-            <div class="info">
-                <div class="row">
-                    <span class="label">ชื่อ-นามสกุล</span>
-                    <span class="value">พิมพ์พรณ สุขสวัสดิ์</span>
-                    <i class="fa fa-pen"></i>
-                </div>
-
-                <div class="row">
-                    <span class="label">หมายเลขโทรศัพท์</span>
-                    <span class="value">0922334434</span>
-                    <i class="fa fa-pen"></i>
-                </div>
-            </div>
-
-        </div>
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle">แก้ไขข้อมูล</h3>
+    <input type="text" id="editInput" placeholder="กรอกข้อมูล">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal()">ยกเลิก</button>
+      <button class="ok-btn" id="saveBtn" onclick="saveEdit()">
+        <span id="saveBtnText">ตกลง</span>
+        <span id="saveBtnSpinner" class="btn-spinner hidden"></span>
+      </button>
     </div>
-
+  </div>
 </div>
 
 </body>
