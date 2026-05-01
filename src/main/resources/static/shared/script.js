@@ -44,10 +44,10 @@ function togglePassword() {
 
   if (password.type === "password") {
     password.type = "text";
-    eye.src = "./img/eye-password-show-svgrepo-com.svg";
+    eye.src = "/img/eye-password-show.svg";
   } else {
     password.type = "password";
-    eye.src = "./img/eye-off-c-os-208494.svg";
+    eye.src = "/img/eye-off.svg";
   }
 }
 

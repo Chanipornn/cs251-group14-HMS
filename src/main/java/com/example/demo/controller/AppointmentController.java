@@ -41,9 +41,18 @@ public class AppointmentController {
 		return service.reschedule(id, dto);
 	}
 
-	@GetMapping("/patient/{id}")
+	@GetMapping("/patients/{id}")
 	public List<AppointmentDTO> getByPatient(@PathVariable Integer id) {
 		return service.getByPatient(id);
+	}
+	
+	@PostMapping("/patients/{patientId}")
+	public AppointmentDTO createWithPatient(
+	    @PathVariable Integer patientId,
+	    @RequestBody AppointmentRequestDTO req
+	) {
+	    req.setPatientId(patientId);
+	    return service.create(req);
 	}
 
 	@GetMapping("/doctor/{doctorId}")

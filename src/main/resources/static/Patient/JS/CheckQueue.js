@@ -99,6 +99,81 @@ async function loadQueues() {
     // ==========================
     // RENDER
     // ==========================
+	function renderQueues(list) {
+	    const container = document.querySelector(".queue-content");
+
+	    container.innerHTML = list.map(q => `
+	        <div class="queue-card">
+
+	            ${getStatusHTML(q.status)}
+
+	            <div class="queue-number">
+	                Queue No. A-${q.queueNumber || "-"}
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">แผนก</span>
+	                <span class="value">${q.department || "-"}</span>
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">แพทย์</span>
+	                <span class="value">${q.doctorName || "-"}</span>
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">นัดมาเพื่อ</span>
+	                <span class="value">${q.reason || "-"}</span>
+	            </div>
+
+	            <div class="date-time-box">
+	                <i class="fa-regular fa-calendar"></i>
+	                ${q.appointmentDate || "-"} ${q.appointmentTime || ""}
+	            </div>
+
+	        </div>
+	    `).join("");
+	}
+	
+	
+/*
+	function renderQueues(list) {
+	    const container = document.querySelector(".queue-content");
+
+	    container.innerHTML = list.map(q => `
+	        <div class="queue-card">
+
+	            ${getStatusHTML(q.status)}
+
+	            <div class="queue-number">
+	                Queue No. A-${q.id || "-"}
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">แผนก</span>
+	                <span class="value">${q.department || "-"}</span>
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">แพทย์</span>
+	                <span class="value">${q.doctorName || "-"}</span>
+	            </div>
+
+	            <div class="info-row">
+	                <span class="label">นัดมาเพื่อ</span>
+	                <span class="value">${q.reason || "-"}</span>
+	            </div>
+
+	            <div class="date-time-box">
+	                <i class="fa-regular fa-calendar"></i>
+	                ${q.date || "-"} ${q.time || ""}
+	            </div>
+
+	        </div>
+	    `).join("");
+	}
+	*/
+	/*
 function renderQueues(list) {
     const container = document.querySelector(".queue-content");
 
@@ -134,6 +209,7 @@ function renderQueues(list) {
         </div>
     `).join("");
 }
+*/
 
 //อันเก่า
 /*
