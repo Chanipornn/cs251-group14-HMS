@@ -12,11 +12,10 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="left-section">
-      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
+      <div class="menu-icon" id="sidebarToggle">☰</div>
+      <img src="../../img/hospital.png" class="circle-img">
     </div>
     <div class="profile">
       <span>นพ.วิรุต</span>
@@ -26,35 +25,29 @@
 
   <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <h3>เมนู</h3>
+      <h3>เมนู</h3><br>
 
-      <nav class="nav-list">
-        <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
-        <a href="history.html" class="menu active">การจ่ายยา</a>
-        <a href="appointment.html" class="menu">การนัดหมาย</a>
-        <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-        <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
-      </nav>
+      <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+      <a href="history.html" class="menu active">การจ่ายยา</a>
+      <a href="appointment.html" class="menu">การนัดหมาย</a>
+      <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+      <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
 
       <div class="logout" onclick="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
+        <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-      <!-- Page Title with back arrow -->
       <div class="form-title">
         <button class="back-link" onclick="window.location.href='history.html'">
-          <i class="fa-solid fa-arrow-left"></i>
+          <i class="fa-solid fa-circle-arrow-left"></i>
         </button>
         <h1>เพิ่มการสั่งยา</h1>
       </div>
 
-      <!-- Form -->
       <div class="form-body">
         <div class="form-row-two">
           <div class="form-group">
@@ -88,7 +81,6 @@
         </div>
       </div>
 
-      <!-- Actions -->
       <div class="form-actions">
         <button class="btn btn-secondary" onclick="window.location.href='history.html'">ยกเลิก</button>
         <button class="btn btn-primary" onclick="showModal()">ยืนยัน</button>

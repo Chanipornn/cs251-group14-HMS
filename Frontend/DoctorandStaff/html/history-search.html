@@ -12,11 +12,10 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="left-section">
-      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
+      <div class="menu-icon" id="sidebarToggle">☰</div>
+      <img src="../../img/hospital.png" class="circle-img">
     </div>
     <div class="profile">
       <span>นพ.วิรุต</span>
@@ -26,27 +25,22 @@
 
   <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <h3>เมนู</h3>
+      <h3>เมนู</h3><br>
 
-      <nav class="nav-list">
-        <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
-        <a href="history.html" class="menu active">การจ่ายยา</a>
-        <a href="appointment.html" class="menu">การนัดหมาย</a>
-        <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-        <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
-      </nav>
+      <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+      <a href="history.html" class="menu active">การจ่ายยา</a>
+      <a href="appointment.html" class="menu">การนัดหมาย</a>
+      <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+      <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
 
       <div class="logout" onclick="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
+        <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-      <!-- Search Row -->
       <div class="search-row">
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="6780987" value="6780987" />
@@ -54,17 +48,13 @@
         </div>
       </div>
 
-      <!-- Page Title -->
       <div class="page-title">
         <h1>ประวัติการจ่ายยา</h1>
       </div>
 
-      <!-- Two Column Layout -->
       <div class="two-col">
 
-        <!-- Left: Card List -->
         <div class="card-list">
-          <!-- Active Card -->
           <div class="record-card active" onclick="selectCard(this, 0)">
             <div class="card-info">
               <h3>วันที่ 20/03/2569</h3>
@@ -77,7 +67,6 @@
             </button>
           </div>
 
-          <!-- Add Button -->
           <div class="add-row">
             <button class="add-link" onclick="window.location.href='dispense-medication.html'">
               <i class="fa-solid fa-plus"></i> เพิ่มรายการจ่ายยา
@@ -85,7 +74,6 @@
           </div>
         </div>
 
-        <!-- Right: Preview Panel -->
         <div class="preview-panel">
           <div class="paper-center">
             <h2>ใบรายการจ่ายยา</h2>
@@ -121,13 +109,11 @@
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('collapsed');
     }
-
     function logout() {
       if (confirm('ต้องการออกจากระบบ?')) {
         window.location.href = 'login.html';
       }
     }
-
     function selectCard(el, index) {
       document.querySelectorAll('.record-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');

@@ -52,7 +52,6 @@ a {
   left: 0;
   right: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
 
 .left-section {
@@ -67,57 +66,36 @@ a {
 }
 
 .circle-img {
-    width: 3rem;
-    height: 3rem;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid white;
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
 }
 
 .profile {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
 .avatar {
-    width: 35px;              
-    height: 35px;
-    background-color: white;   
-    border-radius: 50%;        
-    border: 2px solid white;   
-    
-    
-    background-size: cover;    
-    background-position: center; 
-    background-repeat: no-repeat; 
-    
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-}
-
-/* HEADER - ปรับให้ Fixed อยู่กับที่บนสุด */
-.header {
-  height: 80px;
-  background: #6E65BE;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  
-  /* เพิ่มส่วนนี้ */
-  position: fixed;   /* ล็อคให้อยู่บนสุด */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;    /* ให้อยู่เหนือเลเยอร์อื่นๆ */
+  width: 35px;
+  height: 35px;
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* === LAYOUT === */
 .container {
   display: flex;
-  margin-top: 80px;  /* สำคัญ: ป้องกันเนื้อหาโดน Header บัง */
+  margin-top: 80px;
   align-items: flex-start;
 }
 
@@ -126,39 +104,24 @@ a {
   width: 250px;
   background: white;
   padding: 20px;
-  /* ปรับความสูงให้เต็มจอพอดีหลังจากหัก Header */
-  height: calc(100vh - 80px); 
+  height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  transition: 0.3s;
-
-  /* ล็อค Sidebar ให้อยู่กับที่ */
   position: sticky;
-  top: 80px; 
+  top: 80px;
   flex-shrink: 0;
-  overflow-y: auto; /* ถ้าเมนูยาวเกิน ให้ Scroll ได้เฉพาะใน Sidebar */
+  overflow-y: auto;
 }
 
 .sidebar.collapsed {
   width: 0;
   padding: 0;
   overflow: hidden;
-  transform: translateX(-100%);
 }
 
 .sidebar h3 {
-  font-size: 18px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 18px;
-  padding-left: 12px;
-}
-
-.nav-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
 }
 
 .menu {
@@ -168,16 +131,17 @@ a {
   color: black;
   margin-bottom: 10px;
   font-weight: 600;
+  font-size: 16px;
+  display: block;
 }
 
 .menu:hover {
-  background: #f0edfc;
+  background: #f0f0ff;
 }
 
 .menu.active {
   background: linear-gradient(90deg, #746BC3, #B4ADEE);
   color: white;
-  font-weight: 600;
 }
 
 .logout {
@@ -185,10 +149,15 @@ a {
   color: red;
   cursor: pointer;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
-.logout:hover {
-  opacity: 0.8;
+.logoutlogo {
+  width: 20px;
+  vertical-align: middle;
 }
 
 /* === MAIN CONTENT === */

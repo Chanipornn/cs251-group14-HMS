@@ -12,11 +12,10 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="left-section">
       <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
+      <img src="../../img/hospital.png" class="circle-img">
     </div>
     <div class="profile">
       <span>นพ.วิรุต</span>
@@ -26,24 +25,20 @@
 
   <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <h3>เมนู</h3>
+      <h3>เมนู</h3><br>
 
-      <nav class="nav-list">
-        <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
-        <a href="history.html" class="menu">การจ่ายยา</a>
-        <a href="appointment.html" class="menu active">การนัดหมาย</a>
-        <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-        <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
-      </nav>
+      <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
+      <a href="history.html" class="menu">การจ่ายยา</a>
+      <a href="appointment.html" class="menu active">การนัดหมาย</a>
+      <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
+      <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
 
       <div class="logout" onclick="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
+        <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
 
       <div class="page-title">
@@ -52,8 +47,8 @@
 
       <div class="search-row">
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="PatientID / DoctorID" />
-          <button class="search-btn" onclick="renderAppointments()"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <input type="text" placeholder="PatientID / DoctorID" />
+          <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
       </div>
 
@@ -64,16 +59,84 @@
         </span>
       </div>
 
-      <div class="card-list" id="cardList"></div>
+      <div class="card-list" id="cardList">
+
+        <div class="appoint-card" data-queue="1">
+          <div class="card-body">
+            <p class="card-date">วันที่ : 25/03/2569</p>
+            <p>ชื่อ : น.ส. โยมิว แก้วหวาน</p>
+            <p>อายุ : 25 ปี</p>
+            <p>น้ำหนัก : 55 กก.</p>
+            <p>ส่วนสูง : 165 ซม.</p>
+          </div>
+          <div class="card-meta">
+            <span class="queue-label">หมายเลขคิว : 01</span>
+            <button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+          </div>
+        </div>
+
+        <div class="appoint-card" data-queue="2">
+          <div class="card-body">
+            <p class="card-date">วันที่ : 25/03/2569</p>
+            <p>ชื่อ : นาย นวัต ตะสังโดน</p>
+            <p>อายุ : 21 ปี</p>
+            <p>น้ำหนัก : 60 กก.</p>
+            <p>ส่วนสูง : 160 ซม.</p>
+          </div>
+          <div class="card-meta">
+            <span class="queue-label">หมายเลขคิว : 02</span>
+            <button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+          </div>
+        </div>
+
+        <div class="appoint-card" data-queue="3">
+          <div class="card-body">
+            <p class="card-date">วันที่ : 25/03/2569</p>
+            <p>ชื่อ : น.ส. บากินตา อิบาบู</p>
+            <p>อายุ : 44 ปี</p>
+            <p>น้ำหนัก : 70 กก.</p>
+            <p>ส่วนสูง : 155 ซม.</p>
+          </div>
+          <div class="card-meta">
+            <span class="queue-label">หมายเลขคิว : 03</span>
+            <button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+          </div>
+        </div>
+
+      </div>
 
       <div class="add-row">
-        <button class="add-link" onclick="window.location.href='add-appointment.html'">
-          + เพิ่มการนัดหมาย
-        </button>
+        <button class="add-link" onclick="window.location.href='add-appointment.html'">+ เพิ่มการนัดหมาย</button>
       </div>
 
     </main>
   </div>
-  <script src="../JS/appointment.js"></script>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+    function logout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    let sortAsc = true;
+    function toggleSort() {
+      sortAsc = !sortAsc;
+      const icon = document.getElementById('sortIcon');
+      icon.style.transform = sortAsc ? 'rotate(0deg)' : 'rotate(180deg)';
+      icon.style.transition = 'transform 0.3s';
+      const list = document.getElementById('cardList');
+      const cards = Array.from(list.querySelectorAll('.appoint-card'));
+      cards.sort((a, b) => {
+        const qa = parseInt(a.dataset.queue);
+        const qb = parseInt(b.dataset.queue);
+        return sortAsc ? qa - qb : qb - qa;
+      });
+      cards.forEach(card => list.appendChild(card));
+    }
+  </script>
 </body>
 </html>
