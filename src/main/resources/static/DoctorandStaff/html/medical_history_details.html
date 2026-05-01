@@ -1,98 +1,238 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายละเอียดประวัติ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/medical_history_details.css">
-    
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ระบบจัดการประวัติการรักษา</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="/DoctorandStaff/css/medical_history.css">
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-    <!-- HEADER -->
-<header class="header">
-  <div class="left-section">
-    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <img src="../../img/hospital.png" class="circle-img">
-  </div>
+	<header class="header">
+		<div class="left-section">
+			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+			<img src="../../img/hospital.png" class="circle-img">
+		</div>
 
-  <div class="profile">
-    <span>นพ.วิรุต</span>
-    <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
-  </div>
-</header>
+		<div class="profile">
+			<span id="displayName">กำลังโหลด...</span>
+			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+		</div>
+	</header>
 
-    <div class="container">
-        
-        <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h3>เมนู</h3><br>
+	<div class="container">
 
-    <a href="medical_history.html" class="menu active">ประวัติการรักษา</a>
-    <a href="history.html" class="menu">การจ่ายยา</a>
-    <a href="appointment.html" class="menu">การนัดหมาย</a>
-    <a href="medical_certificate_history.html" class="menu">การออกใบรับรองแพทย์</a>
-    <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+		<aside class="sidebar">
+			<h3>เมนู</h3><br>
 
-    <div class="logout" onclick="logout()">
-      <img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
-    </div>
-  </aside>
+			<a href="/doctorandstaff/medical_history" class="menu active">ประวัติการรักษา</a>
+			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
+			<a href="/doctorandstaff/appointment" class="menu">การนัดหมาย</a>
+			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
+			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
 
-        <div class="content-body">
-    <div class="detail-header">
-        <a href="medical_history.html" class="back-btn-circle">
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <h1 class="form-title">รายละเอียดการรักษา</h1>
-    </div>
+			<div class="logout" onclick="logout()">
+				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+			</div>
+		</aside>
 
-    <div class="detail-container">
-        <div class="detail-card">
-            <div class="card-line"></div>
-            <div class="card-content">
-                <div class="content-header">
-                    <h3>ประวัติผู้ป่วย <i class="fa-solid fa-pen-to-square edit-icon"></i></h3>
-                    <span class="staff-only"><i class="fa-solid fa-lock"></i> เฉพาะ Staff เท่านั้น</span>
-                </div>
-                
-                <div id="patientDetailView"> <p id="detDate">วันที่บันทึก : --/--/----</p>
-                    <div class="info-list">
-                        <p id="detName">กำลังโหลด...</p>
-                        <p id="detId">รหัสประจำตัวผู้ป่วย : --</p>
-                        <p id="detAge">อายุ : -- ปี</p>
-                        <p id="detWeight">น้ำหนัก : -- กก.</p>
-                        <p id="detHeight">ส่วนสูง : -- ชม.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<main class="main-content">
+			<div class="content-body">
 
-        <div class="detail-card">
-            <div class="card-line"></div>
-            <div class="card-content">
-                <div class="content-header">
-                    <h3>ประวัติการรักษา <i class="fa-solid fa-pen-to-square edit-icon"></i></h3>
-                </div>
-                
-                <div class="info-list highlight">
-                    <p><strong id="detDiagnosis">การวินิจฉัยโรค : --</strong></p>
-                    <p id="detPatientIdLabel">รหัสประจำตัวผู้ป่วย : --</p>
-                    <p id="detDoctor">รหัสประจำตัวแพทย์ : --</p>
-                    <p id="detDateVisit">วันที่เข้าพบแพทย์ : --</p>
-                    <p id="detSymptoms">อาการ : --</p>
-                    <p id="detDocDiagnosis">การวินิจฉัย : --</p>
-                    <p id="detTreatment">รายละเอียดการรักษา : --</p>
-                    <p id="detResult">ผลการรักษา : --</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    </div>
+				<section class="stats-cards">
+					<div class="date-selector">
+						<i class="fa-solid fa-chevron-left" id="prevDate" style="cursor: pointer;"></i>
+						<span id="currentDateText">กำลังโหลด...</span>
+						<i class="fa-solid fa-chevron-right" id="nextDate" style="cursor: pointer;"></i>
+					</div>
 
-    <script src="../js/medical_history.js"></script>
+					<div class="cards-wrapper">
+						<div class="card card-cyan">
+							<h2 id="statCompleted">0</h2>
+							<p>เคสที่รักษาเสร็จสิ้น</p>
+						</div>
+						<div class="card card-purple">
+							<h2 id="statToday">0</h2>
+							<p>เคสที่ต้องรักษาวันนี้</p>
+						</div>
+						<div class="card card-blue">
+							<h2 id="statTotal">0</h2>
+							<p>การรักษาทั้งหมด</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="table-section">
+					<div class="table-controls">
+						<h3 class="table-title">เคสที่รักษา</h3>
+
+						<div class="search-container">
+							<input type="text" id="patientSearch" placeholder="กรุณากรอกรหัสผู้ป่วย หรือ ชื่อ">
+							<i class="fa-solid fa-magnifying-glass search-icon"></i>
+						</div>
+
+						<button class="btn-add-record" onclick="location.href='create_medical_history.html'">
+							<i class="fa-solid fa-plus"></i> เพิ่มประวัติการรักษา
+						</button>
+					</div>
+
+					<div class="table-wrapper">
+						<table class="history-table">
+							<thead>
+								<tr>
+									<th>รหัสประจำตัวผู้ป่วย</th>
+									<th>ชื่อ - นามสกุล</th>
+									<th>วันที่ทำการรักษา</th>
+									<th>การวินิจฉัย</th>
+								</tr>
+							</thead>
+							<tbody id="historyTableBody">
+								<tr>
+									<td colspan="4" style="text-align:center; padding: 50px; color: #999;">
+										กำลังโหลดข้อมูล...
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+			</div>
+		</main>
+
+	</div>
+
 </body>
+<script src="../js/medical_history.js"></script>
+<script>
+	// ตัวแปรสำหรับเก็บข้อมูลประวัติและข้อมูลคนที่ล็อคอิน
+	let allMedicalRecords = [];
+	let loggedInDoctorId = null;
+	let loggedInDoctorName = "";
+	let loggedInRole = "";
+
+	window.onload = async function () {
+		try {
+			// 1. เช็คสิทธิ์และเก็บข้อมูลคนที่ล็อคอิน
+			const response = await fetch('/api/doctorandstaff/me');
+			if (response.status === 401) {
+				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
+				window.location.href = "/doctorandstaff";
+				return;
+			}
+
+			const data = await response.json();
+			document.getElementById('displayName').textContent = data.name;
+
+			// เซ็ตค่าตัวแปรเก็บไว้ใช้ Filter ข้อมูล
+			loggedInDoctorName = data.name;
+			loggedInDoctorId = data.DoctorID; // อิงจากชื่อฟิลด์ตอนส่งมาจาก Controller
+			loggedInRole = data.role; // ตรวจสอบว่าเป็น Doctor หรือ Staff
+
+			// 2. แสดงวันที่ปัจจุบัน
+			const today = new Date();
+			document.getElementById('currentDateText').textContent = today.toLocaleDateString('th-TH', {
+				year: 'numeric', month: 'long', day: 'numeric'
+			});
+
+			// 3. ดึงข้อมูลประวัติการรักษา
+			await fetchMedicalRecords();
+
+			// 4. เปิดระบบค้นหา
+			setupSearch();
+
+		} catch (error) {
+			console.error("เกิดข้อผิดพลาด:", error);
+		}
+	};
+
+
+	async function fetchMedicalRecords() {
+		try {
+			const res = await fetch('/api/medical-records');
+			if (!res.ok) throw new Error('Failed to fetch data');
+
+			const rawData = await res.json();
+
+			// 🌟 พระเอกอยู่ตรงนี้: ระบบ Filter ข้อมูล
+			if (loggedInRole === 'Doctor') {
+				// ถ้าเป็น "หมอ" ให้กรองเอาเฉพาะเคสที่ตัวเองเป็นคนตรวจ (เช็คจาก ID หรือ ชื่อ)
+				allMedicalRecords = rawData.filter(record => {
+					return record.doctorId === loggedInDoctorId || record.doctorName === loggedInDoctorName;
+				});
+			} else {
+				// ถ้าเป็น "Staff" (เจ้าหน้าที่/พยาบาล) ให้ดึงมาแสดงทั้งหมด
+				allMedicalRecords = rawData;
+			}
+
+			// วาดตารางและอัปเดตสถิติตามข้อมูลที่กรองมาแล้ว
+			renderTable(allMedicalRecords);
+			updateStats(allMedicalRecords);
+
+		} catch (error) {
+			console.error("Error fetching medical records:", error);
+			document.getElementById('historyTableBody').innerHTML =
+				`<tr><td colspan="4" style="text-align:center; padding: 50px; color: red;">ไม่สามารถดึงข้อมูลประวัติการรักษาได้</td></tr>`;
+		}
+	}
+
+	function renderTable(records) {
+		const tbody = document.getElementById('historyTableBody');
+		tbody.innerHTML = '';
+
+		if (records.length === 0) {
+			tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 50px; color: #999;">ยังไม่มีประวัติการรักษาของคุณในระบบ</td></tr>`;
+			return;
+		}
+
+		records.forEach(record => {
+			const tr = document.createElement('tr');
+
+			tr.innerHTML = `
+				<td>${record.patientId || '-'}</td>
+				<td>${record.patientName || record.patientFirstName + ' ' + record.patientLastName || 'ไม่ระบุชื่อ'}</td>
+				<td>${record.visitDate || '-'}</td>
+				<td>${record.diagnosis || '-'}</td>
+			`;
+			tbody.appendChild(tr);
+		});
+	}
+
+	function updateStats(records) {
+		// เปลี่ยนเป็นอัปเดตสถิติเฉพาะผลงานของหมอคนนั้น
+		document.getElementById('statTotal').textContent = records.length;
+
+		const todayStr = new Date().toISOString().split('T')[0];
+		const todayRecords = records.filter(r => r.visitDate && r.visitDate.startsWith(todayStr));
+		document.getElementById('statToday').textContent = todayRecords.length;
+
+		const completedRecords = records.filter(r => r.diagnosis && r.diagnosis.trim() !== '');
+		document.getElementById('statCompleted').textContent = completedRecords.length;
+	}
+
+	function setupSearch() {
+		const searchInput = document.getElementById('patientSearch');
+		searchInput.addEventListener('input', function (e) {
+			const keyword = e.target.value.toLowerCase();
+
+			const filteredRecords = allMedicalRecords.filter(record => {
+				const pId = String(record.patientId || '').toLowerCase();
+				const pName = String(record.patientName || record.patientFirstName || '').toLowerCase();
+				return pId.includes(keyword) || pName.includes(keyword);
+			});
+
+			renderTable(filteredRecords);
+		});
+	}
+
+	async function logout() {
+		await fetch('/api/logout', {method: 'POST'});
+		window.location.href = "/";
+	}
+</script>
+
 </html>

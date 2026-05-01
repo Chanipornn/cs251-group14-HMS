@@ -1,79 +1,196 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>สร้างใบรับรองแพทย์</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="../css/styles.css">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>สร้างใบรับรองแพทย์</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<!-- สมมติว่ามีไฟล์ CSS ตัวนี้ หรือถ้าไม่มีก็ปล่อยไว้ได้ครับ -->
+	<link rel="stylesheet" href="../css/styles.css">
+	<style>
+		/* สไตล์เพิ่มเติมเพื่อให้ช่อง Readonly ดูแตกต่าง */
+		.input[readonly] {
+			background-color: #f5f5f5;
+			cursor: not-allowed;
+			color: #777;
+		}
+
+		/* ปรับ textarea ให้สูงกำลังดี */
+		.textarea {
+			width: 100%;
+			min-height: 100px;
+			padding: 10px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+			font-family: 'Prompt', sans-serif;
+		}
+	</style>
 </head>
+
 <body data-page="medical-create">
-  <header class="header">
-    <div class="left-section">
-      <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-      <img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
-    </div>
+	<header class="header">
+		<div class="left-section">
+			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+			<img src="../../img/hospital.png" class="circle-img" alt="Hospital Logo">
+		</div>
 
-    <div class="profile">
-      <span>นพ.วิรุต</span>
-      <div class="avatar" style="background-image: url('../../img/profile.png');"></div>
-    </div>
-  </header>
+		<div class="profile">
+			<span id="displayName">กำลังโหลด...</span>
+			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+		</div>
+	</header>
 
-  <div class="container">
-    <aside class="sidebar">
-      <h3>เมนู</h3><br>
+	<div class="container">
+		<aside class="sidebar">
+			<h3>เมนู</h3><br>
 
-      <a href="medical_history.html" class="menu">ประวัติการรักษา</a>
-      <a href="history.html" class="menu">การจ่ายยา</a>
-      <a href="appointment.html" class="menu">การนัดหมาย</a>
-      <a href="medical_certificate_history.html" class="menu active">การออกใบรับรองแพทย์</a>
-      <a href="invoice_history.html" class="menu">ใบแจ้งหนี้</a>
+			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
+			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
+			<a href="/doctorandstaff/appointment" class="menu">การนัดหมาย</a>
+			<a href="/doctorandstaff/medical_certificate" class="menu active">การออกใบรับรองแพทย์</a>
+			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
 
-      <div class="logout" onclick="logout()">
-        <img src="../../img/log out.png" class="logoutlogo" alt="Logout">ออกจากระบบ
-      </div>
-    </aside>
+			<div class="logout" onclick="logout()">
+				<img src="../../img/log out.png" class="logoutlogo" alt="Logout">ออกจากระบบ
+			</div>
+		</aside>
 
-    <main class="main">
-      <div class="form-title">
-        <button class="back-link" data-nav="medical_certificate_history.html"><i class="fa-solid fa-circle-arrow-left"></i></button>
-        <h1>สร้างใบรับรองแพทย์</h1>
-      </div>
-      <form id="medicalCertificateForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>รหัสประจำตัวผู้ป่วย :</label>
-            <input id="mcPatientId" class="input" readonly>
-          </div>
-          <div class="form-group">
-            <label>รหัสประจำตัว แพทย์ :</label>
-            <input id="mcDoctorId" class="input" readonly>
-          </div>
-          <div class="form-group full">
-            <label>วันออกใบรับรองแพทย์ :</label>
-            <input id="mcDate" type="date" class="input">
-          </div>
-          <div class="form-group full">
-            <label>อาการ :</label>
-            <textarea id="mcSymptoms" class="textarea" placeholder="เช่น มีไข้"></textarea>
-          </div>
-          <div class="form-group full">
-            <label>วัตถุประสงค์ในการออกใบรับรองแพทย์ :</label>
-            <textarea id="mcPurpose" class="textarea" placeholder="เช่น ลางาน"></textarea>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" data-nav="medical_certificate_history.html">ยกเลิก</button>
-          <button type="submit" class="btn btn-primary">ยืนยัน</button>
-        </div>
-      </form>
+		<main class="main">
+			<div class="form-title">
+				<button class="back-link" onclick="location.href='/doctorandstaff/medical_certificate'"><i
+						class="fa-solid fa-circle-arrow-left"></i></button>
+				<h1>สร้างใบรับรองแพทย์</h1>
+			</div>
+			<form id="medicalCertificateForm">
+				<div class="form-grid">
+					<div class="form-group">
+						<label>รหัสประจำตัวผู้ป่วย <span style="color:red">*</span> :</label>
+						<input id="mcPatientId" class="input" type="number" placeholder="เช่น 1001" required>
+					</div>
+					<div class="form-group">
+						<label>รหัสประจำตัว แพทย์ :</label>
+						<!-- ช่องนี้ล็อคไว้ เพราะดึงจากระบบอัตโนมัติ -->
+						<input id="mcDoctorId" class="input" readonly>
+					</div>
+					<div class="form-group full">
+						<label>วันออกใบรับรองแพทย์ <span style="color:red">*</span> :</label>
+						<input id="mcDate" type="date" class="input" required>
+					</div>
+					<div class="form-group full">
+						<label>อาการ :</label>
+						<textarea id="mcSymptoms" class="textarea"
+							placeholder="เช่น เป็นไข้หวัดใหญ่ อุณหภูมิ 39 องศา"></textarea>
+					</div>
+					<div class="form-group full">
+						<label>วัตถุประสงค์ในการออกใบรับรองแพทย์ :</label>
+						<textarea id="mcPurpose" class="textarea"
+							placeholder="เช่น เพื่อใช้ประกอบการลาพักฟื้นเป็นเวลา 3 วัน"></textarea>
+					</div>
+				</div>
+				<div class="form-actions" style="margin-top: 20px;">
+					<button type="button" class="btn btn-secondary"
+						onclick="location.href='/doctorandstaff/medical_certificate'">ยกเลิก</button>
+					<button type="submit" class="btn btn-primary">ยืนยันการสร้าง</button>
+				</div>
+			</form>
 
-    </main>
-  </div>
-  <script src="../js/app.js"></script>
+		</main>
+	</div>
+
+	<script>
+		let loggedInDoctorId = null;
+
+		window.onload = async function () {
+			try {
+				// 1. ดึงข้อมูลผู้ที่ล็อคอินอยู่
+				const meRes = await fetch('/api/doctorandstaff/me');
+				if (meRes.status === 401) {
+					alert('กรุณาล็อคอินก่อนเข้าใช้งาน');
+					window.location.href = '/doctorandstaff';
+					return;
+				}
+				const meData = await meRes.json();
+				document.getElementById('displayName').textContent = meData.name;
+
+				// 2. เอารหัสแพทย์มาใส่ในช่อง input
+				loggedInDoctorId = meData.doctorId || meData.DoctorID;
+				if (loggedInDoctorId) {
+					document.getElementById('mcDoctorId').value = loggedInDoctorId;
+				}
+
+				// 3. ตั้งค่าวันที่เริ่มต้นเป็น 'วันนี้'
+				const today = new Date().toISOString().split('T')[0];
+				document.getElementById('mcDate').value = today;
+
+			} catch (error) {
+				console.error("Error loading user info:", error);
+			}
+		};
+
+		// 4. จัดการตอนที่หมอกด "ยืนยันการสร้าง"
+		document.getElementById('medicalCertificateForm').addEventListener('submit', async function (e) {
+			e.preventDefault(); // กันไม่ให้หน้ารีเฟรช
+
+			const patientId = document.getElementById('mcPatientId').value;
+			const doctorId = document.getElementById('mcDoctorId').value;
+			const issueDate = document.getElementById('mcDate').value; // ได้มาเป็น YYYY-MM-DD
+
+			const symptoms = document.getElementById('mcSymptoms').value;
+			const purpose = document.getElementById('mcPurpose').value;
+
+			// ถ้าไม่มีรหัสคนไข้หรือหมอ ให้หยุดการทำงาน
+			if (!patientId || !doctorId) {
+				alert("กรุณากรอกรหัสผู้ป่วยให้ครบถ้วน");
+				return;
+			}
+
+			// รวมอาการและวัตถุประสงค์เข้าด้วยกัน เพื่อบันทึกลงฟิลด์ Description ของ Database[cite: 26]
+			let fullDescription = "";
+			if (symptoms) fullDescription += "อาการ: " + symptoms + " ";
+			if (purpose) fullDescription += "| วัตถุประสงค์: " + purpose;
+
+			// 🌟 จัดโครงสร้างข้อมูลให้ตรงกับที่ Spring Boot ต้องการรับ[cite: 28]
+			const payload = {
+				patient: {patientId: parseInt(patientId)},
+				doctor: {doctorId: parseInt(doctorId)},
+				issueDate: issueDate,
+				description: fullDescription.trim() // ตัดช่องว่างส่วนเกิน
+			};
+
+			try {
+				// ยิง API แบบ POST เพื่อบันทึกข้อมูล[cite: 28]
+				const res = await fetch('/api/certificates', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(payload)
+				});
+
+				if (res.ok) {
+					alert("สร้างใบรับรองแพทย์สำเร็จ!");
+					// เด้งกลับไปหน้ารวมใบรับรองแพทย์
+					window.location.href = "/doctorandstaff/medical_certificate";
+				} else {
+					const errorMsg = await res.text();
+					alert("เกิดข้อผิดพลาดในการบันทึก: " + errorMsg);
+				}
+
+			} catch (error) {
+				console.error("Error creating certificate:", error);
+				alert("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+			}
+		});
+
+		async function logout() {
+			await fetch('/api/logout', {method: 'POST'});
+			window.location.href = "/";
+		}
+	</script>
 </body>
+
 </html>

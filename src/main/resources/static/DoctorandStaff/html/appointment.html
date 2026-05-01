@@ -6,6 +6,8 @@
 	<title>Appointments</title>
 	<link rel="stylesheet" href="/DoctorandStaff/css/appointment.css">
 	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -18,7 +20,7 @@
 		</div>
 
 		<div class="profile">
-			<span id = "displayName"></span>
+			<span id="displayName">กำลังโหลด...</span>
 			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
 		</div>
 	</header>
@@ -44,81 +46,157 @@
 			<h2>รายการนัดหมาย</h2>
 
 			<div class="search-box">
-				<input type="text" placeholder="PatientID / DoctorID">
+				<input type="text" id="searchInput" placeholder="PatientID / ชื่อผู้ป่วย">
 				<span>🔍</span>
 			</div>
 
-			<div class="sort">หมายเลขคิว ↕</div>
-
-			<div class="card">
-				<div class="card-left">
-					<p>วันที่ : 25/03/2569</p>
-					<p>ชื่อ : น.ส. เอิบ มั่งคง</p>
-					<p>อายุ : 25 ปี</p>
-					<p>น้ำหนัก : 55 กก.</p>
-					<p>ส่วนสูง : 165 ซม.</p>
-				</div>
-				<div class="card-right">
-					<p>หมายเลขคิว : 01</p>
-					<button class="edit">✏️</button>
-				</div>
+			<div style="display: flex; justify-content: space-between; margin-top: 15px;">
+				<button class="add-appointment" onclick="location.href='/doctorandstaff/appointment/add'">+
+					เพิ่มการนัดหมาย</button>
+				<div class="sort">หมายเลขคิว ↕</div>
 			</div>
 
-			<div class="card">
-				<div class="card-left">
-					<p>วันที่ : 25/03/2569</p>
-					<p>ชื่อ : นาย นิวด์ ตะวันโต</p>
-					<p>อายุ : 21 ปี</p>
-					<p>น้ำหนัก : 60 กก.</p>
-					<p>ส่วนสูง : 160 ซม.</p>
-				</div>
-				<div class="card-right">
-					<p>หมายเลขคิว : 02</p>
-					<button class="edit">✏️</button>
-				</div>
+			<!-- 🌟 พื้นที่สำหรับใส่การ์ดที่จะถูกสร้างจาก JavaScript -->
+			<div id="appointmentList">
+				<p style="text-align:center; color:#999;">กำลังโหลดข้อมูลนัดหมาย...</p>
 			</div>
-
-			<div class="card">
-				<div class="card-left">
-					<p>วันที่ : 25/03/2569</p>
-					<p>ชื่อ : น.ส. มานัตถ์ อินทุ</p>
-					<p>อายุ : 44 ปี</p>
-					<p>น้ำหนัก : 70 กก.</p>
-					<p>ส่วนสูง : 155 ซม.</p>
-				</div>
-				<div class="card-right">
-					<p>หมายเลขคิว : 03</p>
-					<button class="edit">✏️</button>
-				</div>
-			</div>
-
-			<button class="add-appointment">+ เพิ่มการนัดหมาย</button>
 
 		</div>
 	</div>
 
-	</div>
-
 </body>
 <script>
+	let allAppointments = [];
+	let DoctorID;
+
 	window.onload = async function () {
 		try {
-			const response = await fetch('/api/me');
-			console.log(response);
+			// 1. เช็คสถานะการล็อคอิน
+			const response = await fetch('/api/doctorandstaff/me');
 			if (response.status === 401) {
 				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
 				window.location.href = "/doctorandstaff";
 				return;
 			}
-	
+
 			const data = await response.json();
 			document.getElementById('displayName').textContent = data.name;
+
+			// รับ DoctorID
+			DoctorID = data.doctorId || data.DoctorID;
+
+			if (DoctorID) {
+				await fetchAppointments();
+				setupSearch();
+			} else {
+				document.getElementById('appointmentList').innerHTML = '<p style="color:red;">ไม่พบข้อมูลแพทย์ กรุณาล็อคอินใหม่</p>';
+			}
 
 		} catch (error) {
 			console.error("เกิดข้อผิดพลาด:", error);
 		}
 	};
 
+	// 📌 ฟังก์ชันดึงข้อมูลจาก Controller
+	async function fetchAppointments() {
+		try {
+			const res = await fetch('/api/appointments/doctor/' + DoctorID);
+			if (!res.ok) throw new Error('Failed to fetch');
+
+			allAppointments = await res.json();
+			renderCards(allAppointments);
+		} catch (error) {
+			console.error(error);
+			document.getElementById('appointmentList').innerHTML = '<p style="color:red; text-align:center;">ไม่สามารถดึงข้อมูลการนัดหมายได้</p>';
+		}
+	}
+
+	// 📌 ฟังก์ชันวาดการ์ดให้เต็มจอ (อัปเดตเพิ่มสถานะ)
+	function renderCards(records) {
+		const listContainer = document.getElementById('appointmentList');
+		listContainer.innerHTML = '';
+
+		if (records.length === 0) {
+			listContainer.innerHTML = '<p style="text-align:center; color:#999; padding: 50px;">ไม่มีรายการนัดหมาย</p>';
+			return;
+		}
+
+		records.forEach(record => {
+			const card = document.createElement('div');
+			card.className = 'card';
+
+			// เช็คค่า Null กันพัง
+			const name = record.patientName || 'ไม่ระบุชื่อ';
+			const age = record.age ? record.age + ' ปี' : '-';
+			const weight = record.weight ? record.weight + ' กก.' : '-';
+			const height = record.height ? record.height + ' ซม.' : '-';
+
+			// Format เลขคิวให้เป็น 2 หลัก (เช่น 01, 02)
+			const queue = record.queueNumber ? String(record.queueNumber).padStart(2, '0') : '-';
+
+			// 🌟 แปลงสถานะ (Status) เป็นภาษาไทยและกำหนดสี
+			let statusText = '-';
+			let statusColor = '#333';
+
+			switch (record.status) {
+				case 'WAITING':
+					statusText = 'รอเข้าพบ';
+					statusColor = '#f39c12'; // สีส้ม
+					break;
+				case 'COMPLETED':
+					statusText = 'นัดสำเร็จ';
+					statusColor = '#27ae60'; // สีเขียว
+					break;
+				case 'POSTPONED':
+					statusText = 'เลื่อนนัด';
+					statusColor = '#3498db'; // สีฟ้า
+					break;
+				case 'CANCELLED':
+					statusText = 'ยกเลิก';
+					statusColor = '#e74c3c'; // สีแดง
+					break;
+				default:
+					statusText = record.status || '-';
+			}
+
+			// ประกอบร่าง HTML (เพิ่มการแสดงสถานะที่ฝั่งขวา)
+			card.innerHTML = `
+				    <div class="card-left">
+				        <p><b>วันที่ :</b> ${record.appointmentDate || '-'}</p>
+				        <p><b>ชื่อ :</b> ${name}</p>
+				        <p><b>อายุ :</b> ${age}</p>
+				        <p><b>น้ำหนัก :</b> ${weight}</p>
+				        <p><b>ส่วนสูง :</b> ${height}</p>
+				    </div>
+				    <div class="card-right" style="text-align: right; display: flex; flex-direction: column; justify-content: space-between;">
+						<div>
+							<p style="color: ${statusColor}; font-weight: bold; margin-bottom: 5px; font-size: 1.1rem;">${statusText}</p>
+				        	<p><b>หมายเลขคิว : ${queue}</b></p>
+						</div>
+						<button class="edit-btn" onclick="location.href='/doctorandstaff/edit-appointment?id=${record.appointmentId}'" style="margin-top: auto; border: none; background: none; cursor: pointer; color: #837dd1; font-size: 1.2rem;">
+						    <i class="fa fa-edit"></i>
+						</button>
+				    </div>
+				`;
+			listContainer.appendChild(card);
+		});
+	}
+
+	// 📌 ระบบค้นหา
+	function setupSearch() {
+		const searchInput = document.getElementById('searchInput');
+		searchInput.addEventListener('input', function (e) {
+			const keyword = e.target.value.toLowerCase();
+
+			const filtered = allAppointments.filter(app => {
+				const pId = String(app.patientId || '').toLowerCase();
+				const pName = String(app.patientName || '').toLowerCase();
+				return pId.includes(keyword) || pName.includes(keyword);
+			});
+
+			renderCards(filtered);
+		});
+	}
 
 	async function logout() {
 		await fetch('/api/logout', {method: 'POST'});

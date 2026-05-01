@@ -12,82 +12,205 @@
 	<link rel="stylesheet" href="/DoctorandStaff/css/styles.css">
 </head>
 
-<body data-page="medical-history">
+<body>
 	<!-- HEADER -->
 	<header class="header">
 		<div class="left-section">
 			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
 			<img src="../../img/hospital.png" class="circle-img">
 		</div>
-
 		<div class="profile">
-			<span id="displayName"></span>
+			<span id="displayName">กำลังโหลด...</span>
 			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
 		</div>
 	</header>
 
 	<div class="container">
-
 		<!-- SIDEBAR -->
 		<aside class="sidebar">
 			<h3>เมนู</h3><br>
-
 			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
 			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
 			<a href="/doctorandstaff/appointment" class="menu">การนัดหมาย</a>
 			<a href="/doctorandstaff/medical_certificate" class="menu active">การออกใบรับรองแพทย์</a>
 			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
-
 			<div class="logout" onclick="logout()">
 				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
 			</div>
 		</aside>
-		<main class="main">
+
+		<main class="main" style="width: 100%;">
 			<div class="search-row">
 				<div class="search-box">
-					<input type="text" placeholder="รหัสผู้ป่วย / รหัสใบรับรองแพทย์">
+					<input type="text" id="searchInput" placeholder="รหัสผู้ป่วย / รหัสใบรับรองแพทย์">
 					<i class="fa-solid fa-magnifying-glass"></i>
 				</div>
 			</div>
-			<div class="page-title">
-				<h1>ใบรับรองแพทย์</h1>
+
+			<div class="page-title" style="margin-top: 20px;">
+				<h2 style="color: #666cf6;">ใบรับรองแพทย์</h2>
 			</div>
+
+			<!-- 🌟 เลย์เอาต์แบ่งซ้ายขวา -->
 			<div class="two-col">
-				<section>
-					<div id="recordList" class="card-list"></div>
-					<button class="add-link" data-nav="create_medical_certificate.html">+ สร้างใบรับรองแพทย์</button>
+				<section class="left-panel">
+					<div id="recordList">
+						<p style="text-align: center; color:#999;">กำลังโหลดข้อมูล...</p>
+					</div>
+					<button class="add-link" onclick="location.href='/doctorandstaff/medical_certificate/add'">+
+						สร้างใบรับรองแพทย์</button>
 				</section>
-				<section id="previewPanel" class="preview-panel"></section>
+
+				<section class="right-panel" id="previewPanel">
+					<div style="text-align:center; color:#999; margin-top:50px;">กรุณาเลือกรายการเพื่อดูใบรับรองแพทย์
+					</div>
+				</section>
 			</div>
 		</main>
 	</div>
-	</div>
-	<script src="../js/app.js"></script>
-</body>
-<script>
-	window.onload = async function () {
-		try {
-			const response = await fetch('/api/me');
-			console.log(response);
-			if (response.status === 401) {
-				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
-				window.location.href = "/doctorandstaff";
+
+	<script>
+		let allCertificates = [];
+		let DoctorID;
+
+		window.onload = async function () {
+			try {
+				const response = await fetch('/api/doctorandstaff/me');
+				if (response.status === 401) {
+					alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
+					window.location.href = "/doctorandstaff";
+					return;
+				}
+
+				const data = await response.json();
+				document.getElementById('displayName').textContent = data.name;
+
+				DoctorID = data.doctorId || data.DoctorID;
+				if (DoctorID) {
+					await fetchCertificates();
+					setupSearch();
+				}
+
+			} catch (error) {
+				console.error("เกิดข้อผิดพลาด:", error);
+			}
+		};
+
+		// ดึงข้อมูลใบรับรองแพทย์ทั้งหมดของหมอคนนี้
+		async function fetchCertificates() {
+			try {
+				const res = await fetch('/api/certificates/doctor/' + DoctorID);
+				if (!res.ok) throw new Error('Failed to fetch');
+
+				allCertificates = await res.json();
+				renderCards(allCertificates);
+
+				// โชว์พรีวิวใบแรกอัตโนมัติ (ถ้ามีข้อมูล)
+				if (allCertificates.length > 0) {
+					showPreview(allCertificates[0]);
+					// ทำให้การ์ดแรกเป็น active
+					setTimeout(() => {
+						const firstCard = document.querySelector('.card');
+						if (firstCard) firstCard.classList.add('active');
+					}, 100);
+				}
+			} catch (error) {
+				document.getElementById('recordList').innerHTML = '<p style="color:red; text-align:center;">ไม่สามารถดึงข้อมูลได้</p>';
+			}
+		}
+
+		// วาดการ์ดทางฝั่งซ้าย
+		function renderCards(records) {
+			const listContainer = document.getElementById('recordList');
+			listContainer.innerHTML = '';
+
+			if (records.length === 0) {
+				listContainer.innerHTML = '<p style="text-align:center; color:#999;">ไม่พบข้อมูลใบรับรองแพทย์</p>';
 				return;
 			}
 
-			const data = await response.json();
-			document.getElementById('displayName').textContent = data.name;
+			records.forEach((record) => {
+				const card = document.createElement('div');
+				card.className = 'card';
 
-		} catch (error) {
-			console.error("เกิดข้อผิดพลาด:", error);
+				// ดึงข้อความบางส่วนของ Description มาแสดง (วัตถุประสงค์)
+				let shortDesc = record.description ? record.description.substring(0, 30) + '...' : '-';
+
+				card.innerHTML = `
+				<div class="card-content">
+					<p><b>วันที่ ${record.issueDate || '-'}</b></p>
+					<p>รหัสประจำตัวผู้ป่วย : ${record.patientId || '-'}</p>
+					<p>รหัสใบรับรองแพทย์ : ${record.certificateId || '-'}</p>
+					<p>รายละเอียด : ${shortDesc}</p>
+				</div>
+				<div class="card-icon">
+					<i class="fa-regular fa-circle-right"></i>
+				</div>
+			`;
+
+				// เมื่อคลิกการ์ด ให้โชว์พรีวิวด้านขวา
+				card.onclick = () => {
+					document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+					card.classList.add('active');
+					showPreview(record);
+				};
+
+				listContainer.appendChild(card);
+			});
 		}
-	};
 
+		// 🌟 วาดกระดาษใบรับรองแพทย์ทางฝั่งขวา
+		function showPreview(record) {
+			const preview = document.getElementById('previewPanel');
 
-	async function logout() {
-		await fetch('/api/logout', {method: 'POST'});
-		window.location.href = "/";
-	}
-</script>
+			const pName = record.patientName || 'ไม่ระบุ';
+			const dName = record.doctorName || 'ไม่ระบุ';
+			const desc = record.description || 'ไม่ระบุรายละเอียด';
+
+			preview.innerHTML = `
+			<div class="cert-doc">
+				<div class="cert-header">
+					<h2>ใบรับรองแพทย์</h2>
+					<p>วันที่ ${record.issueDate || '-'}</p>
+				</div>
+				<div class="cert-body">
+					ข้าพเจ้า <b>${dName}</b> รหัสประจำตัวแพทย์ <b>${record.doctorId || '-'}</b> 
+					ได้ตรวจ <b>${pName}</b> รหัสประจำตัวผู้ป่วย <b>${record.patientId || '-'}</b> 
+					เมื่อวันที่ <b>${record.issueDate || '-'}</b> <br><br>
+					<b>รายละเอียด/อาการเบื้องต้น:</b> <br>
+					${desc}
+					<br><br>
+					ใบรับรองแพทย์นี้ออกให้เพื่อนำไปใช้เป็นหลักฐานประกอบการพิจารณา
+				</div>
+				<div class="cert-footer">
+					<p>ลงชื่อ</p>
+					<p><b>${dName}</b></p>
+					<p>(แพทย์ผู้ตรวจ)</p>
+				</div>
+			</div>
+		`;
+		}
+
+		// ระบบค้นหา
+		function setupSearch() {
+			const searchInput = document.getElementById('searchInput');
+			searchInput.addEventListener('input', function (e) {
+				const keyword = e.target.value.toLowerCase();
+				const filtered = allCertificates.filter(cert => {
+					const cId = String(cert.certificateId || '').toLowerCase();
+					const pId = String(cert.patientId || '').toLowerCase();
+					return cId.includes(keyword) || pId.includes(keyword);
+				});
+				renderCards(filtered);
+			});
+		}
+
+		async function logout() {
+			await fetch('/api/logout', {method: 'POST'});
+			window.location.href = "/";
+		}
+	</script>
+
+</body>
 
 </html>

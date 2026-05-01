@@ -40,5 +40,10 @@ public class MedicalCertificateController {
 	    public List<MedicalCertificateDTO> getByPatient(@PathVariable Integer id) {
 	        return service.getByPatient(id);
 	    }
+	    // GET by Doctor	    
+	    @GetMapping("/doctor/{id}")
+	    public List<MedicalCertificateDTO> getByDoctor(@PathVariable Integer id) {
+	        return service.getByDoctor(id);
+	    }
 
 }

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>เพิ่มการนัดหมาย</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+	<!-- สมมติว่าใช้ Sidebar/Header ตัวเดิม -->
+	<link rel="stylesheet" href="/DoctorandStaff/css/appointment.css">
+
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<header class="header">
+		<div class="left-section">
+			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+			<img src="../../img/hospital.png" class="circle-img" onerror="this.style.display='none'">
+		</div>
+
+		<div class="profile">
+			<span id="displayName">กำลังโหลด...</span>
+			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+		</div>
+	</header>
+
+	<div class="container">
+
+		<!-- SIDEBAR -->
+		<aside class="sidebar">
+			<h3>เมนู</h3><br>
+
+			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
+			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
+			<a href="/doctorandstaff/appointment" class="menu active">การนัดหมาย</a>
+			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
+			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
+			<div class="logout" onclick="logout()">
+				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+			</div>
+		</aside>
+
+		<main class="main-content" style="width: 100%;">
+			<section class="form-container">
+				<div class="form-header">
+					<a href="appointment.html" class="back-btn-circle">
+						<i class="fa-solid fa-arrow-left"></i>
+					</a>
+					<h1>เพิ่มการนัดหมาย</h1>
+				</div>
+
+				<form id="appointmentForm">
+					<div class="form-row">
+						<div class="input-group">
+							<label>รหัสประจำตัวผู้ป่วย <span style="color:red">*</span></label>
+							<input type="number" id="patientId" placeholder="เช่น 1" required>
+						</div>
+						<div class="input-group">
+							<label>รหัสประจำตัวแพทย์ <span style="color:red">*</span></label>
+							<input type="number" id="doctorId" placeholder="เช่น 1" required>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="input-group">
+							<label>วันที่นัดหมาย <span style="color:red">*</span></label>
+							<input type="date" id="appointmentDate" required>
+						</div>
+						<div class="input-group">
+							<label>เวลาที่นัดหมาย <span style="color:red">*</span></label>
+							<input type="time" id="appointmentTime" required>
+						</div>
+					</div>
+
+					<div class="input-group full-width">
+						<label>เหตุผลการนัดหมาย (Reason) :</label>
+						<textarea id="reason" rows="3" placeholder="เช่น ตรวจติดตามอาการเบาหวาน, ฟังผลเลือด"></textarea>
+					</div>
+
+					<div class="input-group full-width">
+						<label>การเตรียมตัว (Preparation) :</label>
+						<textarea id="preparation" rows="2"
+							placeholder="เช่น งดน้ำงดอาหาร 8 ชั่วโมงก่อนเจาะเลือด"></textarea>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-cancel"
+							onclick="location.href='appointment.html'">ยกเลิก</button>
+						<button type="submit" class="btn-confirm">ยืนยันการนัดหมาย</button>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+
+</body>
+
+<script>
+	window.onload = async function () {
+		try {
+			// 1. เช็คสถานะการล็อคอิน
+			const response = await fetch('/api/doctorandstaff/me');
+			if (response.status === 401) {
+				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
+				window.location.href = "/doctorandstaff";
+				return;
+			}
+
+			const data = await response.json();
+			document.getElementById('displayName').textContent = data.name;
+
+			// 2. ดึงรหัสแพทย์มาใส่ในช่องให้อัตโนมัติ (เพื่อความสะดวก)
+			const loggedInDoctorId = data.doctorId || data.DoctorID;
+			if (loggedInDoctorId) {
+				document.getElementById('doctorId').value = loggedInDoctorId;
+			}
+
+			// 3. เซ็ตค่าเริ่มต้นให้วันที่นัดหมายเป็น "วันพรุ่งนี้"
+			const tomorrow = new Date();
+			tomorrow.setDate(tomorrow.getDate() + 1);
+			document.getElementById('appointmentDate').value = tomorrow.toISOString().split('T')[0];
+
+		} catch (error) {
+			console.error("เกิดข้อผิดพลาด:", error);
+		}
+	};
+
+	// 📌 จัดการตอนกดปุ่ม Submit 
+	document.getElementById('appointmentForm').addEventListener('submit', async function (e) {
+		e.preventDefault(); // กันไม่ให้หน้าเว็บรีเฟรช
+
+		// 🌟 1. ดึงค่าวันที่ส่งไปตรงๆ แบบ YYYY-MM-DD
+		const rawDate = document.getElementById('appointmentDate').value;
+
+		// 🌟 2. ดึงเวลาแล้วเติมวินาที ( :00 ) ต่อท้ายด้วย เพื่อให้ตรงกับชนิด LocalTime
+		const rawTime = document.getElementById('appointmentTime').value + ":00";
+
+		// 🌟 3. จัดโครงสร้าง Payload ใหม่ (จุดนี้คือตัวแก้ปัญหา "Patient is required")
+		const payload = {
+			// ต้องส่งเป็น Object ซ้อนเข้าไปแบบนี้ครับ เพราะฝั่ง Java เป็นตัวแปรออบเจกต์ (private Patient patient;)
+			patient: {
+				patientId: parseInt(document.getElementById('patientId').value)
+			},
+			doctor: {
+				doctorId: parseInt(document.getElementById('doctorId').value)
+			},
+			appointmentDate: rawDate,
+			appointmentTime: rawTime,
+			reason: document.getElementById('reason').value,
+			preparation: document.getElementById('preparation').value,
+			status: "WAITING" // หรือส่ง 3 ถ้า Enum ฝั่ง Java รับเป็นตัวเลข
+		};
+
+		try {
+			// ยิง API บันทึกข้อมูลไปที่ Controller
+			const res = await fetch('/api/appointments', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			if (res.ok) {
+				alert("เพิ่มการนัดหมายสำเร็จ!");
+				window.location.href = "/doctorandstaff/appointment"; // เด้งกลับไปหน้าแสดงรายการ
+			} else {
+				const errorMsg = await res.text();
+				alert("ไม่สามารถบันทึกได้: " + errorMsg);
+			}
+
+		} catch (error) {
+			console.error("Error saving appointment:", error);
+			alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+		}
+	});
+
+	async function logout() {
+		await fetch('/api/logout', {method: 'POST'});
+		window.location.href = "/";
+	}
+</script>
+
+</html>

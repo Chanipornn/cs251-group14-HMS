@@ -67,7 +67,7 @@
 <script>
 	window.onload = async function () {
 		try {
-			const response = await fetch('/api/me');
+			const response = await fetch('/api/doctorandstaff/me');
 			console.log(response);
 			if (response.status === 401) {
 				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");

@@ -4,14 +4,16 @@ import com.example.demo.dto.MedicalCertificateDTO;
 import com.example.demo.model.MedicalCertificate;
 
 public class MedicalCertificateMapper {
-	public static MedicalCertificateDTO toDTO(MedicalCertificate c) {
-        return new MedicalCertificateDTO(
-                c.getCertificateId(),
-                c.getIssueDate(),
-                c.getDescription(),
-                c.getPatient().getPatientId(),
-                c.getDoctor().getDoctorId()
+    public static MedicalCertificateDTO toDTO(MedicalCertificate c) {
+        MedicalCertificateDTO dto = new MedicalCertificateDTO(
+            c.getCertificateId(), c.getIssueDate(), c.getDescription(),
+            c.getPatient().getPatientId(), c.getDoctor().getDoctorId(), null, null
         );
+        dto.setPatientName(c.getPatient().getName() + " " + c.getPatient().getSurname());
+        dto.setDoctorName(c.getDoctor().getName() + " " + c.getDoctor().getSurname());
+        
+        return dto;
     }
+	
 
 }

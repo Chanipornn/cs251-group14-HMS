@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.model.Appointment;
 import com.example.demo.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -10,48 +12,42 @@ import java.util.List;
 
 import com.example.demo.dto.AppointmentDTO;
 import com.example.demo.dto.AppointmentRequestDTO;
+import com.example.demo.mapper.AppointmentMapper;
 
 @RestController
-@RequestMapping("/api/appointments/patients")
+@RequestMapping("/api/appointments") 
 @RequiredArgsConstructor
 public class AppointmentController {
 	private final AppointmentService service;
 
-	
-    // Create
-	@PostMapping("/{id}")
+	@PostMapping
 	public AppointmentDTO create(@RequestBody AppointmentRequestDTO req) {
 	    return service.create(req);
 	}
 
-    // Cancel
+	@GetMapping("/{id}")
+	public AppointmentDTO getById(@PathVariable Integer id) {
+		return AppointmentMapper.toDTO(service.getById(id));
+	}
+
 	@PutMapping("/{id}/cancel")
 	public AppointmentDTO cancel(@PathVariable Integer id) {
-	    return service.cancel(id);
+		return service.cancel(id);
 	}
 
-    // reschedule
+	
 	@PutMapping("/{id}/reschedule")
-	public AppointmentDTO reschedule(
-	        @PathVariable Integer id,
-	        @RequestBody AppointmentDTO dto) {
-
-	    return service.reschedule(id, dto);
+	public AppointmentDTO reschedule(@PathVariable Integer id, @RequestBody AppointmentDTO dto) {
+		return service.reschedule(id, dto);
 	}
 
-	/*
-    // search patient
 	@GetMapping("/patient/{id}")
 	public List<AppointmentDTO> getByPatient(@PathVariable Integer id) {
-	    return service.getByPatient(id);
+		return service.getByPatient(id);
 	}
-	*/
-	
-	// search patient
-	@GetMapping("/{id}")
-	public List<AppointmentDTO> getByPatient(@PathVariable Integer id) {
-	    return service.getByPatient(id);
-	}
-	
 
+	@GetMapping("/doctor/{doctorId}")
+	public List<AppointmentDTO> getByDoctor(@PathVariable Integer doctorId) {
+		return service.getAppointmentsByDoctor(doctorId);
+	}
 }

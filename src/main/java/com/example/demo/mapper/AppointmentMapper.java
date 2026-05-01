@@ -14,14 +14,13 @@ public class AppointmentMapper {
 	            a.getQueueNumber(),
 	            a.getStatus().name(),
 	            a.getDoctor().getDoctorId(),
-	            a.getPatient().getPatientId()
+	            a.getPatient().getPatientId(), 
+	            null, 
+	            null, 
+	            null, 
+	            null
 	    );
 
-	    /*
-	    dto.setDoctorName(
-	    	    a.getDoctor().getName() + " " + a.getDoctor().getSurname()
-	    	);
-	    	*/
 	    dto.setDoctorName(
 	            a.getDoctor() != null
 	                ? a.getDoctor().getName() + " " + a.getDoctor().getSurname()

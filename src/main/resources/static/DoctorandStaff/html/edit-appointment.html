@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>แก้ไขการนัดหมาย</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+	<!-- ใช้ CSS ตัวเดียวกับหน้า Appointment -->
+	<link rel="stylesheet" href="/DoctorandStaff/css/appointment.css">
+
+</head>
+
+<body>
+
+	<header class="header">
+		<div class="left-section">
+			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+			<img src="../../img/hospital.png" class="circle-img" onerror="this.style.display='none'">
+		</div>
+		<div class="profile">
+			<span id="displayName">กำลังโหลด...</span>
+			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+		</div>
+	</header>
+
+	<div class="container">
+		<aside class="sidebar">
+			<h3>เมนู</h3><br>
+			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
+			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
+			<a href="/doctorandstaff/appointment" class="menu active">การนัดหมาย</a>
+			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
+			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
+			<div class="logout" onclick="logout()">
+				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+			</div>
+		</aside>
+
+		<main class="main-content" style="width: 100%;">
+			<section class="form-container">
+				<div class="form-header">
+					<a href="appointment.html" class="back-btn-circle">
+						<i class="fa-solid fa-arrow-left"></i>
+					</a>
+					<h1>แก้ไขการนัดหมาย</h1>
+				</div>
+
+				<form id="editAppointmentForm">
+					<div class="form-row">
+						<div class="input-group">
+							<label>รหัสประจำตัวผู้ป่วย</label>
+							<input type="number" id="patientId" readonly title="ไม่สามารถแก้ไขรหัสผู้ป่วยได้">
+						</div>
+						<div class="input-group">
+							<label>รหัสประจำตัวแพทย์</label>
+							<input type="number" id="doctorId" readonly title="ไม่สามารถแก้ไขรหัสแพทย์ได้">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="input-group">
+							<label>วันที่นัดหมาย <span style="color:red">*</span></label>
+							<input type="date" id="appointmentDate" required>
+						</div>
+						<div class="input-group">
+							<label>เวลาที่นัดหมาย</label>
+							<!-- เวลาแก้ไขไม่ได้ เพราะใน Reschedule Backend คุณไม่ได้อนุญาตให้แก้เวลา -->
+							<input type="time" id="appointmentTime" readonly>
+						</div>
+					</div>
+
+					<div class="input-group full-width">
+						<label>เหตุผลการนัดหมาย (Reason) :</label>
+						<textarea id="reason" rows="3" required></textarea>
+					</div>
+
+					<div class="input-group full-width">
+						<label>การเตรียมตัว (Preparation) :</label>
+						<textarea id="preparation" rows="2"></textarea>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-danger" onclick="cancelAppointment()">ยกเลิกการนัดหมาย
+							(ลบ)</button>
+						<button type="button" class="btn-cancel"
+							onclick="location.href='/doctorandstaff/appointment'">ยกเลิกการแก้ไข</button>
+						<button type="submit" class="btn-confirm">ยืนยันแก้ไข (เลื่อนนัด)</button>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+
+</body>
+
+<script>
+	// 1. ดึงค่า ID จาก URL (เช่น edit-appointment.html?id=5)
+	const urlParams = new URLSearchParams(window.location.search);
+	const appointmentId = urlParams.get('id');
+
+	window.onload = async function () {
+		if (!appointmentId) {
+			alert("ไม่พบรหัสการนัดหมาย กรุณาเลือกรายการใหม่");
+			window.location.href = "appointment.html";
+			return;
+		}
+
+		try {
+			// โหลดชื่อหมอ
+			const meRes = await fetch('/api/doctorandstaff/me');
+			if (meRes.status === 401) {
+				window.location.href = "/doctorandstaff";
+				return;
+			}
+			const data = await meRes.json();
+			document.getElementById('displayName').textContent = data.name;
+
+			// โหลดข้อมูลนัดหมายเดิมมากาง
+			await loadAppointmentData();
+
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	async function loadAppointmentData() {
+		try {
+			// ยิง API ตัวใหม่ที่เราเพิ่งสร้าง
+			const res = await fetch(`/api/appointments/${appointmentId}`);
+			if (!res.ok) throw new Error("Failed to load");
+
+			const app = await res.json();
+
+			document.getElementById('patientId').value = app.patientId;
+			document.getElementById('doctorId').value = app.doctorId;
+
+			// แปลงวันที่จาก dd-MM-yyyy ให้เป็น YYYY-MM-DD เพื่อใส่ใน input type="date"
+			if (app.appointmentDate) {
+				const [day, month, year] = app.appointmentDate.split('-');
+				document.getElementById('appointmentDate').value = `${year}-${month}-${day}`;
+			}
+
+			// เวลามาเป็น HH:mm อยู่แล้ว
+			document.getElementById('appointmentTime').value = app.appointmentTime;
+
+			document.getElementById('reason').value = app.reason || "";
+			document.getElementById('preparation').value = app.preparation || "";
+
+		} catch (error) {
+			alert("ไม่สามารถดึงข้อมูลนัดหมายได้");
+		}
+	}
+
+	// บันทึกการแก้ไข (Reschedule)
+	document.getElementById('editAppointmentForm').addEventListener('submit', async function (e) {
+		e.preventDefault();
+
+		// แปลงวันที่กลับเป็น dd-MM-yyyy ส่งให้ Backend
+		const rawDate = document.getElementById('appointmentDate').value;
+		const [year, month, day] = rawDate.split('-');
+		const formattedDate = `${day}-${month}-${year}`;
+
+		const payload = {
+			appointmentDate: formattedDate,
+			reason: document.getElementById('reason').value,
+			preparation: document.getElementById('preparation').value
+		};
+
+		try {
+			const res = await fetch(`/api/appointments/${appointmentId}/reschedule`, {
+				method: 'PUT', // API ของคุณใช้ PUT
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify(payload)
+			});
+
+			if (res.ok) {
+				alert("เลื่อนการนัดหมายสำเร็จ!");
+				window.location.href = "/doctorandstaff/appointment";
+			} else {
+				alert("เกิดข้อผิดพลาดในการแก้ไข");
+			}
+		} catch (error) {
+			alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์");
+		}
+	});
+
+	// ยกเลิกการนัดหมาย
+	async function cancelAppointment() {
+		if (confirm("คุณต้องการยกเลิก (ลบ) การนัดหมายนี้ใช่หรือไม่?")) {
+			try {
+				const res = await fetch(`/api/appointments/${appointmentId}/cancel`, {
+					method: 'PUT' // API ของคุณใช้ PUT สำหรับ cancel
+				});
+
+				if (res.ok) {
+					alert("ยกเลิกการนัดหมายแล้ว");
+					window.location.href = "/doctorandstaff/appointment";
+				}
+			} catch (error) {
+				alert("ไม่สามารถยกเลิกการนัดหมายได้");
+			}
+		}
+	}
+
+	async function logout() {
+		await fetch('/api/logout', {method: 'POST'});
+		window.location.href = "/";
+	}
+</script>
+
+</html>

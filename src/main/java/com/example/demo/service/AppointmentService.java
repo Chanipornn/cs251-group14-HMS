@@ -6,23 +6,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import com.example.demo.dto.AppointmentDTO;
 import com.example.demo.dto.AppointmentRequestDTO;
 import com.example.demo.mapper.AppointmentMapper;
 
-import java.time.LocalTime;
-
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
 	private final AppointmentRepository appointmentRepository;
-    private final PatientRepository patientRepository;
-    private final DoctorRepository doctorRepository;
+	private final PatientRepository patientRepository;
+	private final DoctorRepository doctorRepository;
 
-    // CREATE
+    // CREATE (เวอร์ชันอัปเกรดแล้ว)
     public AppointmentDTO create(AppointmentRequestDTO req) {
 
         Patient patient = patientRepository
@@ -45,11 +44,12 @@ public class AppointmentService {
             throw new RuntimeException("เวลานี้ถูกจองแล้ว");
         }
 
-        // ✅ generate queue
+        // ✅ generate queue (รันตามคิวจริง ไม่สุ่มแล้ว)
         Integer maxQueue = appointmentRepository
                 .findMaxQueue(doctor.getDoctorId(), date);
 
-        int newQueue = maxQueue + 1;
+        // ดักกรณีที่เป็นคิวแรกของวัน (maxQueue อาจจะเป็น null)
+        int newQueue = (maxQueue != null ? maxQueue : 0) + 1;
 
         Appointment appt = new Appointment();
         appt.setPatient(patient);
@@ -66,117 +66,66 @@ public class AppointmentService {
 
         return AppointmentMapper.toDTO(appt);
     }
-    
-    
-    
-    
-    /*
-    public AppointmentDTO create(AppointmentRequestDTO req) {
-    	Patient patient = patientRepository
-                .findById(req.getPatientId())
-                .orElseThrow();
 
-        Doctor doctor = doctorRepository
-                .findById(req.getDoctorId())
-                .orElseThrow();
+	// Cancel
+	public AppointmentDTO cancel(Integer id) {
+		Appointment a = getById(id);
+		a.setStatus(Appointment.AppointmentStatus.CANCELLED);
+		return AppointmentMapper.toDTO(appointmentRepository.save(a));
+	}
 
-        LocalDate date = LocalDate.parse(req.getDate());
-        LocalTime time = LocalTime.parse(req.getTime());
+	// reschedule
+	public AppointmentDTO reschedule(Integer id, AppointmentDTO dto) {
+		Appointment a = appointmentRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Appointment not found"));
 
-        // 🔥 generate queue
-        Integer maxQueue = appointmentRepository
-                .findMaxQueue(doctor.getDoctorId(), date);
+		if (dto.getAppointmentDate() != null) {
+			a.setAppointmentDate(dto.getAppointmentDate());
+		}
 
-        int newQueue = maxQueue + 1;
+		if (dto.getReason() != null) {
+			a.setReason(dto.getReason());
+		}
 
-        Appointment appt = new Appointment();
-        appt.setPatient(patient);
-        appt.setDoctor(doctor);
-        appt.setAppointmentDate(date);
-        appt.setAppointmentTime(time);
-        appt.setQueueNumber(newQueue);
+		if (dto.getPreparation() != null) {
+			a.setPreparation(dto.getPreparation());
+		}
 
-        appt.setReason(req.getReason());
-        appt.setPreparation(req.getPreparation());
+		a.setStatus(Appointment.AppointmentStatus.POSTPONED);
 
-        appt.setStatus(Appointment.AppointmentStatus.WAITING);
+		return AppointmentMapper.toDTO(appointmentRepository.save(a));
+	}
 
-        appointmentRepository.save(appt);
+	public List<AppointmentDTO> getByPatient(Integer patientId) {
+		return appointmentRepository.findByPatient_PatientId(patientId).stream().map(AppointmentMapper::toDTO).toList();
+	}
 
-        return mapToDTO(appt);
-/*
-        if (a.getPatient() == null || a.getPatient().getPatientId() == null) {
-            throw new RuntimeException("Patient is required");
-        }
+	public Appointment getById(Integer id) {
+		return appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
+	}
 
-        if (a.getDoctor() == null || a.getDoctor().getDoctorId() == null) {
-            throw new RuntimeException("Doctor is required");
-        }
+	public List<AppointmentDTO> getAppointmentsByDoctor(Integer doctorId) {
+		return appointmentRepository.findAppointmentsWithPatientByDoctorId(doctorId).stream().map(a -> {
+			AppointmentDTO dto = new AppointmentDTO();
+			dto.setAppointmentId(a.getAppointmentId());
+			dto.setAppointmentDate(a.getAppointmentDate());
+			dto.setAppointmentTime(a.getAppointmentTime());
+			dto.setQueueNumber(a.getQueueNumber());
+            
+			dto.setStatus(a.getStatus() != null ? a.getStatus().name() : null); 
+            
+			if (a.getPatient() != null) {
+				dto.setPatientId(a.getPatient().getPatientId());
+				dto.setPatientName(a.getPatient().getName() + " " + a.getPatient().getSurname());
+				dto.setWeight(a.getPatient().getWeight());
+				dto.setHeight(a.getPatient().getHeight());
 
-        Patient patient = patientRepository.findById(a.getPatient().getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
-
-        Doctor doctor = doctorRepository.findById(a.getDoctor().getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-
-        a.setPatient(patient);
-        a.setDoctor(doctor);
-        //a.setStatus(Appointment.AppointmentStatus.COMPLETED);
-        a.setStatus(Appointment.AppointmentStatus.WAITING);
-        a.setQueueNumber(generateQueue());
-
-        Appointment saved = appointmentRepository.save(a);
-
-        return AppointmentMapper.toDTO(saved);  
-        
-    	
-    }
-
-   */
-
-    // Cancel
-    public AppointmentDTO cancel(Integer id) {
-        Appointment a = getById(id);
-        a.setStatus(Appointment.AppointmentStatus.CANCELLED);
-        return AppointmentMapper.toDTO(appointmentRepository.save(a));
-    }
-
-    // reschedule
-    public AppointmentDTO reschedule(Integer id, AppointmentDTO dto) {
-        Appointment a = appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-
-        if (dto.getAppointmentDate() != null) {
-            a.setAppointmentDate(dto.getAppointmentDate());
-        }
-
-        if (dto.getReason() != null) {
-            a.setReason(dto.getReason());
-        }
-
-        if (dto.getPreparation() != null) {
-            a.setPreparation(dto.getPreparation());
-        }
-
-        a.setStatus(Appointment.AppointmentStatus.POSTPONED);
-
-        return AppointmentMapper.toDTO(appointmentRepository.save(a));
-    }
-    
-    
-
-    // getByPatient
-    public List<AppointmentDTO> getByPatient(Integer patientId) {
-        return appointmentRepository.findByPatient_PatientId(patientId)
-                .stream()
-                .map(AppointmentMapper::toDTO)
-                .toList();
-    }
-
- // get by id
-    public Appointment getById(Integer id) {
-        return appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-    }
-    
+				if (a.getPatient().getDateOfBirth() != null) {
+					int age = java.time.LocalDate.now().getYear() - a.getPatient().getDateOfBirth().getYear();
+					dto.setAge(age);
+				}
+			}
+			return dto;
+		}).collect(Collectors.toList());
+	}
 }

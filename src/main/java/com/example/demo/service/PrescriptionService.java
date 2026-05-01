@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.InvoiceDTO;
 import com.example.demo.dto.PrescriptionDTO;
+import com.example.demo.dto.PrescriptionHistoryProjection;
 import com.example.demo.model.Prescription;
 import com.example.demo.model.MedicalRecord;
 import com.example.demo.model.Doctor;
@@ -74,5 +76,16 @@ public class PrescriptionService {
                 entity.getMedicalRecord().getRecordId(),
                 entity.getDoctor().getDoctorId()
         );
+    }
+    public List<PrescriptionDTO> getByDoctor(Integer doctorId) {
+        return prescriptionRepository.findByDoctor_DoctorId(doctorId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+	// เพิ่ม Method นี้เข้าไป
+    public List<PrescriptionHistoryProjection> getPrescriptionHistoryByDoctorId(Integer doctorId) {
+        // สามารถเพิ่ม Business Logic หรือการตรวจสอบเงื่อนไขตรงนี้ได้ในอนาคต
+        return prescriptionRepository.findHistoryByDoctorId(doctorId);
     }
 }

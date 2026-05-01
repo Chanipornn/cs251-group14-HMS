@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
 
     @GetMapping("/")
-    public String mainPage() {
-        return "redirect:/login.html";
+    public String MainPage() {
+        return "forward:/login.html";  
     }
 
     @GetMapping("/doctorandstaff")

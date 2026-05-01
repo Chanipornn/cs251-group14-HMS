@@ -14,4 +14,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     List<Invoice> findByStatus(PaymentStatus status);
     Optional<Invoice> findByMedicalRecord_RecordId(Integer recordId);
     List<Invoice> findByPatient_PatientIdAndStatus(Integer patientId, PaymentStatus status);
+    List<Invoice> findByMedicalRecord_Doctor_DoctorId(Integer doctorId);
+
 }
