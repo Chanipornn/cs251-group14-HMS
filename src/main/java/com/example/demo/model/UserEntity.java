@@ -39,7 +39,10 @@ public class UserEntity {
 
     @Column(name = "Status", length = 10)
     private String status = "Active";
-    
+
+    @Column(name = "ProfileImageUrl", length = 500)
+    private String profileImageUrl;
+
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Patient patient;
