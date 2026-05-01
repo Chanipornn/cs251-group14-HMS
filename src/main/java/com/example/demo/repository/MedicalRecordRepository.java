@@ -15,7 +15,6 @@ public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, In
     List<MedicalRecord> findByPatient_PatientId(Integer patientId);
     
 
-    // 🌟 1. เพิ่ม Method นี้เข้าไปใหม่: ใช้ JOIN FETCH เพื่อดึงประวัติพร้อมข้อมูลคนไข้
     @Query("SELECT m FROM MedicalRecord m JOIN FETCH m.patient WHERE m.doctor.doctorId = :doctorId")
     List<MedicalRecord> findRecordsWithPatientByDoctorId(@Param("doctorId") Integer doctorId);
     

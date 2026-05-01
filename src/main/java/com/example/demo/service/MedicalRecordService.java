@@ -74,9 +74,7 @@ public class MedicalRecordService {
         return convertToDTO(medicalRecordRepository.save(entity));
     }
 
-    // Helper: แปลง Entity เป็น DTO
     private MedicalRecordDTO convertToDTO(MedicalRecord entity) {
-        // ประกอบร่างชื่อและนามสกุล (เช็ค null กันเหนียวไว้หน่อยก็ดีครับ)
         String patientFullName = "";
         if (entity.getPatient() != null) {
             patientFullName = entity.getPatient().getName() + " " + entity.getPatient().getSurname();

@@ -21,11 +21,6 @@ public class AppointmentMapper {
 	            null
 	    );
 
-	    /*
-	    dto.setDoctorName(
-	    	    a.getDoctor().getName() + " " + a.getDoctor().getSurname()
-	    	);
-	    	*/
 	    dto.setDoctorName(
 	            a.getDoctor() != null
 	                ? a.getDoctor().getName() + " " + a.getDoctor().getSurname()

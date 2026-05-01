@@ -96,12 +96,10 @@ public class AppointmentService {
 		return AppointmentMapper.toDTO(appointmentRepository.save(a));
 	}
 
-	// getByPatient
 	public List<AppointmentDTO> getByPatient(Integer patientId) {
 		return appointmentRepository.findByPatient_PatientId(patientId).stream().map(AppointmentMapper::toDTO).toList();
 	}
 
-	// get by id
 	public Appointment getById(Integer id) {
 		return appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
 	}
@@ -114,17 +112,14 @@ public class AppointmentService {
 			dto.setAppointmentTime(a.getAppointmentTime());
 			dto.setQueueNumber(a.getQueueNumber());
             
-            // ป้องกัน Error กรณี Status เป็น Enum ต้องแปลงเป็น String
 			dto.setStatus(a.getStatus() != null ? a.getStatus().name() : null); 
             
-			// Map ข้อมูลคนไข้
 			if (a.getPatient() != null) {
 				dto.setPatientId(a.getPatient().getPatientId());
 				dto.setPatientName(a.getPatient().getName() + " " + a.getPatient().getSurname());
 				dto.setWeight(a.getPatient().getWeight());
 				dto.setHeight(a.getPatient().getHeight());
 
-				// คำนวณอายุ (แบบง่ายๆ)
 				if (a.getPatient().getDateOfBirth() != null) {
 					int age = java.time.LocalDate.now().getYear() - a.getPatient().getDateOfBirth().getYear();
 					dto.setAge(age);

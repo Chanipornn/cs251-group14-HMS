@@ -40,7 +40,7 @@ public class MedicalCertificateController {
 	    public List<MedicalCertificateDTO> getByPatient(@PathVariable Integer id) {
 	        return service.getByPatient(id);
 	    }
-	 // 🌟 เปิดทางให้หน้าเว็บยิง API เข้ามาดึงข้อมูลตามหมอได้
+	    // GET by Doctor	    
 	    @GetMapping("/doctor/{id}")
 	    public List<MedicalCertificateDTO> getByDoctor(@PathVariable Integer id) {
 	        return service.getByDoctor(id);

@@ -27,7 +27,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findByAppointmentDateBetween(LocalDate from, LocalDate to);
 
  
- // ดึงนัดหมายพร้อมข้อมูลคนไข้ โดยหาจาก DoctorID และเรียงตามวันที่/เวลา
     @Query("SELECT a FROM Appointment a JOIN FETCH a.patient WHERE a.doctor.doctorId = :doctorId ORDER BY a.appointmentDate ASC, a.appointmentTime ASC")
     List<Appointment> findAppointmentsWithPatientByDoctorId(@Param("doctorId") Integer doctorId);
     

@@ -2,7 +2,7 @@ package com.example.demo.dto;
 
 import java.time.LocalDate;
 
-// สร้าง Interface รับค่าจาก Custom SQL โดยเฉพาะ
+
 public interface PrescriptionHistoryProjection {
     Integer getPrescriptionId();
     String getMedicineName();
