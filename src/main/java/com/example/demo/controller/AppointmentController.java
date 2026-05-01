@@ -35,7 +35,11 @@ public class AppointmentController {
 		return service.cancel(id);
 	}
 
-	
+	@PutMapping("/{id}/complete")
+	public AppointmentDTO complete(@PathVariable Integer id) {
+		return service.complete(id);
+	}
+
 	@PutMapping("/{id}/reschedule")
 	public AppointmentDTO reschedule(@PathVariable Integer id, @RequestBody AppointmentDTO dto) {
 		return service.reschedule(id, dto);

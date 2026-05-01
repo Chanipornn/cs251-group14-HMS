@@ -114,6 +114,12 @@ public class AppointmentService {
 		}).collect(Collectors.toList());
 	}
 
+	public AppointmentDTO complete(Integer id) {
+		Appointment a = getById(id);
+		a.setStatus(Appointment.AppointmentStatus.COMPLETED);
+		return AppointmentMapper.toDTO(appointmentRepository.save(a));
+	}
+
 	public Appointment getById(Integer id) {
 		return appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
 	}

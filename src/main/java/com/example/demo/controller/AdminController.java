@@ -145,3 +145,4 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllLogs());
     }
 }
+

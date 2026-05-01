@@ -403,3 +403,93 @@ h2 {
 .btn-confirm:hover {
 	background-color: #6c66bd;
 }
+
+.modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,0.5);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+}
+
+.modal-overlay.active {
+	display: flex;
+}
+
+.modal-box {
+	background: white;
+	padding: 25px;
+	border-radius: 20px;
+	width: 320px;
+	text-align: center;
+	animation: fadeIn 0.25s ease;
+}
+
+/* ICON */
+.modal-icon {
+	font-size: 45px;
+	margin-bottom: 15px;
+	color: #746BC3;
+}
+
+.modal-icon.success {
+	color: #27ae60;
+}
+
+/* TITLE */
+.modal-box h3 {
+	font-size: 1.3rem;
+	margin-bottom: 10px;
+	color: #333;
+}
+
+/* DESCRIPTION */
+.modal-box p {
+	font-size: 0.95rem;
+	color: #666;
+	margin-bottom: 20px;
+}
+
+/* BUTTONS */
+.btn-confirm {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 20px;
+	background: #746BC3;
+	color: white;
+	cursor: pointer;
+	font-weight: 500;
+	transition: 0.2s;
+}
+
+.btn-confirm:hover {
+	background: #5e55b5;
+}
+
+.btn-cancel {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 20px;
+	background: #e0e0e0;
+	color: #333;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.btn-cancel:hover {
+	background: #d5d5d5;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+	from {
+		transform: scale(0.85);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}

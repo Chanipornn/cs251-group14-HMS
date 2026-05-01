@@ -7,74 +7,98 @@
 	<link rel="stylesheet" href="/DoctorandStaff/css/appointment.css">
 	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 
 <body>
 
-	<!-- HEADER -->
-	<header class="header">
-		<div class="left-section">
-			<div class="menu-icon" onclick="toggleSidebar()">☰</div>
-			<img src="../../img/hospital.png" class="circle-img">
-		</div>
-
-		<div class="profile">
-			<span id="displayName">กำลังโหลด...</span>
-			<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
-		</div>
-	</header>
-
-	<div class="container">
-
-		<!-- SIDEBAR -->
-		<aside class="sidebar">
-			<h3>เมนู</h3><br>
-
-			<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
-			<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
-			<a href="/doctorandstaff/appointment" class="menu active">การนัดหมาย</a>
-			<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
-			<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
-			<div class="logout" onclick="logout()">
-				<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
-			</div>
-		</aside>
-
-		<div class="content">
-
-			<h2>รายการนัดหมาย</h2>
-
-			<div class="search-box">
-				<input type="text" id="searchInput" placeholder="PatientID / ชื่อผู้ป่วย">
-				<span>🔍</span>
-			</div>
-
-			<div style="display: flex; justify-content: space-between; margin-top: 15px;">
-				<button class="add-appointment" onclick="location.href='/doctorandstaff/appointment/add'">+
-					เพิ่มการนัดหมาย</button>
-				<div class="sort">หมายเลขคิว ↕</div>
-			</div>
-
-			<!-- 🌟 พื้นที่สำหรับใส่การ์ดที่จะถูกสร้างจาก JavaScript -->
-			<div id="appointmentList">
-				<p style="text-align:center; color:#999;">กำลังโหลดข้อมูลนัดหมาย...</p>
-			</div>
-
-		</div>
+<header class="header">
+	<div class="left-section">
+		<div class="menu-icon" onclick="toggleSidebar()">☰</div>
+		<img src="../../img/hospital.png" class="circle-img">
 	</div>
 
-</body>
+	<div class="profile">
+		<span id="displayName">กำลังโหลด...</span>
+		<div class="avatar" style="background-image: url('../../img/profile.png');"></div>
+	</div>
+</header>
+
+<div class="container">
+
+	<aside class="sidebar">
+		<h3>เมนู</h3><br>
+		<a href="/doctorandstaff/medical_history" class="menu">ประวัติการรักษา</a>
+		<a href="/doctorandstaff/history" class="menu">การจ่ายยา</a>
+		<a href="/doctorandstaff/appointment" class="menu active">การนัดหมาย</a>
+		<a href="/doctorandstaff/medical_certificate" class="menu">การออกใบรับรองแพทย์</a>
+		<a href="/doctorandstaff/invoice" class="menu">ใบแจ้งหนี้</a>
+		<div class="logout" onclick="logout()">
+			<img src="../../img/log out.png" class="logoutlogo">ออกจากระบบ
+		</div>
+	</aside>
+
+	<div class="content">
+
+		<h2>รายการนัดหมาย</h2>
+
+		<div class="search-box">
+			<input type="text" id="searchInput" placeholder="PatientID / ชื่อผู้ป่วย">
+			<span>🔍</span>
+		</div>
+
+		<div style="display: flex; justify-content: space-between; margin-top: 15px;">
+			<button class="add-appointment" onclick="location.href='/doctorandstaff/appointment/add'">
+				+ เพิ่มการนัดหมาย
+			</button>
+			<div class="sort">หมายเลขคิว ↕</div>
+		</div>
+
+		<div id="appointmentList">
+			<p style="text-align:center; color:#999;">กำลังโหลดข้อมูลนัดหมาย...</p>
+		</div>
+
+	</div>
+</div>
+
+<!-- ✅ SUCCESS MODAL -->
+<div id="successModal" class="modal-overlay">
+	<div class="modal-box">
+		<div class="modal-icon success">
+			<i class="fa-solid fa-circle-check"></i>
+		</div>
+		<h3>สำเร็จ</h3>
+		<p>อัปเดตสถานะเป็น "ตรวจสำเร็จ" แล้ว</p>
+		<button class="btn-confirm" onclick="closeSuccessModal()">ตกลง</button>
+	</div>
+</div>
+
+<!-- ✅ CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay">
+	<div class="modal-box">
+		<div class="modal-icon">
+			<i class="fa-solid fa-circle-question"></i>
+		</div>
+		<h3>ยืนยัน</h3>
+		<p>คุณต้องการเปลี่ยนเป็น "ตรวจสำเร็จ" ใช่ไหม?</p>
+
+		<div style="display:flex; gap:10px; justify-content:center;">
+			<button class="btn-cancel" onclick="closeConfirmModal()">ยกเลิก</button>
+			<button class="btn-confirm" onclick="confirmComplete()">ยืนยัน</button>
+		</div>
+	</div>
+</div>
+
 <script>
 	let allAppointments = [];
 	let DoctorID;
+	let selectedAppointmentId = null;
 
+	// ================= INIT =================
 	window.onload = async function () {
 		try {
-			// 1. เช็คสถานะการล็อคอิน
 			const response = await fetch('/api/doctorandstaff/me');
+
 			if (response.status === 401) {
-				alert("กรุณาล็อคอินก่อนเข้าใช้งาน");
 				window.location.href = "/doctorandstaff";
 				return;
 			}
@@ -82,126 +106,162 @@
 			const data = await response.json();
 			document.getElementById('displayName').textContent = data.name;
 
-			// รับ DoctorID
 			DoctorID = data.doctorId || data.DoctorID;
 
 			if (DoctorID) {
 				await fetchAppointments();
 				setupSearch();
-			} else {
-				document.getElementById('appointmentList').innerHTML = '<p style="color:red;">ไม่พบข้อมูลแพทย์ กรุณาล็อคอินใหม่</p>';
 			}
 
 		} catch (error) {
-			console.error("เกิดข้อผิดพลาด:", error);
+			console.error(error);
 		}
 	};
 
-	// 📌 ฟังก์ชันดึงข้อมูลจาก Controller
+	// ================= LOAD =================
 	async function fetchAppointments() {
 		try {
 			const res = await fetch('/api/appointments/doctor/' + DoctorID);
-			if (!res.ok) throw new Error('Failed to fetch');
-
 			allAppointments = await res.json();
 			renderCards(allAppointments);
 		} catch (error) {
 			console.error(error);
-			document.getElementById('appointmentList').innerHTML = '<p style="color:red; text-align:center;">ไม่สามารถดึงข้อมูลการนัดหมายได้</p>';
 		}
 	}
 
-	// 📌 ฟังก์ชันวาดการ์ดให้เต็มจอ (อัปเดตเพิ่มสถานะ)
+	// ================= RENDER =================
 	function renderCards(records) {
 		const listContainer = document.getElementById('appointmentList');
 		listContainer.innerHTML = '';
 
 		if (records.length === 0) {
-			listContainer.innerHTML = '<p style="text-align:center; color:#999; padding: 50px;">ไม่มีรายการนัดหมาย</p>';
+			listContainer.innerHTML = '<p style="text-align:center;">ไม่มีรายการ</p>';
 			return;
 		}
 
 		records.forEach(record => {
-			const card = document.createElement('div');
-			card.className = 'card';
 
-			// เช็คค่า Null กันพัง
 			const name = record.patientName || 'ไม่ระบุชื่อ';
-			const age = record.age ? record.age + ' ปี' : '-';
-			const weight = record.weight ? record.weight + ' กก.' : '-';
-			const height = record.height ? record.height + ' ซม.' : '-';
-
-			// Format เลขคิวให้เป็น 2 หลัก (เช่น 01, 02)
 			const queue = record.queueNumber ? String(record.queueNumber).padStart(2, '0') : '-';
 
-			// 🌟 แปลงสถานะ (Status) เป็นภาษาไทยและกำหนดสี
 			let statusText = '-';
 			let statusColor = '#333';
 
 			switch (record.status) {
 				case 'WAITING':
 					statusText = 'รอเข้าพบ';
-					statusColor = '#f39c12'; // สีส้ม
+					statusColor = '#f39c12';
 					break;
+
 				case 'COMPLETED':
-					statusText = 'นัดสำเร็จ';
-					statusColor = '#27ae60'; // สีเขียว
+					statusText = 'ตรวจสำเร็จ';
+					statusColor = '#27ae60';
 					break;
+
 				case 'POSTPONED':
 					statusText = 'เลื่อนนัด';
-					statusColor = '#3498db'; // สีฟ้า
+					statusColor = '#3498db';
 					break;
+
 				case 'CANCELLED':
 					statusText = 'ยกเลิก';
-					statusColor = '#e74c3c'; // สีแดง
+					statusColor = '#e74c3c';
 					break;
-				default:
-					statusText = record.status || '-';
 			}
 
-			// ประกอบร่าง HTML (เพิ่มการแสดงสถานะที่ฝั่งขวา)
+			const card = document.createElement('div');
+			card.className = 'card';
+
 			card.innerHTML = `
-				    <div class="card-left">
-				        <p><b>วันที่ :</b> ${record.appointmentDate || '-'}</p>
-				        <p><b>ชื่อ :</b> ${name}</p>
-				        <p><b>อายุ :</b> ${age}</p>
-				        <p><b>น้ำหนัก :</b> ${weight}</p>
-				        <p><b>ส่วนสูง :</b> ${height}</p>
-				    </div>
-				    <div class="card-right" style="text-align: right; display: flex; flex-direction: column; justify-content: space-between;">
-						<div>
-							<p style="color: ${statusColor}; font-weight: bold; margin-bottom: 5px; font-size: 1.1rem;">${statusText}</p>
-				        	<p><b>หมายเลขคิว : ${queue}</b></p>
-						</div>
-						<button class="edit-btn" onclick="location.href='/doctorandstaff/edit-appointment?id=${record.appointmentId}'" style="margin-top: auto; border: none; background: none; cursor: pointer; color: #837dd1; font-size: 1.2rem;">
-						    <i class="fa fa-edit"></i>
-						</button>
-				    </div>
-				`;
+		<div class="card-left">
+			<p><b>วันที่ :</b> ${record.appointmentDate || '-'}</p>
+			<p><b>ชื่อ :</b> ${name}</p>
+		</div>
+
+		<div class="card-right" style="text-align:right; display:flex; flex-direction:column; justify-content:space-between;">
+			<div>
+				<p style="color:${statusColor}; font-weight:bold;">
+					${statusText}
+				</p>
+				<p><b>คิว : ${queue}</b></p>
+			</div>
+
+			<div style="display:flex; gap:10px; justify-content:flex-end;">
+
+				${record.status === 'WAITING' ? `
+					<button onclick="openConfirmModal(${record.appointmentId})"
+					style="background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:10px;">
+						ตรวจสำเร็จ
+					</button>
+				` : ''}
+
+				<button onclick="location.href='/doctorandstaff/edit-appointment?id=${record.appointmentId}'"
+				style="border:none;background:none;color:#837dd1;">
+					<i class="fa fa-edit"></i>
+				</button>
+
+			</div>
+		</div>
+		`;
+
 			listContainer.appendChild(card);
 		});
 	}
 
-	// 📌 ระบบค้นหา
+	// ================= MODAL =================
+	function openConfirmModal(id) {
+		selectedAppointmentId = id;
+		document.getElementById("confirmModal").classList.add("active");
+	}
+
+	function closeConfirmModal() {
+		document.getElementById("confirmModal").classList.remove("active");
+	}
+
+	async function confirmComplete() {
+		if (!selectedAppointmentId) return;
+
+		try {
+			const res = await fetch(`/api/appointments/${selectedAppointmentId}/complete`, {
+				method: 'PUT'
+			});
+
+			if (res.ok) {
+				closeConfirmModal();
+				document.getElementById("successModal").classList.add("active");
+				fetchAppointments();
+			}
+
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	function closeSuccessModal() {
+		document.getElementById("successModal").classList.remove("active");
+	}
+
+	// ================= SEARCH =================
 	function setupSearch() {
-		const searchInput = document.getElementById('searchInput');
-		searchInput.addEventListener('input', function (e) {
+		const input = document.getElementById('searchInput');
+
+		input.addEventListener('input', function(e) {
 			const keyword = e.target.value.toLowerCase();
 
 			const filtered = allAppointments.filter(app => {
-				const pId = String(app.patientId || '').toLowerCase();
-				const pName = String(app.patientName || '').toLowerCase();
-				return pId.includes(keyword) || pName.includes(keyword);
+				return String(app.patientName || '').toLowerCase().includes(keyword);
 			});
 
 			renderCards(filtered);
 		});
 	}
 
+	// ================= LOGOUT =================
 	async function logout() {
 		await fetch('/api/logout', {method: 'POST'});
 		window.location.href = "/";
 	}
 </script>
 
+</body>
 </html>
