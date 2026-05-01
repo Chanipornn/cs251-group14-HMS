@@ -19,6 +19,7 @@ public class AppointmentDTO {
     private Integer doctorId;
     private Integer patientId;
     
+    private String department;
     private String doctorName;
     private String reason;
     private String preparation;
@@ -59,4 +60,14 @@ public class AppointmentDTO {
 
     public String getPreparation() { return preparation; }
     public void setPreparation(String preparation) { this.preparation = preparation; }
+    
+    public String getDepartment() { 
+        return department; 
+    }
+
+    public void setDepartment(String department) { 
+        this.department = department; 
+    }
+    
+    
 }

@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.demo.dto.AppointmentDTO;
+import com.example.demo.dto.AppointmentRequestDTO;
 import com.example.demo.mapper.AppointmentMapper;
+
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +23,88 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
 
     // CREATE
-    public AppointmentDTO create(Appointment a) {
+    public AppointmentDTO create(AppointmentRequestDTO req) {
 
+        Patient patient = patientRepository
+                .findById(req.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        Doctor doctor = doctorRepository
+                .findById(req.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        LocalDate date = LocalDate.parse(req.getDate());
+        LocalTime time = LocalTime.parse(req.getTime());
+
+        // ✅ กันเวลาซ้ำ
+        boolean exists = appointmentRepository
+                .existsByDoctor_DoctorIdAndAppointmentDateAndAppointmentTime(
+                        doctor.getDoctorId(), date, time);
+
+        if (exists) {
+            throw new RuntimeException("เวลานี้ถูกจองแล้ว");
+        }
+
+        // ✅ generate queue
+        Integer maxQueue = appointmentRepository
+                .findMaxQueue(doctor.getDoctorId(), date);
+
+        int newQueue = maxQueue + 1;
+
+        Appointment appt = new Appointment();
+        appt.setPatient(patient);
+        appt.setDoctor(doctor);
+        appt.setAppointmentDate(date);
+        appt.setAppointmentTime(time);
+        appt.setQueueNumber(newQueue);
+
+        appt.setReason(req.getReason());
+        appt.setPreparation(req.getPreparation());
+        appt.setStatus(Appointment.AppointmentStatus.WAITING);
+
+        appointmentRepository.save(appt);
+
+        return AppointmentMapper.toDTO(appt);
+    }
+    
+    
+    
+    
+    /*
+    public AppointmentDTO create(AppointmentRequestDTO req) {
+    	Patient patient = patientRepository
+                .findById(req.getPatientId())
+                .orElseThrow();
+
+        Doctor doctor = doctorRepository
+                .findById(req.getDoctorId())
+                .orElseThrow();
+
+        LocalDate date = LocalDate.parse(req.getDate());
+        LocalTime time = LocalTime.parse(req.getTime());
+
+        // 🔥 generate queue
+        Integer maxQueue = appointmentRepository
+                .findMaxQueue(doctor.getDoctorId(), date);
+
+        int newQueue = maxQueue + 1;
+
+        Appointment appt = new Appointment();
+        appt.setPatient(patient);
+        appt.setDoctor(doctor);
+        appt.setAppointmentDate(date);
+        appt.setAppointmentTime(time);
+        appt.setQueueNumber(newQueue);
+
+        appt.setReason(req.getReason());
+        appt.setPreparation(req.getPreparation());
+
+        appt.setStatus(Appointment.AppointmentStatus.WAITING);
+
+        appointmentRepository.save(appt);
+
+        return mapToDTO(appt);
+/*
         if (a.getPatient() == null || a.getPatient().getPatientId() == null) {
             throw new RuntimeException("Patient is required");
         }
@@ -44,13 +127,12 @@ public class AppointmentService {
 
         Appointment saved = appointmentRepository.save(a);
 
-        return AppointmentMapper.toDTO(saved);   
+        return AppointmentMapper.toDTO(saved);  
+        
+    	
     }
 
-    // generate queue 
-    private Integer generateQueue() {
-        return (int) (ThreadLocalRandom.current().nextDouble() * 100);
-    }
+   */
 
     // Cancel
     public AppointmentDTO cancel(Integer id) {

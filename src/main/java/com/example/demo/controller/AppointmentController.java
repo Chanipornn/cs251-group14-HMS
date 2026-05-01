@@ -9,17 +9,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.dto.AppointmentDTO;
+import com.example.demo.dto.AppointmentRequestDTO;
 
 @RestController
-@RequestMapping("/api/appointments")
+@RequestMapping("/api/appointments/patients")
 @RequiredArgsConstructor
 public class AppointmentController {
 	private final AppointmentService service;
 
+	
     // Create
-	@PostMapping
-	public AppointmentDTO create(@RequestBody Appointment a) {
-	    return service.create(a);
+	@PostMapping("/{id}")
+	public AppointmentDTO create(@RequestBody AppointmentRequestDTO req) {
+	    return service.create(req);
 	}
 
     // Cancel
@@ -37,10 +39,19 @@ public class AppointmentController {
 	    return service.reschedule(id, dto);
 	}
 
+	/*
     // search patient
 	@GetMapping("/patient/{id}")
 	public List<AppointmentDTO> getByPatient(@PathVariable Integer id) {
 	    return service.getByPatient(id);
 	}
+	*/
+	
+	// search patient
+	@GetMapping("/{id}")
+	public List<AppointmentDTO> getByPatient(@PathVariable Integer id) {
+	    return service.getByPatient(id);
+	}
+	
 
 }

@@ -17,9 +17,21 @@ public class AppointmentMapper {
 	            a.getPatient().getPatientId()
 	    );
 
-	    
+	    /*
 	    dto.setDoctorName(
 	    	    a.getDoctor().getName() + " " + a.getDoctor().getSurname()
+	    	);
+	    	*/
+	    dto.setDoctorName(
+	            a.getDoctor() != null
+	                ? a.getDoctor().getName() + " " + a.getDoctor().getSurname()
+	                : "-"
+	        );
+	    
+	    dto.setDepartment(
+	    	    a.getDoctor() != null && a.getDoctor().getDepartment() != null
+	    	        ? a.getDoctor().getDepartment().getDepName()
+	    	        : "-"
 	    	);
 	    dto.setReason(a.getReason());
 	    dto.setPreparation(a.getPreparation());
