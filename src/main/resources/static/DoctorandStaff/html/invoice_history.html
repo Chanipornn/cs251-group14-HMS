@@ -309,15 +309,6 @@
 						<p>ชื่อคนไข้ : <b>${inv.patientName || '-'}</b></p>
 					</div>
 				</div>
-				<table class="invoice-table">
-					<tbody>
-						${itemsHTML}
-					</tbody>
-				</table>
-				<div class="invoice-total">
-					<span>รวมทั้งหมด</span>
-					<span>${inv.totalAmount ? inv.totalAmount.toLocaleString() : '0'} บาท</span>
-				</div>
 				${inv.status === 'UNPAID' ? '<div style="text-align:center; margin-top:30px;"><button style="background:#e74c3c; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold;">รอการชำระเงิน</button></div>' : '<div style="text-align:center; margin-top:30px;"><button style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold;">ชำระเงินแล้ว</button></div>'}
 			`;
 
