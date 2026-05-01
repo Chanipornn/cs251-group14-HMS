@@ -70,47 +70,39 @@
   <!-- วันเกิด -->
   <div class="form-group">
     <label>วันเกิด <span class="required">*</span></label>
-  
+
     <div class="select-row">
-  
-      <!-- DAY -->
+
+      <!-- DAY — ✅ select อยู่ใน custom-dropdown -->
       <div class="custom-dropdown">
         <div class="dropdown-selected" onclick="toggleDropdown(this)">
           <span>DD</span>
           <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
         </div>
-  
         <div class="dropdown-options" id="dayOptions"></div>
+        <select id="day" style="display:none"></select>
       </div>
-  
-      <select id="day" style="display:none"></select>
-  
-  
-      <!-- MONTH -->
+
+      <!-- MONTH — ✅ select อยู่ใน custom-dropdown -->
       <div class="custom-dropdown">
         <div class="dropdown-selected" onclick="toggleDropdown(this)">
           <span>MM</span>
           <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
         </div>
-  
         <div class="dropdown-options" id="monthOptions"></div>
+        <select id="month" style="display:none"></select>
       </div>
-  
-      <select id="month" style="display:none"></select>
-  
-  
-      <!-- YEAR -->
+
+      <!-- YEAR — ✅ select อยู่ใน custom-dropdown -->
       <div class="custom-dropdown">
         <div class="dropdown-selected" onclick="toggleDropdown(this)">
           <span>YYYY</span>
           <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
         </div>
-  
         <div class="dropdown-options" id="yearOptions"></div>
+        <select id="year" style="display:none"></select>
       </div>
-  
-      <select id="year" style="display:none"></select>
-  
+
     </div>
   </div>
 
@@ -136,13 +128,13 @@
 
   <div class="form-group">
     <label>กรุ๊ปเลือด <span class="required">*</span></label>
-  
+
     <div class="custom-dropdown">
       <div class="dropdown-selected" onclick="toggleDropdown(this)">
         <span>ตัวเลือก</span>
         <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
       </div>
-  
+
       <div class="dropdown-options">
         <div onclick="selectOption(this, 'blood')">A</div>
         <div onclick="selectOption(this, 'blood')">B</div>
@@ -150,8 +142,7 @@
         <div onclick="selectOption(this, 'blood')">O</div>
       </div>
     </div>
-  
-    <!-- ซ่อน select -->
+
     <select id="blood" style="display:none">
       <option value="">ตัวเลือก</option>
       <option>A</option>
@@ -159,7 +150,7 @@
       <option>AB</option>
       <option>O</option>
     </select>
-  
+
   </div>
 
   <div class="form-group">
@@ -167,7 +158,6 @@
     <input id="disease" type="text" placeholder="กรอกโรคประจำตัว" required>
   </div>
 
-  <!-- ไม่ required -->
   <div class="form-group">
     <label>แพ้ยา</label>
     <input id="allergy" type="text" placeholder="กรอกยาที่แพ้">
@@ -193,13 +183,13 @@
 
   <div class="form-group">
     <label>สิทธิการรักษา <span class="required">*</span></label>
-  
+
     <div class="custom-dropdown">
       <div class="dropdown-selected" onclick="toggleDropdown(this)">
         <span>ตัวเลือก</span>
         <img src="../../img/arrow-down-sign-to-navigate.png" class="arrow">
       </div>
-  
+
       <div class="dropdown-options">
         <div onclick="selectOption(this, 'right')">ชำระเงินเอง</div>
         <div onclick="selectOption(this, 'right')">สิทธิบัตรทอง</div>
@@ -207,8 +197,7 @@
         <div onclick="selectOption(this, 'right')">สิทธิสวัสดิการข้าราชการ</div>
       </div>
     </div>
-  
-    <!-- ซ่อน select -->
+
     <select id="right" style="display:none">
       <option value="">ตัวเลือก</option>
       <option>ชำระเงินเอง</option>
@@ -216,7 +205,7 @@
       <option>สิทธิประกันสังคม</option>
       <option>สิทธิสวัสดิการข้าราชการ</option>
     </select>
-  
+
   </div>
 
   <!-- BUTTON -->
@@ -227,6 +216,8 @@
   </div>
 
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script src="../JS/register.js"></script>
 

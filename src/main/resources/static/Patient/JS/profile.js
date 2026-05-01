@@ -1,135 +1,175 @@
-// โหลดรูปจาก localStorage ตอนเปิดหน้า
+// =========================
+// DEFAULT AVATAR
+// =========================
+const DEFAULT_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0dff7'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%237b6ee6'/%3E%3Cellipse cx='50' cy='85' rx='28' ry='20' fill='%237b6ee6'/%3E%3C/svg%3E";
+
+// =========================
+// MAIN
+// =========================
 document.addEventListener("DOMContentLoaded", function () {
-    const savedImage = localStorage.getItem("profileImage");
-  
-    if (savedImage) {
-      document.getElementById("profileImage").src = savedImage;
-    }
-  });
-  
-  // กดที่รูป → เปิดเลือกไฟล์
-  document.getElementById("profileImage").addEventListener("click", function () {
-    document.getElementById("imageUpload").click();
-  });
-  
-  // เมื่อเลือกรูป
-  document.getElementById("imageUpload").addEventListener("change", function (e) {
-    const file = e.target.files[0];
-  
-    if (!file) return;
-  
-    const reader = new FileReader();
-  
-    reader.onload = function (event) {
-      const imageData = event.target.result;
-  
-      // แสดงรูป
-      document.getElementById("profileImage").src = imageData;
-  
-      // เก็บลง localStorage
-      localStorage.setItem("profileImage", imageData);
-    };
-  
-    reader.readAsDataURL(file);
-  });
 
-  function logout() {
-    // ลบข้อมูล session / user
-    localStorage.clear();
-  
-    // เด้งไปหน้า login
-    window.location.href = "../../login.html";
-  }
+  let user = JSON.parse(localStorage.getItem("currentUser")) || {};
 
-  document.addEventListener("DOMContentLoaded", function () {
+  const img = document.getElementById("profileImage");
+  const upload = document.getElementById("imageUpload");
 
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if (!user) return;
-  
-    const img = document.getElementById("profileImage");
-  
-    // =========================
-    // LOAD IMAGE
-    // =========================
+  // =========================
+  // LOAD IMAGE
+  // =========================
+  if (img) {
     img.src = user.profileImage && user.profileImage !== ""
       ? user.profileImage
-      : "../../img/profile.png";
-  
-    // =========================
-    // CLICK → UPLOAD
-    // =========================
-    img.addEventListener("click", function () {
-      document.getElementById("imageUpload").click();
+      : DEFAULT_AVATAR;
+
+    img.style.cursor = "pointer";
+    img.addEventListener("click", () => {
+      if (upload) upload.click();
     });
-  
-    // =========================
-    // CHANGE IMAGE
-    // =========================
-    document.getElementById("imageUpload").addEventListener("change", function (e) {
-  
+  }
+
+  // =========================
+  // CHANGE IMAGE
+  // =========================
+  if (upload) {
+    upload.addEventListener("change", function (e) {
       const file = e.target.files[0];
       if (!file) return;
-  
+
+      if (!file.type.startsWith("image/")) {
+        alert("กรุณาเลือกรูปภาพ");
+        return;
+      }
+
       const reader = new FileReader();
-  
+
       reader.onload = function (event) {
         const imageData = event.target.result;
-  
-        // เปลี่ยนรูปทันที
-        img.src = imageData;
-  
-        // =========================
-        // UPDATE currentUser
-        // =========================
+
+        // แสดงรูปทันที
+        if (img) img.src = imageData;
+
+        // update currentUser
         user.profileImage = imageData;
         localStorage.setItem("currentUser", JSON.stringify(user));
-  
-        // =========================
-        // UPDATE users (สำคัญมาก)
-        // =========================
+
+        // sync users
         let users = JSON.parse(localStorage.getItem("users")) || [];
-  
-        users = users.map(u => {
-          if (u.username === user.username) {
-            return user;
-          }
-          return u;
-        });
-  
+
+        const index = users.findIndex(u => u.email === user.email);
+
+        if (index !== -1) {
+          users[index].profileImage = imageData;
+        } else if (user.email) {
+          users.push(user);
+        }
+
         localStorage.setItem("users", JSON.stringify(users));
       };
-  
+
       reader.readAsDataURL(file);
     });
-  
-    // =========================
-    // TEXT DATA
-    // =========================
-    document.getElementById("profileName").innerText = user.username || "-";
-    document.getElementById("profileEmail").innerText = user.email || "-";
-  
-    document.getElementById("fullname").innerText =
-      (user.firstname || "-") + " " + (user.lastname || "");
-  
-    document.getElementById("phone").innerText = user.phone || "-";
-    document.getElementById("idcard").innerText = user.idcard || "-";
-    document.getElementById("gender").innerText = user.gender || "-";
-  
-    // วันเกิด
-    if (user.day && user.month && user.year) {
-      document.getElementById("birth").innerText =
-        user.day + "/" + user.month + "/" + user.year;
-    } else {
-      document.getElementById("birth").innerText = "-";
-    }
-  
-  });
-  
-  
-  // =========================
-  // LOGOUT
-  // =========================
-  function logout() {
-    localStorage.clear();
-    window.location.href = "../../login.html";
   }
+
+  loadProfileFromAPI();
+  
+});
+
+
+// =========================
+// HELPER
+// =========================
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  if (value === undefined || value === null || value === "") {
+    el.innerText = "-";
+  } else {
+    el.innerText = value;
+  }
+}
+
+function formatGender(gender) {
+    if (!gender) return "-";
+
+  const g = gender.toUpperCase();
+
+  if (g === "M") return "ผู้ชาย";
+  if (g === "F") return "ผู้หญิง";
+
+  return "-";
+}
+
+function formatDate(date) {
+  if (!date) return "-";
+
+  const parts = date.split("-");
+  if (parts.length !== 3) return date;
+
+  const [d, m, y] = parts;
+  return `${d}/${m}/${y}`;
+}
+
+
+// =========================
+// LOAD PROFILE FROM API
+// =========================
+async function loadProfileFromAPI() {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (!user || !user.patientId) {
+    console.error("No patientId");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/api/patients/${user.patientId}`);
+    const data = await res.json();
+
+    console.log("PATIENT:", data);
+
+    // ใช้ fullName จาก backend
+    setText("profileName", data.fullName);
+    setText("fullname", data.fullName);
+
+    setText("idcard", data.thaiNationalId);
+    setText("gender", formatGender(data.gender));
+    setText("phone", data.telephone);
+    setText("address", data.address);
+
+    setText("birth", formatDate(data.dateOfBirth));
+
+    setText("blood", data.bloodType);
+    setText("disease", data.chronicIllness);
+    setText("allergy", data.drugAllergy ? data.drugAllergy : "ไม่มี");
+    setText("weight", data.weight ? data.weight + " กก." : "-");
+    setText("height", data.height ? data.height + " ซม." : "-");
+    setText("right", data.rightToHealthcare);
+
+  } catch (err) {
+    console.error("โหลดข้อมูลไม่สำเร็จ", err);
+  }
+}
+
+async function loadUser() {
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) return;
+
+  const res = await fetch(`http://localhost:8080/api/users/${userId}`);
+  const data = await res.json();
+
+  setText("profileEmail", data.email);
+}
+loadUser();
+
+
+// =========================
+// LOGOUT
+// =========================
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "../../login.html";
+}

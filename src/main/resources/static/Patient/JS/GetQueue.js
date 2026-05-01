@@ -1,5 +1,6 @@
 // ================= DATA =================
-const doctors = [
+//const 
+let doctors = [
     { id: 1, name: "นพ.สมชาย ศรีสุข", dept: "หู คอ จมูก", img: "../../img/doctor_img1.png", favorite: false },
     { id: 2, name: "พญ.นนทพัทธ์ ใจดี", dept: "หู คอ จมูก", img: "../../img/doctor_img2.png", favorite: false },
     { id: 3, name: "พญ.ชลธิชา คำดี", dept: "หู คอ จมูก", img: "../../img/doctor_img4.png", favorite: false },
@@ -24,7 +25,7 @@ function renderDoctors(list) {
             </div>
 
             <div class="doc-img-container">
-                <img src="${doc.img}">
+                <img src="${doc.img}" class="doc-avatar">
             </div>
 
             <div class="doc-info">
@@ -39,12 +40,26 @@ function renderDoctors(list) {
 // ================= GO BOOKING =================
 function goToBooking(id) {
     const doc = doctors.find(d => d.id === id);
-    if (!doc) return;
 
     localStorage.setItem("selectedDoctor", JSON.stringify(doc));
+
     window.location.href = "Booking.html";
 }
+/*
+function goToBooking(id) {
+    const doc = doctors.find(d => d.id === id);
+    if (!doc) return;
 
+    localStorage.setItem("selectedDoctor", JSON.stringify({
+        doctorId: doc.id,   // ✅ ใช้ doc
+        name: doc.name,
+        dept: doc.dept,
+        img: doc.img
+    }));
+
+    window.location.href = "Booking.html";
+}
+*/
 // ================= FAVORITE =================
 function toggleFavorite(id) {
     const doc = doctors.find(d => d.id === id);
@@ -72,10 +87,13 @@ function applyFilter() {
 }
 
 // ================= EVENTS =================
+/*
 document.querySelector(".filter-icon").addEventListener("click", openPopup);
 document.getElementById("searchInput").addEventListener("input", applyFilter);
+*/
 
 // ================= POPUP =================
+/*
 const popupHTML = `
 <div class="filter-popup" id="filterPopup">
     <div class="popup-content">
@@ -96,6 +114,7 @@ const popupHTML = `
 `;
 
 document.body.insertAdjacentHTML("beforeend", popupHTML);
+*/
 
 function openPopup() {
     document.getElementById("filterPopup").classList.add("active");
@@ -112,4 +131,10 @@ function selectDept(dept) {
 }
 
 // ================= INIT =================
-applyFilter();
+//applyFilter();
+document.addEventListener("DOMContentLoaded", () => {
+    renderDoctors(doctors);
+
+    document.querySelector(".filter-icon").addEventListener("click", openPopup);
+    document.getElementById("searchInput").addEventListener("input", applyFilter);
+});

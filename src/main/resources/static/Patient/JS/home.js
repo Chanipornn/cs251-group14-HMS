@@ -3,21 +3,46 @@
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===== USERNAME =====
-  const username = localStorage.getItem("username");
-  const usernameEl = document.getElementById("username");
+ // ===== LOAD USER =====
+ const user = JSON.parse(localStorage.getItem("currentUser"));
 
+  if (!user) {
+    window.location.href = "../../login.html";
+    return;
+  }
+
+  console.log("USER:", user);
+
+ // ===== LOAD PROFILE FROM BACKEND =====
+ if (user && user.patientId) {
+    fetch(`http://localhost:8080/api/patients/${user.patientId}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("PATIENT:", data);
+
+        const fullNameEl = document.getElementById("fullname");
+
+        if (fullNameEl) {
+          fullNameEl.innerText = data.name + " " + data.surname;
+        }
+      })
+      .catch(err => console.error("Fetch error:", err));
+  }
+
+  // ===== USERNAME (มุมขวา) =====
+  const usernameEl = document.querySelector(".user-name");
   if (usernameEl) {
-    usernameEl.textContent = username || "Guest";
+    usernameEl.innerText = user.username || "Guest";
   }
 
-  // ===== PROFILE IMAGE =====
-  const profileImg = document.getElementById("profileImage");
-  const savedImage = localStorage.getItem("profileImage");
+ 
+// ===== PROFILE IMAGE =====
+const profileImg = document.getElementById("profileImage");
+const savedImage = user?.profileImage
 
-  if (profileImg && savedImage) {
-    profileImg.src = savedImage;
-  }
+if (profileImg && savedImage) {
+  profileImg.src = savedImage;
+}
 
   // =========================
   // BANNER SLIDER
@@ -42,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSlider();
   }, 3000);
 
+
   // =========================
   // SWIPE (มือถือ)
   // =========================
@@ -64,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSlider();
   });
 
+
   // =========================
   // CLICK DOT
   // =========================
@@ -74,4 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-});
+}
+
+);
