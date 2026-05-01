@@ -1,18 +1,16 @@
 // ================= DATA =================
 //const 
-let doctors = [
-    { id: 1, name: "นพ.สมชาย ศรีสุข", dept: "หู คอ จมูก", img: "../../img/doctor_img1.png", favorite: false },
-    { id: 2, name: "พญ.นนทพัทธ์ ใจดี", dept: "หู คอ จมูก", img: "../../img/doctor_img2.png", favorite: false },
-    { id: 3, name: "พญ.ชลธิชา คำดี", dept: "หู คอ จมูก", img: "../../img/doctor_img4.png", favorite: false },
-    { id: 4, name: "นพ.วราภรณ์ ศิริชัย", dept: "ศัลยกรรม", img: "../../img/doctor_img3.png", favorite: false },
-    { id: 5, name: "นพ.อัครพล ศรีนวล", dept: "อายุรกรรม", img: "../../img/doctor_img5.png", favorite: false },
-    { id: 6, name: "นพ.พงศกร แก้วดี", dept: "อายุรกรรม", img: "../../img/doctor_img7.png", favorite: false },
-    { id: 7, name: "พญ.มินตรา จันทร์ทรา", dept: "กุมารเวชกรรม", img: "../../img/doctor_img6.png", favorite: false },
-    { id: 8, name: "นพ.สมปอง สองสิบ", dept: "จักษุ", img: "../../img/doctor_img8.png", favorite: false }
-];
+window.onload = async function() {
+    try {
+        const response = await fetch('/api/doctor/');
+    
+        const data = await response.json();
+        console.log(data)
 
-const doctorGrid = document.getElementById("doctorGrid");
-let selectedDept = "all";
+    } catch (error) {
+        console.error("เกิดข้อผิดพลาด:", error);
+    }
+};
 
 // ================= RENDER =================
 function renderDoctors(list) {

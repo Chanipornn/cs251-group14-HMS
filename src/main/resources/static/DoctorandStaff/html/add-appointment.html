@@ -140,18 +140,12 @@
 
 		// 🌟 3. จัดโครงสร้าง Payload ใหม่ (จุดนี้คือตัวแก้ปัญหา "Patient is required")
 		const payload = {
-			// ต้องส่งเป็น Object ซ้อนเข้าไปแบบนี้ครับ เพราะฝั่ง Java เป็นตัวแปรออบเจกต์ (private Patient patient;)
-			patient: {
-				patientId: parseInt(document.getElementById('patientId').value)
-			},
-			doctor: {
-				doctorId: parseInt(document.getElementById('doctorId').value)
-			},
-			appointmentDate: rawDate,
-			appointmentTime: rawTime,
+			patientId: parseInt(document.getElementById('patientId').value),
+			doctorId: parseInt(document.getElementById('doctorId').value),
+			date: rawDate,
+			time: rawTime,
 			reason: document.getElementById('reason').value,
-			preparation: document.getElementById('preparation').value,
-			status: "WAITING" // หรือส่ง 3 ถ้า Enum ฝั่ง Java รับเป็นตัวเลข
+			preparation: document.getElementById('preparation').value
 		};
 
 		try {
