@@ -157,13 +157,21 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
     console.log("DOCTOR:", doctorData);
     console.log("USER:", user);
 
-    await fetch("http://localhost:8080/api/appointments/patients/${user.patientId}", {
+   	await fetch(`http://localhost:8080/api/appointments/patients/${user.patientId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bookingData)
 
 })
-
+/*
+await fetch("http://localhost:8080/api/appointments", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(bookingData)
+})
+*/
 .then(async res => {
     const data = await res.json();
 
