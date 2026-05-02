@@ -238,11 +238,29 @@ body {
     margin-bottom: 20px;
 }
 
-/* ให้ modal ซ่อนก่อน */
 .modal-overlay {
+    position: fixed;      /* 🔥 สำคัญสุด */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.4); /* พื้นหลังมืด */
+
     display: none;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;        /* กันโดน element อื่นทับ */
 }
 
 .modal-overlay.active {
     display: flex;
+}
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
